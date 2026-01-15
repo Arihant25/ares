@@ -9971,7 +9971,7 @@
                                     "How does dividing the scores by the temperature ($T$) change the 'exponent' in the Softmax math?",
                                     "What happens if $T$ is very small (approaching 0)?"
                                 ],
-                                "resolution_insight": "Temperature is a variable ($T$) inserted into the Softmax equation: $P_i = \frac{\exp(z_i/T)}{\sum_j \exp(z_j/T)}$. It mathematically scales the 'distance' between the token probabilities.",
+                                "resolution_insight": "Temperature is a variable ($T$) inserted into the Softmax equation. It mathematically scales the 'distance' between the token probabilities.",
                                 "bloom_level": "Applying"
                             }
                         ]
