@@ -6818,6 +6818,83 @@
                 ],
                 "resolution_insight": "While dimensions represent semantic features, they are usually 'latent' and not directly map-able to simple human labels like 'is_animal'.",
                 "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If 'hot' and 'cold' are opposites, their vectors must be as far away from each other as possible in the model's space.",
+                "incorrect_belief": "Antonyms have high spatial distance in vector space.",
+                "socratic_sequence": [
+                  "In a typical sentence like 'The weather is very ___', could both 'hot' and 'cold' fit in that blank?",
+                  "If a model groups words based on the contexts they appear in, would 'hot' be more similar to 'cold' or to 'refrigerator'?",
+                  "Why might antonyms actually be closer to each other than to completely unrelated words like 'democracy'?"
+                ],
+                "resolution_insight": "Antonyms often cluster together because they share similar linguistic contexts and grammatical roles, making them 'semantically related' even if their specific meanings are opposite.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "To get the vector for 'apple pie,' the model just adds the vector for 'apple' to the vector for 'pie' like a simple math equation.",
+                "incorrect_belief": "Vector representation of phrases is purely additive and linear.",
+                "socratic_sequence": [
+                  "Does the phrase 'hot dog' mean the same thing as the sum of a high temperature and a canine animal?",
+                  "If we just added the numbers together, would the model be able to tell the difference between 'house boat' and 'boat house'?",
+                  "How might the model represent the unique, new meaning that emerges when two words are combined?"
+                ],
+                "resolution_insight": "While vector addition is a common analogy, the representation of multi-word concepts involves complex transformations that capture emergent meanings not found in the individual words alone.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The vector for a word like 'dog' only contains factual data about it being a four-legged animal that barks.",
+                "incorrect_belief": "Vectors only store denotative or dictionary-based meaning.",
+                "socratic_sequence": [
+                  "Does the word 'dog' carry different feelings or associations than the word 'canine' in a poem?",
+                  "How would a model recognize that 'puppy' feels more 'positive' or 'cute' than 'mutt' if it only looked at factual definitions?",
+                  "If a vector is built by looking at millions of human conversations, will it capture just facts, or also emotions and cultural associations?"
+                ],
+                "resolution_insight": "Vectors capture connotations, sentiment, and cultural nuances because they are derived from how humans use words in context, not just from formal definitions.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Meaning is like a map, so we should be able to represent every word's meaning using just two or three coordinates.",
+                "incorrect_belief": "Semantic space is low-dimensional and easily visualizable.",
+                "socratic_sequence": [
+                  "If we only had two axes, like 'size' and 'danger,' could we distinguish between a 'lion' and a 'shark'?",
+                  "How many different traits (like age, color, speed, emotion, legality, etc.) does a complex word like 'justice' have?",
+                  "Why might a computer need 512 or 1,024 different numbers to describe a single word accurately?"
+                ],
+                "resolution_insight": "Human language is high-dimensional; it requires hundreds of coordinates (dimensions) to capture the subtle nuances that distinguish millions of different concepts.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If a number in a word's vector is zero, it means that word has absolutely none of that specific quality.",
+                "incorrect_belief": "Zero values in a vector represent the total absence of a human-understandable trait.",
+                "socratic_sequence": [
+                  "Since dimensions aren't labeled as 'color' or 'size,' does a '0' have a fixed human meaning?",
+                  "Could a '0' simply be a neutral point in a mathematical relationship rather than a 'missing' feature?",
+                  "If the whole vector is a pattern, is one single number responsible for a whole concept, or is it the combination of all numbers?"
+                ],
+                "resolution_insight": "Individual values in a latent vector are only meaningful in relation to the entire set; a zero does not map to a 'missing' human concept like 'not red' or 'not alive'.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The vector for 'cat' in English is exactly the same as the vector for 'gato' in Spanish because they mean the same thing.",
+                "incorrect_belief": "Semantic vectors are language-independent and universal by default.",
+                "socratic_sequence": [
+                  "If an English model has never seen Spanish text, how would it know what 'gato' means?",
+                  "If two different models are trained on different sets of books, will they use the exact same 'coordinate system' for their numbers?",
+                  "What would need to happen during training for the model to align two different languages into the same vector space?"
+                ],
+                "resolution_insight": "Vectors are specific to the model's internal 'map' and its training data; 'cat' and 'gato' only share a vector if the model was specifically trained on a multilingual corpus to align them.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "The numbers in a vector are always whole integers like 1, 5, or 10 to make it easier for the computer to calculate them.",
+                "incorrect_belief": "Vectors consist of discrete integer values.",
+                "socratic_sequence": [
+                  "If we only used whole numbers, how could we represent a word that is just 1% more 'regal' than another word?",
+                  "Does a computer find it more precise to calculate distances using whole steps or a smooth, continuous range of decimals?",
+                  "Why would high-precision decimals (floating-point numbers) be better for capturing the 'infinite' variety of human meanings?"
+                ],
+                "resolution_insight": "Vectors use high-precision floating-point numbers to capture extremely subtle distances and relationships between concepts in a continuous mathematical space.",
+                "bloom_level": "Understanding"
               }
             ]
           },
@@ -6833,6 +6910,83 @@
                   "In a 3D map, would you place 'coffee' closer to 'tea' or closer to 'coffin'?"
                 ],
                 "resolution_insight": "Similarity in vector space (often measured by cosine similarity) refers to semantic relationship\u2014how often concepts share context\u2014rather than spelling.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Since 'doctor' and 'hospital' aren't synonyms, the model doesn't see them as similar in vector space.",
+                "incorrect_belief": "Semantic similarity only applies to words with the same meaning (synonyms).",
+                "socratic_sequence": [
+                  "If you read the word 'doctor' in a story, are you more likely to see the word 'nurse' or the word 'volcano' in the next paragraph?",
+                  "Do 'doctor' and 'hospital' tend to appear in the same types of discussions or environments?",
+                  "If vectors group concepts that share context, would words from the same 'scene' be close together or far apart?"
+                ],
+                "resolution_insight": "Semantic similarity captures 'relatedness' and 'contextual co-occurrence' (words that appear in similar situations), not just words that mean the same thing.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If 'buy' and 'sell' have a high similarity score, I can swap them in a sentence without changing the model's understanding.",
+                "incorrect_belief": "High similarity implies logical interchangeability or functional equivalence.",
+                "socratic_sequence": [
+                  "Do 'buy' and 'sell' occur in the same types of sentences (about money, stores, and products)?",
+                  "If two words appear in identical contexts, will their vectors be close together?",
+                  "Does the model's ability to see that two words are 'related' mean it thinks they perform the same action in a sentence?"
+                ],
+                "resolution_insight": "Words can be highly similar because they share a domain (like commerce), yet they can represent opposite directions of an action or logic.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The vector for 'Paris' and 'London' must be close together because they are geographically close in Europe.",
+                "incorrect_belief": "Vector distance mirrors physical world distance or spatial coordinates.",
+                "socratic_sequence": [
+                  "In a newspaper, is 'Paris' more often mentioned alongside 'London' because of a map, or because they are both 'capital cities' and 'political hubs'?",
+                  "If we compared 'Paris' to 'The Moon', would the distance be based on kilometers or on how differently we talk about them?",
+                  "Does a model learn about the world through GPS coordinates or through the way words are used in text?"
+                ],
+                "resolution_insight": "Vector proximity is determined by linguistic usage and shared attributes (e.g., both are European capitals), not by physical distance in the real world.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "The model groups vectors into neat folders like 'Animals' or 'Cities' and only compares words within those folders.",
+                "incorrect_belief": "Vector space is partitioned into discrete, hierarchical, or mutually exclusive categories.",
+                "socratic_sequence": [
+                  "Can the word 'Apple' be similar to 'Banana' (fruit) and 'Microsoft' (technology) at the same time?",
+                  "In a 3D space, can a single point be 'near' multiple different clusters of points simultaneously?",
+                  "If the space is continuous rather than divided into folders, is there any limit to how many different 'groups' a word can relate to?"
+                ],
+                "resolution_insight": "Vector space is a continuous mathematical landscape where words have multi-directional relationships, allowing them to belong to many 'concepts' at once.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If 'cat' and 'dog' have a 0.8 similarity score, it means they share exactly 80% of their physical characteristics.",
+                "incorrect_belief": "Similarity scores are a direct ratio or tally of overlapping semantic features or biological traits.",
+                "socratic_sequence": [
+                  "When we calculate the angle between two lines in geometry, are we counting the physical 'parts' of those lines?",
+                  "Does the model know what a 'whisker' is as a physical object, or does it just know how the word 'whisker' is used near 'cat'?",
+                  "If a similarity score is a mathematical calculation of an angle, can it be a literal count of animal traits?"
+                ],
+                "resolution_insight": "Similarity is a geometric measure of how similar the patterns of word usage are, not a checklist of physical or real-world features.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "If two words are completely unrelated, like 'pencil' and 'democracy', their similarity score must be zero.",
+                "incorrect_belief": "Lack of relationship results in absolute mathematical orthogonality (zero similarity).",
+                "socratic_sequence": [
+                  "Are 'pencil' and 'democracy' both nouns used in human language?",
+                  "In a massive data set, is it possible to find a sentence where someone uses a 'pencil' to vote in a 'democracy'?",
+                  "In high-dimensional space, is it more likely for two things to be perfectly 90 degrees apart, or for them to share at least some tiny baseline relationship?"
+                ],
+                "resolution_insight": "Truly zero similarity is rare in LLMs because almost all words share some broad context (like being part of the same language or part of human experience).",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Similarity is just a 1-to-100 ranking; if 'pizza' is similar to 'pasta', it can't also be equally similar to 'delivery'.",
+                "incorrect_belief": "Semantic similarity is a one-dimensional scale rather than a multi-dimensional relationship.",
+                "socratic_sequence": [
+                  "If you are standing in a room, can you be 5 feet away from a chair and also 5 feet away from a table at the same time?",
+                  "Does 'pizza' relate to 'pasta' because of its ingredients and to 'delivery' because of how it is sold?",
+                  "If a vector has hundreds of dimensions, can it point 'toward' many different concepts in different directions simultaneously?"
+                ],
+                "resolution_insight": "Vectors exist in high-dimensional space, allowing a single word to have high similarity with many different, unrelated concepts across different 'directions' of meaning.",
                 "bloom_level": "Applying"
               }
             ]
@@ -6850,6 +7004,83 @@
                 ],
                 "resolution_insight": "Higher dimensionality allows for more nuance but increases compute costs and the risk of 'overfitting' to noise in the training data.",
                 "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "If a model has 512 embedding dimensions, it means it can only recognize a maximum of 512 unique words.",
+                "incorrect_belief": "Embedding dimension count is equivalent to vocabulary capacity.",
+                "socratic_sequence": [
+                  "If a point on a 2D graph has two coordinates (x, y), are there only two possible locations on the entire page?",
+                  "Could you plot a thousand different points using just those same two axes?",
+                  "How does adding a third axis (z) change how many unique spots you can describe, and does it limit the number of dots you can place in the room?"
+                ],
+                "resolution_insight": "Embedding dimensions describe the 'space' or 'coordinates' available to define a word, while vocabulary size is the number of distinct points (words) that can be placed within that space.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If the embedding dimension is 768, that means the model's response can only be 768 tokens long.",
+                "incorrect_belief": "Embedding dimensions limit the sequence length or context window.",
+                "socratic_sequence": [
+                  "If every person in a library has a 10-digit ID number, does that mean the library can only hold 10 books?",
+                  "Is the 'length' of a single person's ID the same thing as the 'number' of people allowed in the building?",
+                  "If a vector represents a single token's meaning, why would its internal size dictate how many separate tokens we can line up in a row?"
+                ],
+                "resolution_insight": "Embedding dimensions represent the 'width' of the data for a single token, whereas the context window represents the 'length' of the sequence of tokens the model can process at once.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Simple words like 'the' only need 2 or 3 dimensions, while scientific terms like 'mitochondria' use all 1024 dimensions.",
+                "incorrect_belief": "The number of active dimensions varies based on the semantic complexity of the word.",
+                "socratic_sequence": [
+                  "If a computer expects a list of exactly 1024 numbers for every word it processes, what happens if you only provide 3?",
+                  "In a spreadsheet with 10 columns, does an entry for a 'simple' item allow you to delete the columns, or do you just fill them with zeros or neutral values?",
+                  "Would it be easier or harder for a model's math if the size of the input changed randomly for every word it read?"
+                ],
+                "resolution_insight": "To maintain mathematical consistency in the neural network's calculations, every token in a model uses a fixed-length vector with the exact same number of dimensions.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "The first dimension in a 512-vector always represents whether a word is a noun or a verb.",
+                "incorrect_belief": "Specific dimensions have fixed, human-assigned linguistic roles that are consistent across models.",
+                "socratic_sequence": [
+                  "If two different people organize their kitchens, is there a law that says they must both put the forks in the third drawer?",
+                  "Since the model learns these numbers automatically during training without human labels, would it have a reason to pick 'Part of Speech' for index #1 every single time?",
+                  "If a model is trained on code instead of English, would 'index #1' still represent a 'noun'?"
+                ],
+                "resolution_insight": "Dimensions are abstract and learned through statistical patterns; there is no universal standard for what a specific index (like the first or last number) represents, even between two models of the same size.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Embedding dimensions are just a way to store the word's spelling more clearly, like high-resolution compression.",
+                "incorrect_belief": "Dimensions are for literal text reconstruction rather than semantic encoding.",
+                "socratic_sequence": [
+                  "If I give you the GPS coordinates for a city, do those numbers tell you how to spell the city's name?",
+                  "Do coordinates tell you more about the 'name' of the city, or where it sits in relation to other cities?",
+                  "If the model needs to understand that 'coffee' is related to 'tea,' would spelling data or relationship data be more useful in those coordinates?"
+                ],
+                "resolution_insight": "Embedding dimensions define a word's position in a semantic space relative to other concepts, not a method for storing or reconstructing the literal characters of the word.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "A model with 12 layers must have exactly 12 embedding dimensions so each layer can process one number.",
+                "incorrect_belief": "The number of dimensions is tied directly to the number of layers in the neural network.",
+                "socratic_sequence": [
+                  "If you are reading a book with 12 chapters, does every single page have to have exactly 12 words on it?",
+                  "Could a 12-layer model process a vector with 768 numbers at every step of its journey?",
+                  "Does the 'depth' of the processing (layers) have to be identical to the 'width' of the information (dimensions) for the math to work?"
+                ],
+                "resolution_insight": "Embedding dimensions (width) and model layers (depth) are independent architectural hyperparameters, and most models have far more dimensions than layers.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "If a model uses 1,000 dimensions, it's impossible for it to calculate distances accurately because humans can't visualize anything beyond 3D.",
+                "incorrect_belief": "Mathematical distance is limited by human spatial visualization capabilities.",
+                "socratic_sequence": [
+                  "Can you calculate the difference between two 10-digit numbers on a calculator?",
+                  "If a computer has a list of 1,000 test scores for two students, could it calculate the average difference between the two lists without drawing a graph?",
+                  "Does a computer perform subtraction and multiplication based on 'looking' at a space, or by following algebraic formulas on lists of numbers?"
+                ],
+                "resolution_insight": "Computers use linear algebra to calculate distances (like cosine similarity) in high-dimensional space mathematically, which does not require the space to be visualizable to be functional.",
+                "bloom_level": "Applying"
               }
             ]
           },
@@ -6865,6 +7096,83 @@
                   "What is the difference between a pre-made coordinate and one the model 'decides' is best after reading billions of books?"
                 ],
                 "resolution_insight": "In modern LLMs, embeddings are weights that are 'learned' during training, allowing the model to optimize where words sit in vector space based on data.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model learns the best vector for a word every time I use it in a conversation.",
+                "incorrect_belief": "Embeddings are learned during the inference (usage) phase rather than the training phase.",
+                "socratic_sequence": [
+                  "If the model were changing its internal word definitions during every chat, would it provide consistent answers to different users?",
+                  "Think about the difference between a student studying for an exam and a student taking the exam; which phase involves changing what they know?",
+                  "If the billions of numbers in a model were shifting while you used it, what would happen to the massive amount of computing power required to run the model?"
+                ],
+                "resolution_insight": "In standard LLMs, embeddings are 'learned' and updated only during the training process; once the model is deployed for use, these embeddings are frozen and remain static.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Fixed embeddings are just random starting numbers that the model developers never bothered to train.",
+                "incorrect_belief": "Fixed embeddings lack semantic structure or pre-existing value.",
+                "socratic_sequence": [
+                  "If a researcher uses a 'pre-trained' set of embeddings like GloVe, where did those numbers come from before they were imported?",
+                  "Why might a developer choose to 'lock' a set of embeddings that was already trained on the entire internet instead of starting from scratch?",
+                  "Would a model perform better starting with totally random numbers or with a map of word relationships that was already created by another system?"
+                ],
+                "resolution_insight": "Fixed embeddings are often high-quality representations that were 'learned' in a previous process and are purposefully held constant to save time, money, or to prevent the model from forgetting established relationships.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Because the embeddings are 'learned,' they change their values depending on if I say 'bank of a river' or 'bank for money'.",
+                "incorrect_belief": "Individual learned embeddings are dynamic and change based on context.",
+                "socratic_sequence": [
+                  "In the model's vocabulary list, is there one ID for 'bank' or multiple IDs for different meanings?",
+                  "If there is only one entry for the word 'bank' in the embedding table, can that single entry hold two different sets of numbers at the same time?",
+                  "If the base embedding is the same, what other part of the Transformer architecture might be responsible for looking at the surrounding words to refine the meaning?"
+                ],
+                "resolution_insight": "Base learned embeddings are static (one fixed vector per token); the 'contextual' meaning is added later by the Attention layers, not by changing the initial embedding itself.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Researchers 'teach' the model embeddings by manually telling it that 'king' and 'queen' are related.",
+                "incorrect_belief": "Learned embeddings are created through explicit human labeling or instruction.",
+                "socratic_sequence": [
+                  "Given that there are often over 50,000 tokens in a model, how long would it take humans to manually adjust hundreds of dimensions for every single word?",
+                  "If the model looks at billions of sentences, can it figure out that 'king' and 'queen' appear in similar situations without a human helping?",
+                  "What do we call the process where a computer identifies patterns in data on its own to minimize its own errors?"
+                ],
+                "resolution_insight": "Embedding learning is an unsupervised mathematical process where the model adjusts vectors based on statistical patterns in the training data, not through human-coded rules.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If the embeddings are learned, the model can learn to represent a totally new word I just invented during our chat.",
+                "incorrect_belief": "Learned embeddings allow for dynamic vocabulary expansion during interaction.",
+                "socratic_sequence": [
+                  "If the embedding table is like a physical filing cabinet with 50,000 drawers, where does a 50,001st word go?",
+                  "Does the model have the ability to create new 'weights' or parameters while it is in the middle of generating a response?",
+                  "If you use a word the model hasn't seen, how does the tokenizer break it down to fit into the existing drawers?"
+                ],
+                "resolution_insight": "The size of the embedding table and the vocabulary are fixed during training; new words are handled by subword tokenization into existing known pieces, not by learning a new vector slot.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Learned embeddings are always superior to fixed embeddings, so modern AI never uses anything fixed.",
+                "incorrect_belief": "Fixed embeddings are obsolete or strictly inferior in all use cases.",
+                "socratic_sequence": [
+                  "If you are building a small model for a specialized task and have very little data, would it be safer to use a 'tried and true' map of words or try to learn a new one from scratch?",
+                  "What happens to the training speed if the model doesn't have to calculate updates for the embedding layer?",
+                  "Can a component be 'fixed' in one model even though it was 'learned' in another?"
+                ],
+                "resolution_insight": "Fixed embeddings are still used for efficiency, stability, and when working with limited data, as they provide a reliable foundation that doesn't need expensive re-training.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Learned embeddings use more complex math equations, while fixed embeddings are just simple lists of numbers.",
+                "incorrect_belief": "There is a structural or mathematical difference in the format of learned vs. fixed vectors.",
+                "socratic_sequence": [
+                  "If you write down a number with a pencil and then decide you aren't allowed to erase it, did the nature of the number itself change?",
+                  "Once a model finishes training, does the computer treat the 'learned' numbers any differently than 'fixed' numbers during a calculation?",
+                  "In both cases, aren't we just looking at an array of floating-point numbers in a table?"
+                ],
+                "resolution_insight": "Structurally, learned and fixed embeddings are identical; they are both just lists of numbers (vectors). The only difference is whether the software is permitted to change those numbers during the training phase.",
                 "bloom_level": "Understanding"
               }
             ]
@@ -6882,6 +7190,83 @@
                 ],
                 "resolution_insight": "Because Transformers are parallel (non-sequential), they require positional encodings\u2014mathematical signals added to embeddings\u2014to understand word order.",
                 "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Positional encoding is just the model assigning a simple number like 1, 2, or 3 to the word's ID.",
+                "incorrect_belief": "Positional encodings are simple scalar integers added to token IDs rather than multi-dimensional vectors.",
+                "socratic_sequence": [
+                  "If a word is represented by a vector of 512 numbers, what would happen if we only changed one of those numbers to indicate its position?",
+                  "Would a single number be 'loud' enough to be noticed by the model amidst hundreds of other values representing the word's meaning?",
+                  "How might adding a complex pattern of values (a vector) across all 512 dimensions help the model keep track of position more reliably?"
+                ],
+                "resolution_insight": "Positional encodings are high-dimensional vectors, just like word embeddings, allowing the model to integrate location data throughout the entire representation of the token.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If I move a word from the beginning of a sentence to the end, its positional encoding stays the same because it is still the same word.",
+                "incorrect_belief": "Positional encodings are a permanent property of a specific token rather than a property of the slot it occupies.",
+                "socratic_sequence": [
+                  "If you move from the front of a line to the back, does your identity change, or does your 'position number' in the line change?",
+                  "In a Transformer, is the positional information 'baked into' the word in the dictionary, or is it added once the word is placed in a specific sentence?",
+                  "If the encoding 'traveled' with the word, how would the model ever know that the word had actually moved to a new spot?"
+                ],
+                "resolution_insight": "Positional encodings are tied to the 'index' or 'slot' in a sequence, not the token itself; when a word moves to a new position, it receives the encoding for that new position.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "The model uses invisible tokens like '[First]', '[Second]', and '[Third]' to label where words are in the prompt.",
+                "incorrect_belief": "Position is handled by discrete categorical markers rather than the mathematical addition of vectors.",
+                "socratic_sequence": [
+                  "If we added a special token for every possible position, how large would our vocabulary need to be for a 10,000-word essay?",
+                  "Does adding more tokens increase the 'length' of the sequence the model has to process?",
+                  "Instead of adding more tokens, what if we just slightly 'colored' or modified the existing word vectors with a mathematical signal?"
+                ],
+                "resolution_insight": "Position is encoded through vector addition (merging signals) rather than by adding extra, discrete tokens to the sequence, which would be computationally expensive.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Because positional encoding is just math, a model can understand the order of a sentence of any length, even millions of words.",
+                "incorrect_belief": "Positional encoding schemes are infinitely scalable and do not contribute to context window limitations.",
+                "socratic_sequence": [
+                  "If you use a pattern to mark positions, what happens if that pattern starts to repeat or becomes indistinguishable after a certain point?",
+                  "Was the model trained to recognize the 'position signal' for the 1,000,000th word if it only ever saw sequences of 2,048 words during training?",
+                  "How might the 'uniqueness' of a position signal affect the model's ability to tell the difference between word 100 and word 100,000?"
+                ],
+                "resolution_insight": "Positional encodings are often limited by the range of positions the model saw during training; beyond that range, the model may fail to distinguish between different positions.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Adding positional data to a word vector 'corrupts' the word's meaning, making it harder for the model to know what the word is.",
+                "incorrect_belief": "Positional encodings significantly interfere with or override the semantic embedding of a token.",
+                "socratic_sequence": [
+                  "Imagine a word's meaning is represented by a very bright light; if we add a tiny 'tint' to show its position, can you still see the original color?",
+                  "In a high-dimensional space (like 768 dimensions), is there enough room to store both the 'what' (meaning) and the 'where' (position) without them overlapping too much?",
+                  "If the model is trained to expect this addition, could it learn to 'read' the meaning and the position as two separate layers of information?"
+                ],
+                "resolution_insight": "Because embeddings exist in very high-dimensional space, the model can learn to distinguish the semantic 'signal' from the positional 'signal' without one destroying the other.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Positional encodings only tell the model how far apart two words are, not their actual location in the sentence.",
+                "incorrect_belief": "Positional encodings provide only relative distance information rather than absolute sequence indices.",
+                "socratic_sequence": [
+                  "If you know 'Apple' is 2 words away from 'Pie', do you know if that phrase is at the very beginning or the very end of the book?",
+                  "Why might a model need to know that a word is the 'very first word' in a document versus just knowing it is 'near' another word?",
+                  "How can a mathematical formula provide a unique 'fingerprint' for index 1, index 2, and so on, regardless of what other words are nearby?"
+                ],
+                "resolution_insight": "Most positional encoding schemes provide 'absolute' position (the exact index), which the model can then use to calculate 'relative' distance between any two tokens.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "I need to manually label the word order in my prompt if I want the model to be extra precise about instructions.",
+                "incorrect_belief": "Positional information is a user-facing feature or requires manual prompting to function correctly.",
+                "socratic_sequence": [
+                  "When you type a sentence into a chat, does the computer already 'know' which character you typed first and which you typed last based on the data array?",
+                  "If the system automatically adds the positional math to every token you send, would your manual labels be redundant?",
+                  "Is the 'positional encoding' step something that happens inside the neural network architecture or inside the text box where you type?"
+                ],
+                "resolution_insight": "Positional encoding is a built-in architectural step of the Transformer; the model automatically applies this math to all inputs before processing, so manual labeling is unnecessary.",
+                "bloom_level": "Applying"
               }
             ]
           },
@@ -6898,6 +7283,83 @@
                 ],
                 "resolution_insight": "Position is critical for resolving references (anaphora), understanding logic, and determining the functional role of words in a sentence.",
                 "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model just scans for keywords like 'sale' and 'buy', so the order doesn't really matter as long as the words are there.",
+                "incorrect_belief": "LLMs function like a 'Bag of Words' where presence is everything and sequence is nothing.",
+                "socratic_sequence": [
+                  "What is the difference in meaning between 'Don't buy that product' and 'Buy that product, don't'?",
+                  "If a search engine only looked for keywords, would it understand the difference between 'Man bites dog' and 'Dog bites man'?",
+                  "If order didn't matter, why would we need sentences at all instead of just alphabetized lists of words?"
+                ],
+                "resolution_insight": "Meaning in language is emergent from the specific sequence and syntax, not just the statistical sum of individual keywords.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "A word only affects the meaning of the words directly next to it in the sequence.",
+                "incorrect_belief": "Contextual meaning is strictly local rather than global within a sequence.",
+                "socratic_sequence": [
+                  "In the sentence 'The keys that I left on the table by the door are gone,' what does the word 'are' refer to?",
+                  "How many words separate 'keys' from 'are' in that sentence?",
+                  "If the model only looked at adjacent words, would it know that 'are' refers to 'keys' or 'the door'?"
+                ],
+                "resolution_insight": "Language models use positional information to link related concepts across long distances, allowing subjects and verbs to stay connected even with many intervening words.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The first word of a sentence is always the most important because that's where the model starts reading.",
+                "incorrect_belief": "Positional importance is a linear decay from the start of a sequence to the end.",
+                "socratic_sequence": [
+                  "In the sentence 'After a long and exhausting journey through the mountains, we arrived,' which part tells you the main action?",
+                  "If the most important information is at the end, does the model ignore it?",
+                  "How does the model know that 'we arrived' is the conclusion if it only focused on the start of the prompt?"
+                ],
+                "resolution_insight": "Positional encoding allows every position in a sequence to be potentially significant; importance is determined by context, not just starting position.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Words like 'no' or 'not' apply to the whole sentence regardless of where you put them in the sequence.",
+                "incorrect_belief": "Logical operators have a global, position-independent scope within a sequence.",
+                "socratic_sequence": [
+                  "Compare the sentences 'It is not a good day for a walk' and 'It is a good day for a walk, not'\u2014is the logic identical?",
+                  "If I say 'I believe he is not guilty' versus 'I do not believe he is guilty,' does the focus of the doubt change?",
+                  "Does the position of 'not' change which specific word or phrase is being negated?"
+                ],
+                "resolution_insight": "The specific sequence position of logical operators determines their scope and which concepts they modify or negate.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "The model knows what 'crane' means because it has a specific ID for the bird and a different ID for the construction machine.",
+                "incorrect_belief": "Semantic ambiguity is solved at the token level rather than through sequence position.",
+                "socratic_sequence": [
+                  "How could a tokenizer tell which 'crane' you mean before the model even reads the rest of the sentence?",
+                  "If both meanings use the same word, what information is left to tell them apart besides the surrounding words?",
+                  "Does the sentence 'The crane flew over the lake' provide a different positional context than 'The crane lifted the steel beam'?"
+                ],
+                "resolution_insight": "Identical tokens (homonyms) rely entirely on their relative positions to other words in a sequence to resolve their specific meaning.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "If the model understands 'John called Mary,' it automatically understands 'Mary called John' the same way since the relationship is the same.",
+                "incorrect_belief": "Relationships between entities in a sequence are perceived as directionless or symmetric.",
+                "socratic_sequence": [
+                  "If John owes Mary money, does Mary necessarily owe John money?",
+                  "Who is the 'actor' in 'The cat chased the mouse' versus 'The mouse chased the cat'?",
+                  "If we swap the positions of the names, does the direction of the action change?"
+                ],
+                "resolution_insight": "Sequence position defines the functional roles (such as agent vs. recipient) in a relationship, which is critical for understanding directionality in language.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Punctuation just tells the model where to 'pause'; it doesn't change the position-based meaning of the actual words.",
+                "incorrect_belief": "Punctuation is purely prosodic (rhythmic) rather than structural in sequence processing.",
+                "socratic_sequence": [
+                  "What is the difference between 'Let's eat, Grandpa!' and 'Let's eat Grandpa!'?",
+                  "How does the comma change the relationship between 'eat' and 'Grandpa'?",
+                  "Does the punctuation mark change the 'positional' role of the word 'Grandpa' from being a person addressed to being the object being eaten?"
+                ],
+                "resolution_insight": "Punctuation marks act as positional anchors that define how different segments of a sequence relate to each other structurally.",
+                "bloom_level": "Analyzing"
               }
             ]
           },
@@ -6914,6 +7376,83 @@
                 ],
                 "resolution_insight": "The context window is the specific range of tokens the model can 'see' at one time; once something leaves that window, the model effectively 'forgets' it for that generation.",
                 "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The context window only limits how much text I can paste in, not how long the AI's answer can be.",
+                "incorrect_belief": "Output tokens do not count toward the context window limit.",
+                "socratic_sequence": [
+                  "If the model needs to 'see' the first half of its own sentence to finish the second half, where does that text live?",
+                  "If a model has a total limit of 1,000 tokens and your prompt is 950 tokens, how much room is left for the response?",
+                  "Does the model distinguish between your words and its own words when calculating its total 'active' memory?"
+                ],
+                "resolution_insight": "The context window is a shared capacity for the entire exchange; both the input (prompt) and the output (generation) consume the same limited token 'space'.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model can only talk about things I have provided in the current context window.",
+                "incorrect_belief": "The context window is the model's only source of knowledge, excluding training data.",
+                "socratic_sequence": [
+                  "If you ask the model to explain the concept of 'gravity' without defining it first, how does it know what to say?",
+                  "What is the difference between the information a model learned during its 'training' years and the specific instructions in your current 'prompt'?",
+                  "If the context window is like a piece of paper you're writing on right now, what is the 'library' the model was built from?"
+                ],
+                "resolution_insight": "The model relies on its vast internal parameters (learned during training) for general knowledge, while the context window provides the specific 'short-term' data for the current task.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "If my conversation goes over the token limit, the model will just crash or give me an error message.",
+                "incorrect_belief": "Context limits function as a hard system failure rather than a sliding buffer.",
+                "socratic_sequence": [
+                  "When you scroll through a very long news feed on your phone, does the app crash when it runs out of memory, or does it just stop showing the oldest posts?",
+                  "If a model can only 'see' 4,000 tokens but your chat is 5,000 tokens long, what is the most logical way for it to keep the conversation going?",
+                  "Why might the AI forget your name at the start of a 100-page conversation even if it's still replying to you?"
+                ],
+                "resolution_insight": "In many applications, the context window 'slides'; as new tokens are added at the end, the oldest tokens are discarded to stay within the model's capacity.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "A model with a 1-million token context window is ten times smarter than one with a 100,000 token window.",
+                "incorrect_belief": "Context window size is a direct proxy for reasoning quality or 'intelligence'.",
+                "socratic_sequence": [
+                  "If two students are taking a test, and one has a much larger desk to spread out their notes, does that automatically make them better at solving the problems?",
+                  "Does the ability to hold more information at once (capacity) guarantee the ability to understand that information better (reasoning)?",
+                  "Could a model be very good at 'reading' a whole book but very bad at summarizing its meaning?"
+                ],
+                "resolution_insight": "Context window measures 'volume' (how much data can be processed at once), whereas the model's architecture and parameters determine its 'intelligence' or reasoning capability.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "The context window includes everything other people are currently typing to the model in their own chats.",
+                "incorrect_belief": "The context window is a shared live space between all concurrent users.",
+                "socratic_sequence": [
+                  "If you and a friend both use the same brand of calculator at the same time, does your math affect their screen?",
+                  "How could a model remain helpful to you if its 'attention' was constantly filled with millions of other people's unrelated questions?",
+                  "What does it mean for a computer process to be 'isolated' from other users?"
+                ],
+                "resolution_insight": "Each context window is an independent, private instance created specifically for a single session; the model processes each user's request in a separate mathematical 'space'.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The context window works like a search engine where the model 'looks up' keywords I typed earlier.",
+                "incorrect_belief": "Contextual processing is a keyword-based retrieval rather than holistic integration.",
+                "socratic_sequence": [
+                  "If you ask a model to 'rewrite this text in a sarcastic tone,' does it find the word 'sarcastic' in the source text, or does it change how it sees every other word?",
+                  "Does the model process the relationship between all words in the window at once, or does it just jump around looking for specific matches?",
+                  "If it were just searching for keywords, how would it be able to follow instructions that aren't even in the text?"
+                ],
+                "resolution_insight": "The context window is a unified vector space where every token can mathematically influence the interpretation of every other token simultaneously, allowing for deep understanding of relationships.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "As long as I don't start a 'New Chat,' every word ever typed in this history is still inside the model's view.",
+                "incorrect_belief": "The saved chat history is functionally identical to the active context window.",
+                "socratic_sequence": [
+                  "Is there a difference between the 'file' where a computer saves your chat and the 'RAM' the computer uses to run its thoughts?",
+                  "If a model's physical limit is 8,000 tokens, but your chat log on the screen shows 20,000 tokens, which part can the model actually 'calculate' with right now?",
+                  "Why might the AI lose track of instructions given at the very top of a very long chat thread?"
+                ],
+                "resolution_insight": "The 'chat history' is a persistent log stored in a database, but the 'context window' is the specific, limited subset of that history that the model can actually process at the moment of generation.",
+                "bloom_level": "Applying"
               }
             ]
           },
@@ -6930,6 +7469,83 @@
                 ],
                 "resolution_insight": "LLMs use the entire context (prompt + previous conversation) to weight the probability of the next token, meaning the same 'question' can yield different results in different contexts.",
                 "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The model only uses my very last sentence to figure out what to say next.",
+                "incorrect_belief": "Contextual influence is limited to the immediate prior input (extreme recency bias).",
+                "socratic_sequence": [
+                  "If I tell the model my name in the first message and ask for it five messages later, can it still answer correctly?",
+                  "How would the model maintain a consistent story if it forgot the characters introduced at the beginning of the chat?",
+                  "If context was only the last sentence, why would developers brag about 'large context windows' that can hold entire books?"
+                ],
+                "resolution_insight": "The model processes the entire active history within its context window as a single sequence, allowing information from the very beginning of the session to influence the next word generated.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Context acts like a 'Mad Libs' template where the model just fills in the blanks with my words.",
+                "incorrect_belief": "Generation is a static structure filled with contextual variables rather than a dynamic sequence prediction.",
+                "socratic_sequence": [
+                  "If the model used a fixed template, how could it write a poem in the style of Shakespeare about a modern toaster?",
+                  "Does the model wait until the end of my prompt to decide the 'shape' of its answer, or does it predict it token by token?",
+                  "If I change the persona to a scientist vs. a toddler, does the model just change the words or the entire sentence structure?"
+                ],
+                "resolution_insight": "Context doesn't fill slots in a template; it shifts the probability distribution for every single token, allowing the model to generate entirely unique and fluid structures for every prompt.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "If I provide a specific context, like a story about a dragon, the model stops using its original training knowledge.",
+                "incorrect_belief": "Context replaces training data during inference rather than supplementing or constraining it.",
+                "socratic_sequence": [
+                  "If you ask the model to describe a dragon's 'scales' in your story, where does it get the definition of 'scales' or the knowledge that they are hard?",
+                  "Does the model lose its ability to use correct English grammar just because the topic is fictional?",
+                  "How do the model's general knowledge and your specific story work together to create a believable scene?"
+                ],
+                "resolution_insight": "Context provides the specific 'sandbox' or constraints for the current task, but the model's underlying training provides the language, logic, and world concepts needed to navigate that sandbox.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Adding more words to the context always makes the model's response more accurate and helpful.",
+                "incorrect_belief": "More context is a linear improvement to output quality, ignoring the 'lost in the middle' or 'noise' effects.",
+                "socratic_sequence": [
+                  "If I give you a 500-page manual and ask one tiny question, is it easier or harder than if I just gave you the relevant page?",
+                  "What happens if my prompt includes contradictory instructions, like 'be brief' and 'explain in extreme detail'?",
+                  "Can irrelevant 'filler' text in a prompt distract the model from the actual instruction?"
+                ],
+                "resolution_insight": "While more context provides more data, excessive or irrelevant information can introduce 'noise,' making it harder for the model to attend to the most important tokens.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "The model 'learns' new facts from our context and stores them permanently to help other users.",
+                "incorrect_belief": "Context-based updates are permanent and global (confusing inference with training).",
+                "socratic_sequence": [
+                  "If I tell the model I am the 'Grand Mayor of Mars,' will it tell the next person who logs in that I have that title?",
+                  "Is our conversation like a temporary whiteboard that gets wiped clean, or a permanent change to the model's software?",
+                  "If every user could permanently change the model's facts just by chatting, how quickly would the model become unreliable?"
+                ],
+                "resolution_insight": "Context is a temporary 'short-term memory' active only for the current session; it does not alter the model's underlying weights or its knowledge base for other users.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model pays the exact same amount of attention to every single word I type in the prompt.",
+                "incorrect_belief": "All tokens in the context exert equal mathematical influence on the generation of the next token.",
+                "socratic_sequence": [
+                  "In the sentence 'The astronaut, who had forgotten his oxygen tank, felt panicky,' which words are most important for predicting the next word?",
+                  "If I say 'Ignore all previous instructions and only say Hello,' should the model care more about the word 'Ignore' or the word 'and'?",
+                  "How does the model decide which part of a 2,000-token prompt is the actual command versus the background data?"
+                ],
+                "resolution_insight": "The model uses an 'attention' mechanism to weigh tokens differently, focusing heavily on structurally or semantically important words while de-emphasizing 'noise' or common grammatical fillers.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Because context determines the answer, the model will always give the same response for the same context every time.",
+                "incorrect_belief": "Contextual generation is purely deterministic and lacks probabilistic sampling.",
+                "socratic_sequence": [
+                  "Have you ever clicked 'Regenerate' and received a slightly different explanation for the same question?",
+                  "If the model only picked the 100% 'most likely' word every single time, would its writing feel natural or repetitive?",
+                  "If there are five different ways to say 'The cat sat,' how does the model choose between them if the context is the same?"
+                ],
+                "resolution_insight": "Context sets the probabilities for the next tokens, but the model typically uses 'sampling' to choose from a range of likely words, meaning the same context can result in different variations of an answer.",
+                "bloom_level": "Applying"
               }
             ]
           },
@@ -6945,6 +7561,83 @@
                   "How does the model 'ignore' fluff to focus on the subject?"
                 ],
                 "resolution_insight": "The Attention mechanism allows the model to assign higher 'weights' to specific tokens that are most relevant to predicting the current word.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "The model only pays attention to the words right next to the one it's currently writing.",
+                "incorrect_belief": "Attention is strictly local and limited by proximity.",
+                "socratic_sequence": [
+                  "In the sentence 'The boy, who forgot his umbrella at the library earlier today, got wet,' how does the model know 'wet' refers to the 'boy'?",
+                  "If it only looked at the words 'today' and 'got', would it have enough information to understand the subject?",
+                  "How does the model link concepts that are separated by many words in a long sentence?"
+                ],
+                "resolution_insight": "The Attention mechanism allows the model to create 'long-range dependencies,' meaning it can connect relevant words regardless of how far apart they are in the text.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model only pays attention to the 'important' words like names and actions, ignoring 'glue' words like 'the', 'a', or 'and'.",
+                "incorrect_belief": "Attention only targets high-semantic tokens (nouns/verbs).",
+                "socratic_sequence": [
+                  "Compare the phrases 'I bought a car' and 'I bought the car'\u2014does the small word change the meaning of the sentence?",
+                  "Without paying attention to 'a' or 'the', how would the model know if you are talking about a specific car or just any car?",
+                  "How do these 'glue' words provide necessary structural context for the 'important' words?"
+                ],
+                "resolution_insight": "While 'important' words carry high semantic weight, functional words provide critical context for grammar, specificity, and logic, so the model still attends to them as needed.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "A word like 'Einstein' always gets the same high amount of attention because it's a famous and important name.",
+                "incorrect_belief": "Token importance is static and intrinsic to the word itself.",
+                "socratic_sequence": [
+                  "If I say 'Einstein was a physicist' versus 'My dog's name is Einstein,' is the name equally important for understanding the topic of the sentence?",
+                  "Does the model need to focus more on 'Einstein' when answering a physics question or when determining how much dog food to buy?",
+                  "How does the surrounding context change which words deserve the most focus at any given moment?"
+                ],
+                "resolution_insight": "Attention is dynamic and situational; the 'importance' of a token is calculated based on its relevance to the specific part of the response the model is currently generating.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "The model skims the text just like a human, starting with the first word and focusing less as it gets 'tired' toward the end of the prompt.",
+                "incorrect_belief": "Attention is a resource-depleting, linear human-like physiological process.",
+                "socratic_sequence": [
+                  "If you give a computer a math problem with 100 numbers, does the computer calculate the 99th number less accurately because it is 'tired'?",
+                  "If you put a very important instruction at the very end of a 1,000-word prompt, can the model still follow it?",
+                  "Is the model's 'focus' a feeling or a mathematical calculation performed on every token simultaneously?"
+                ],
+                "resolution_insight": "Attention is a non-linear mathematical operation that processes the entire context window in parallel, meaning it doesn't 'fatigue' or lose focus in a human sense.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "When the model focuses on one part of the sentence, it basically deletes the other 'unimportant' parts from its memory.",
+                "incorrect_belief": "Attention is a subtractive filter that discards data.",
+                "socratic_sequence": [
+                  "If you highlight a single sentence in a textbook, does the rest of the text on the page disappear?",
+                  "Can the model look back at a 'less important' word later if the conversation changes direction?",
+                  "Is attention about 'erasing' the background or simply 'amplifying' the parts that matter right now?"
+                ],
+                "resolution_insight": "Attention re-weights the influence of information rather than deleting it; all tokens in the context window remain available for every step of the generation process.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model follows a built-in list of grammar rules to decide which words are related to each other.",
+                "incorrect_belief": "Attention is driven by hard-coded linguistic rules.",
+                "socratic_sequence": [
+                  "If I use a brand new slang word that isn't in any dictionary, can the model still tell it's related to the words around it?",
+                  "How did the model learn that 'bank' is related to 'money' in one sentence and 'river' in another without a human teller it?",
+                  "Is it more likely that programmers wrote down every possible word relationship, or that the model discovered these patterns by looking at billions of examples?"
+                ],
+                "resolution_insight": "The model 'learns' what to pay attention to through statistical patterns in its training data, allowing it to understand relationships that are far more complex than simple grammar rules.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "For every new word the model writes, it can only pay attention to one single word from my prompt at a time.",
+                "incorrect_belief": "Attention is a one-to-one mapping between output and input tokens.",
+                "socratic_sequence": [
+                  "To write the word 'Paris' in a travel story, does the model only need the word 'France', or does it also need 'vacation', 'capital', and 'Europe'?",
+                  "Can a single word's meaning in a sentence be shaped by three or four different clues simultaneously?",
+                  "How does the model combine multiple relevant pieces of information from across the entire prompt to decide on the best next word?"
+                ],
+                "resolution_insight": "The Attention mechanism is 'multi-headed,' meaning the model can simultaneously focus on many different parts of the prompt to gather a complete understanding of the context.",
                 "bloom_level": "Evaluating"
               }
             ]
@@ -6962,6 +7655,83 @@
                 ],
                 "resolution_insight": "Retrieval from context involves semantic synthesis; the model uses attention to aggregate information across various parts of the text to form an integrated answer.",
                 "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If the document calls someone a 'physician' but I ask a question about a 'doctor', the model won't be able to find the answer.",
+                "incorrect_belief": "Contextual retrieval relies on exact lexical matches rather than semantic meaning.",
+                "socratic_sequence": [
+                  "If you read a story about a 'feline' and someone asked you about the 'cat', would you be confused?",
+                  "Does the model process words as literal strings of letters or as mathematical vectors representing concepts?",
+                  "How might representing words as 'meanings' help the model bridge the gap between different words for the same thing?"
+                ],
+                "resolution_insight": "The model uses semantic embeddings to retrieve information based on the underlying concept, allowing it to recognize synonyms and paraphrases within the context.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model can only retrieve information if it is written in one single, clear sentence.",
+                "incorrect_belief": "Contextual retrieval is limited to single-unit extraction rather than multi-part synthesis.",
+                "socratic_sequence": [
+                  "If sentence A says 'Alice is in London' and sentence B says 'London is in England', can you tell where Alice is?",
+                  "Does the model look at sentences in isolation, or does it use 'attention' to look at multiple parts of the text at once?",
+                  "What would happen if the model couldn't connect information across different paragraphs?"
+                ],
+                "resolution_insight": "Retrieval involves 'synthesizing' information; the attention mechanism allows the model to link disparate facts across the context window to answer complex queries.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "When I paste a document, the model adds it to its permanent 'brain' or memory for all future chats.",
+                "incorrect_belief": "Providing context updates the model's weights or long-term knowledge base.",
+                "socratic_sequence": [
+                  "If you start a 'New Chat', does the model still remember the document you just gave it?",
+                  "Why do you think there is a limit on how much text you can paste into a single prompt?",
+                  "What is the difference between a student 'studying for a year' versus 'looking at a cheat sheet' during a specific test?"
+                ],
+                "resolution_insight": "Contextual retrieval occurs within a temporary 'short-term' buffer called the context window; it does not change the model's underlying training or long-term memory.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model can't retrieve information from things like lists or tables because they aren't 'sentences'.",
+                "incorrect_belief": "Information retrieval is restricted to narrative prose and cannot parse structured data within context.",
+                "socratic_sequence": [
+                  "Can the model see the visual patterns like line breaks or spacing in a list you provide?",
+                  "If you provided a list of 'Apples: $2' and 'Bananas: $1', how would the model know the price of the apple?",
+                  "Does 'reading' in an LLM require a grammatical subject and verb, or just a pattern of tokens?"
+                ],
+                "resolution_insight": "LLMs can retrieve and associate data from structured formats like tables, CSVs, and lists by recognizing proximity and structural patterns between tokens.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Retrieval from context is basically just a high-speed 'copy and paste' of the original text.",
+                "incorrect_belief": "Information retrieval from context is purely extractive rather than abstractive.",
+                "socratic_sequence": [
+                  "If I ask the model to 'summarize the document for a 5-year-old', is it still just copying and pasting?",
+                  "Can the model answer a question about the document using its own words instead of the author's?",
+                  "If it can change the tone or language while keeping the facts, is it 'copying' or 'interpreting'?"
+                ],
+                "resolution_insight": "Retrieval involves identifying the relevant facts and then generating a new response that can be summarized, translated, or reformatted based on the user's instructions.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The model can't answer 'why' something happened unless the text explicitly uses words like 'because'.",
+                "incorrect_belief": "Contextual retrieval cannot infer causality or logic that isn't explicitly signaled by conjunctions.",
+                "socratic_sequence": [
+                  "If a text says 'It rained. The picnic was cancelled.', do you need the word 'because' to understand the connection?",
+                  "Does the model's training on millions of books help it understand how events usually relate to one another?",
+                  "How does the model 'fill in the blanks' between two related statements in your context?"
+                ],
+                "resolution_insight": "The model uses its pre-trained understanding of logic and common sense to infer implicit relationships and causality between facts retrieved from the context.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "The model must read the entire document from the very first word to the last before it can retrieve any specific fact.",
+                "incorrect_belief": "Retrieval is a linear, sequential process analogous to human reading speed/effort.",
+                "socratic_sequence": [
+                  "Does a computer process text one word at a time like a human, or can it 'see' the whole window of tokens mathematically at once?",
+                  "If the fact you need is in the middle of a 10-page document, does the model get 'tired' by the time it gets there?",
+                  "How does the 'parallel' nature of modern AI architecture change how it 'looks' at a large block of text?"
+                ],
+                "resolution_insight": "Unlike humans, Transformers process all tokens in the context window in parallel, allowing them to 'attend' to relevant information regardless of its linear position in the text.",
+                "bloom_level": "Understanding"
               }
             ]
           },
@@ -6978,6 +7748,83 @@
                 ],
                 "resolution_insight": "Models often exhibit 'recency bias,' where they are more likely to be influenced by or correctly recall information at the very beginning or end of a prompt compared to the middle.",
                 "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "If I stay under the 8,000-token limit, the model processes the 1st token and the 7,999th token with the exact same weight.",
+                "incorrect_belief": "Spatial position within the limit has no impact on weight or influence.",
+                "socratic_sequence": [
+                  "If you read a long grocery list, are you naturally more likely to remember the eggs you just read or the milk from three pages ago?",
+                  "How might being the 'last word' in a prompt change how the model predicts the very next word?",
+                  "Does the model view the entire context window as a flat snapshot, or as a sequence leading up to a point?"
+                ],
+                "resolution_insight": "Even within architectural limits, tokens near the end of the prompt exert a stronger 'pull' on the generation process than those in the middle.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The model always prioritizes my very first instruction because it sets the 'rules' for the entire conversation.",
+                "incorrect_belief": "Primacy bias (initial tokens) is inherently stronger than recency bias.",
+                "socratic_sequence": [
+                  "Have you ever noticed a model 'forget' a formatting rule after a very long chat?",
+                  "If an instruction is 10,000 tokens away from the output, is it still the 'freshest' thing in the model's processing loop?",
+                  "Why might tokens closest to the current generation point be more influential for immediate token prediction?"
+                ],
+                "resolution_insight": "While 'primacy' exists, recency bias often causes models to drift away from initial instructions as the context grows longer.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "When the model focuses on the end of my prompt, it has to delete the beginning of the context window to make room.",
+                "incorrect_belief": "Recency bias is a memory-clearing mechanism rather than a weighted focus.",
+                "socratic_sequence": [
+                  "If the model deleted the start of the text, would it be able to answer a question that links a clue from the start with a clue at the end?",
+                  "Is focus a 'zero-sum' game where 'remembering' one thing require 'erasing' another?",
+                  "Could the information still be 'there' but simply ignored during a specific calculation?"
+                ],
+                "resolution_insight": "Recency bias is a matter of relative attention weights, not the physical deletion of earlier data within the context window.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model favors the end of the text because it is programmed to know that newer information is more up-to-date and accurate.",
+                "incorrect_belief": "Recency bias is a conscious logical preference for 'fresh' data.",
+                "socratic_sequence": [
+                  "Does the model have a sense of 'time' or 'dates' when reading a prompt, or does it just see a sequence of tokens?",
+                  "If you put a historical fact at the end and a current event at the start, which one would the model be biased toward?",
+                  "Is this bias a 'choice' made by the model's logic, or a byproduct of how sequences are mathematically processed?"
+                ],
+                "resolution_insight": "Recency bias is a mathematical artifact of how models process sequences, not an intentional judgment about the 'truth' or 'freshness' of the information.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "If a model has a huge 100,000-token context window, recency bias disappears because it has plenty of room.",
+                "incorrect_belief": "Context capacity and attention distribution are inversely related.",
+                "socratic_sequence": [
+                  "Does having a bigger library make it easier or harder to find a specific page in a specific book?",
+                  "As the 'middle' of a document gets larger, does it become more or less likely to get 'lost' relative to the ends?",
+                  "Could a larger window actually make the 'pull' of the most recent tokens even more dominant?"
+                ],
+                "resolution_insight": "Larger context windows often worsen the 'lost in the middle' effect, making the model rely even more heavily on the most recent tokens.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Recency bias only affects story details; the model will always obey my instructions regardless of where I place them.",
+                "incorrect_belief": "Instructional tokens are immune to positional bias because of their semantic 'status'.",
+                "socratic_sequence": [
+                  "To a model, is an 'instruction' a different type of data than a 'fact', or are they both just converted into tokens?",
+                  "If you hide the phrase 'Write in French' in the middle of a 20-page English essay, how likely is the model to miss it?",
+                  "Why do many advanced prompt engineers recommend putting the final instruction at the very bottom of a prompt?"
+                ],
+                "resolution_insight": "Instructions are processed using the same attention mechanics as data, meaning they can be 'drowned out' if placed in positions of low attention focus.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "The model's recency bias is helpful because it's just the model's way of filtering for the most relevant information.",
+                "incorrect_belief": "Recency bias is the same thing as semantic relevance filtering.",
+                "socratic_sequence": [
+                  "Can a model be distracted by a recent, irrelevant comment even if the important facts were provided earlier?",
+                  "Is 'closeness' in text (physical distance) the same thing as 'importance' to the topic (semantic relevance)?",
+                  "If the answer to a question at the end depends entirely on a definition at the start, does recency bias help or hinder the model?"
+                ],
+                "resolution_insight": "Recency bias is a positional heuristic that can actually cause a model to prioritize recent 'noise' over distant, but highly relevant, 'signals'.",
+                "bloom_level": "Evaluating"
               }
             ]
           },
@@ -6994,6 +7841,83 @@
                 ],
                 "resolution_insight": "The corpus is used only during training to update the model's weights; the model does not 'access' the raw training data once it is deployed.",
                 "bloom_level": "Remembering"
+              },
+              {
+                "student_statement": "The researchers must have read every sentence in the training data to make sure it was correct and helpful.",
+                "incorrect_belief": "Training data curation is a manual, human-reading process.",
+                "socratic_sequence": [
+                  "If a model is trained on one trillion words, and a person reads 250 words per minute, how many lifetimes would it take to read the whole dataset?",
+                  "Since humans can't read it all, what kind of automated tools might scientists use to filter out 'junk' or low-quality websites?",
+                  "If we can't check every line, does that mean the model might accidentally 'learn' incorrect or biased information from the web?"
+                ],
+                "resolution_insight": "Training sets are so massive that human review is impossible for the whole set; instead, developers use automated statistical filters and cleaning algorithms to prepare the corpus.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model is trained on the whole internet, so it should be just as good at Swahili as it is at English.",
+                "incorrect_belief": "The internet's linguistic distribution in the training corpus is balanced.",
+                "socratic_sequence": [
+                  "If you look at the public web today, is there an equal amount of content written in every language, or are some languages more common?",
+                  "If a model sees 1,000 examples of an English sentence for every 1 example of a Swahili sentence, which one will it understand more deeply?",
+                  "How does the volume of 'available data' on the internet for a specific culture affect the model's 'intelligence' in that language?"
+                ],
+                "resolution_insight": "Training corpora are heavily skewed toward high-resource languages like English because they dominate the web, leading to better performance in those languages compared to low-resource ones.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The model's training data includes news articles and social media posts from this morning.",
+                "incorrect_belief": "Training is a continuous, live feed of real-time data.",
+                "socratic_sequence": [
+                  "How long do you think it takes to process trillions of words through thousands of supercomputers?",
+                  "If the training process itself takes several months to complete, can the final model know about an event that happened yesterday?",
+                  "What do we call the specific date when a model stopped receiving new training data?"
+                ],
+                "resolution_insight": "Large models have a 'knowledge cutoff' date because the training process is a static, time-consuming event; they do not automatically learn from the live internet after training is finished.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Since it was trained on 'Harry Potter', the model has a copy of the entire book saved in its memory to look at.",
+                "incorrect_belief": "Training data is stored verbatim (word-for-word) inside the model's weights.",
+                "socratic_sequence": [
+                  "If the training data is 5,000 gigabytes in size, but the model file you download is only 5 gigabytes, can the original text still be inside it?",
+                  "When you learn how to ride a bike, do you store a video of your teacher in your brain, or do you store the 'skill' and 'balance'?",
+                  "Instead of storing the text, could the model be storing the 'mathematical patterns' of how those words usually follow one another?"
+                ],
+                "resolution_insight": "Models learn statistical weights and relationships between tokens rather than storing raw text; they 'reconstruct' information based on patterns rather than 'retrieving' it from a copy.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Common sense doesn't need training data; the model just figures out how the world works because it's 'smart'.",
+                "incorrect_belief": "Reasoning and common sense are inherent architectural features rather than learned from the corpus.",
+                "socratic_sequence": [
+                  "If a model was trained only on medical journals and never on stories or conversations, would it know that 'people usually wear shoes outside'?",
+                  "Where does a human child get their 'common sense'\u2014is it there at birth, or is it learned by observing millions of daily interactions?",
+                  "How might reading millions of everyday blog posts and stories help a model predict that 'if you drop a glass, it will likely break'?"
+                ],
+                "resolution_insight": "What we perceive as 'common sense' is actually the model reflecting the massive amount of human experience and physical-world logic captured in the diverse training corpus.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "If we want the model to be an expert on cats, we should include the same 'Cat Encyclopedia' 1,000 times in the training data.",
+                "incorrect_belief": "Simple repetition of data (redundancy) improves the depth of knowledge.",
+                "socratic_sequence": [
+                  "If you read the exact same page of a book 100 times, are you learning more facts, or are you just memorizing that one specific phrasing?",
+                  "If a model sees the same sentence everywhere, will it become more flexible at explaining the concept, or will it get 'stuck' on that one way of saying it?",
+                  "Could seeing the same data too often lead the model to ignore other, more diverse information about cats?"
+                ],
+                "resolution_insight": "Effective training requires data diversity and 'deduplication'; repeating the same data can lead to 'overfitting,' where the model memorizes specific text instead of learning general concepts.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "The training data is just a long string of paragraphs; it doesn't include things like computer code or data tables.",
+                "incorrect_belief": "The training corpus is limited to narrative or conversational prose.",
+                "socratic_sequence": [
+                  "If a model can write a functioning website in HTML, where did it see the patterns of how those tags are arranged?",
+                  "Besides stories, what other ways do humans record information online (think about spreadsheets or programming repositories)?",
+                  "How might seeing a 'table of ingredients' versus a 'story about a chef' help the model learn different ways of organizing logic?"
+                ],
+                "resolution_insight": "Modern corpora include a wide variety of structured and unstructured data, including code, math, and tables, which is essential for the model to learn logic and formatting.",
+                "bloom_level": "Understanding"
               }
             ]
           },
@@ -7010,6 +7934,83 @@
                 ],
                 "resolution_insight": "High-quality, clean, and factually accurate data is more effective for training than larger volumes of noisy, repetitive, or low-quality text.",
                 "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "The model is smart enough to realize when training text is wrong and just ignores those parts.",
+                "incorrect_belief": "Models have an inherent truth-filter during pre-training.",
+                "socratic_sequence": [
+                  "If a model's only goal is to predict the most likely 'next word' based on patterns, how does it distinguish a 'true' pattern from a 'false' one?",
+                  "If a dataset contains 1,000 articles saying the Earth is flat and only 1 saying it is round, which pattern will the model find more likely?",
+                  "Without a human 'teacher' telling the model what is a lie during the pre-training phase, what mechanism would it use to reject incorrect information?"
+                ],
+                "resolution_insight": "LLMs are statistical pattern matchers, not truth-seekers; they will faithfully learn and replicate whatever inaccuracies or falsehoods are prevalent in their training data.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "If every word in a document is spelled correctly, it is considered high-quality data for the model.",
+                "incorrect_belief": "Data quality is defined solely by orthographic and grammatical correctness.",
+                "socratic_sequence": [
+                  "Can a perfectly spelled paragraph still contain logical contradictions or harmful instructions?",
+                  "If a manual on fixing a car is spelled perfectly but the steps are in a random, nonsensical order, is it 'high quality' for learning how to be a mechanic?",
+                  "Besides spelling, what other attributes\u2014like logic, helpfulness, or clarity\u2014make a text useful for a model to learn from?"
+                ],
+                "resolution_insight": "High-quality data requires semantic coherence, factual accuracy, and logical structure, not just a lack of typos.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Raw data from the internet is the best training material because it represents how humans actually talk.",
+                "incorrect_belief": "Unfiltered, natural data is superior to curated or 'cleaned' datasets.",
+                "socratic_sequence": [
+                  "If you learned to communicate only by reading anonymous YouTube comment sections, how would you likely behave in a professional interview?",
+                  "Does the 'average' internet conversation contain more helpful information or more repetitive noise, spam, and bot-generated text?",
+                  "Why might researchers spend months 'filtering' web data to remove toxicity and gibberish before starting the training process?"
+                ],
+                "resolution_insight": "Raw internet data is often highly toxic, repetitive, and disorganized; cleaning and curation are necessary to ensure the model is helpful and safe.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Small bits of 'noise,' like HTML tags or random numbers in the training text, don't affect the model's performance at all.",
+                "incorrect_belief": "Architectural robustness makes data cleaning/preprocessing of formatting artifacts optional.",
+                "socratic_sequence": [
+                  "If you are trying to learn a poem, but every third word is a random computer code like '<div>', how does that affect your ability to understand the poem's meaning?",
+                  "If the model learns that '<div>' often follows the word 'Hello' in its training data, what might it start doing when you try to chat with it?",
+                  "How does including 'garbage' formatting waste the model's limited capacity to learn actual language patterns?"
+                ],
+                "resolution_insight": "Formatting noise forces the model to waste parameters learning irrelevant patterns, which can lead to 'hallucinated' code or artifacts appearing in the model's final output.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "It doesn't matter if the training stories are factually true as long as the model learns how to put sentences together.",
+                "incorrect_belief": "Language acquisition (syntax) is independent of factual world-modeling (semantics).",
+                "socratic_sequence": [
+                  "If a model learns that '2+2=5' is a common and grammatically correct sentence structure, will it ever be able to provide the correct answer to a math problem?",
+                  "Can a model truly learn 'reasoning' if the examples it studies are filled with logical fallacies and false premises?",
+                  "How do the 'facts' within the training data help build the model's internal map of how the world works?"
+                ],
+                "resolution_insight": "In LLMs, language is the medium for world knowledge; if the model learns from false data, its ability to reason and provide useful information is fundamentally compromised.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Having the exact same high-quality paragraph 100 times in the dataset is better than having it once because it reinforces the knowledge.",
+                "incorrect_belief": "Duplicate data is beneficial for reinforcing facts or strengthening learning.",
+                "socratic_sequence": [
+                  "If you read the same single page of a history book 100 times, have you learned more history than if you read 100 different pages?",
+                  "If a model sees one specific sentence too many times, will it learn the general concept or will it just 'memorize' that exact sequence of words?",
+                  "What happens when a model is so focused on one specific memorized phrase that it can no longer adapt that knowledge to a new, different question?"
+                ],
+                "resolution_insight": "Data deduplication is vital because redundant data causes 'overfitting,' where the model memorizes specific strings of text instead of learning to generalize and reason.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "We should only use highly complex academic papers for training to make the model as 'smart' as possible.",
+                "incorrect_belief": "Higher linguistic complexity is the sole indicator of high-quality data.",
+                "socratic_sequence": [
+                  "Could a model explain 'gravity' to a five-year-old if it has only ever read advanced, jargon-heavy physics journals?",
+                  "If a model never sees simple, everyday conversational language, how effectively will it understand a user's basic instructions?",
+                  "Why is a balance of simple instructions and complex reasoning data more useful for a 'general purpose' AI than technical data alone?"
+                ],
+                "resolution_insight": "Quality data must include diversity; 'instruction data' (clear, simple explanations) is often more valuable for shaping model behavior than dense, technical text.",
+                "bloom_level": "Creating"
               }
             ]
           },
@@ -7026,6 +8027,83 @@
                 ],
                 "resolution_insight": "Diversity in the corpus ensures the model learns different registers (formal vs. informal), domains (code vs. poetry), and cultural perspectives.",
                 "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If a model is trained on enough English data, it will automatically understand other languages because the logic of thinking is the same.",
+                "incorrect_belief": "General intelligence scales across languages regardless of specific linguistic data coverage.",
+                "socratic_sequence": [
+                  "If you are a genius at physics in English, does that mean you automatically know the French words for 'gravity' or 'mass'?",
+                  "How can a model predict the next word in a Spanish sentence if it has never seen the patterns of Spanish grammar?",
+                  "Why do developers need to specifically source large datasets in multiple languages rather than just using one massive English dataset?"
+                ],
+                "resolution_insight": "Language-specific data is essential because models learn the statistical patterns of a specific language; they cannot 'reason' their way into a language they haven't been exposed to.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "To make a model an expert in a field like law, we should only train it on formal legal documents and remove all casual text.",
+                "incorrect_belief": "Deep domain expertise is best achieved by excluding 'noisy' or non-expert data formats.",
+                "socratic_sequence": [
+                  "If a lawyer only ever read law books and never spoke to a regular person, would they understand a client's casual explanation of a problem?",
+                  "How would a model know that a 'lawsuit' in a formal text is the same concept as 'suing someone' in a casual chat if it hasn't seen both?",
+                  "Does 'noisy' data like social media help the model understand how humans actually ask questions about the law?"
+                ],
+                "resolution_insight": "Diverse data allows the model to map between different 'registers' (formal vs. informal), enabling it to understand user queries and provide accessible answers.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Data coverage means the model contains a record of every specific event that occurred during its training years.",
+                "incorrect_belief": "Coverage is a historical record of events rather than a representative sample of linguistic patterns.",
+                "socratic_sequence": [
+                  "Is there a difference between a model knowing 'how' to describe a wedding and 'recording' every wedding that happened in 2022?",
+                  "If the training data doesn't include a specific local news report, can the model accurately 'remember' that event?",
+                  "Does a model's 'knowledge' come from a database of facts or from predicting likely sequences of words based on general patterns?"
+                ],
+                "resolution_insight": "Coverage refers to the breadth of topics, styles, and concepts seen, which allows for generalization, rather than an exhaustive archival record of every individual fact or event.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "A model trained on the entire internet will have a perfectly balanced view of all human cultures.",
+                "incorrect_belief": "The internet's data distribution is a mirrors-of-reality representation of global cultural diversity.",
+                "socratic_sequence": [
+                  "Which languages and cultures have the most websites, digitized books, and social media presence?",
+                  "If 90% of the training data comes from a Western perspective, how will the model likely describe a tradition from a less-represented region?",
+                  "Does 'huge volume' of data automatically mean 'equal representation' of every group?"
+                ],
+                "resolution_insight": "Data coverage is often skewed by the 'digital divide,' meaning models often over-represent cultures with a massive digital footprint while under-representing others.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "The model learns to code because it was trained on computer science textbooks that explain the rules of programming.",
+                "incorrect_belief": "Technical skills are acquired through instructional theory rather than exposure to functional examples.",
+                "socratic_sequence": [
+                  "Do most people learn to code just by reading definitions, or by looking at millions of lines of actual code in repositories like GitHub?",
+                  "Which is more common in a model's training set: a textbook explaining a 'for loop' or the billions of 'for loops' found in open-source software?",
+                  "If a model only saw textbooks but no actual code files, would it know how to fix a specific bug in a complex app?"
+                ],
+                "resolution_insight": "A model's coding ability comes primarily from massive exposure to diverse, real-world code (functional data) rather than just theoretical explanations (textbooks).",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "If the model's training data covers everything from the past, it will be able to accurately predict the future.",
+                "incorrect_belief": "Linguistic coverage equals predictive or prophetic capability for real-world events.",
+                "socratic_sequence": [
+                  "If a model has read every weather report from 1900 to 2020, does it 'know' if it will rain tomorrow in your city?",
+                  "Does seeing the pattern of how stories end mean the model can see how real history will unfold?",
+                  "Is the model predicting 'truth' or is it predicting the 'most likely next word' based on historical data?"
+                ],
+                "resolution_insight": "Coverage of the past helps the model understand causality and narrative patterns, but it remains a statistical engine, not a forecasting tool with real-world sensors.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Including 'bad' data, like poorly written essays or math errors, will make the model's own output worse and should be avoided.",
+                "incorrect_belief": "Training data should only consist of 'perfect' examples to ensure 'perfect' outputs.",
+                "socratic_sequence": [
+                  "If you only ever saw correct math, would you be able to identify where a student made a mistake in their homework?",
+                  "To help a user improve a 'bad' essay, does the model need to know what a 'bad' essay looks like in the first place?",
+                  "How can a model learn to be robust against typos in a user's prompt if it never saw a typo during training?"
+                ],
+                "resolution_insight": "Exposure to a 'long tail' of diverse data, including errors and low-quality text, allows the model to recognize, correct, and remain stable when faced with imperfect human input.",
+                "bloom_level": "Evaluating"
               }
             ]
           },
@@ -7042,6 +8120,83 @@
                 ],
                 "resolution_insight": "Web scraping involves complex pipelines to extract clean text from HTML, filter out 'boilerplate' (headers/footers), and respect robots.txt or copyright.",
                 "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "The model scrapes the web in real-time to answer my questions.",
+                "incorrect_belief": "Training data acquisition is a live, continuous process during inference.",
+                "socratic_sequence": [
+                  "If you use an LLM while your internet is disconnected, can it still answer questions based on its training?",
+                  "Why do AI companies list 'knowledge cutoff' dates for their models?",
+                  "How would the massive amount of time needed to process trillions of words affect a model's ability to give an instant reply?"
+                ],
+                "resolution_insight": "Web scraping for training is a 'static' phase that happens before the model is released; the model's knowledge is frozen at the point training ended.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If a website is public, developers can scrape it for training without any rules or restrictions.",
+                "incorrect_belief": "Public accessibility equals legal and ethical permission for AI training.",
+                "socratic_sequence": [
+                  "What is the purpose of a 'robots.txt' file that web developers include on their sites?",
+                  "If a photographer puts their portfolio online for people to see, does that mean they've given up their copyright?",
+                  "Why might a news organization block AI crawlers from accessing their articles?"
+                ],
+                "resolution_insight": "Web scraping must respect legal frameworks, including copyright law, Terms of Service, and technical 'no-crawl' signals like robots.txt.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Scraped data is ready to use immediately because it is already just text.",
+                "incorrect_belief": "Raw HTML is identical to clean natural language training data.",
+                "socratic_sequence": [
+                  "If you 'View Source' on a webpage, what do you see besides the actual article text?",
+                  "Would a language model be 'smarter' if it spent half its time learning Javascript tags and CSS styling code instead of sentences?",
+                  "How do developers distinguish between the main story and the 'Click here to subscribe' pop-ups on a site?"
+                ],
+                "resolution_insight": "Raw scraped data is 'noisy' and requires extensive cleaning to remove HTML boilerplate, ads, and navigation menus before it can be used for training.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The model understands how a website looks, like where the buttons are, because it was scraped from the page.",
+                "incorrect_belief": "Web scraping preserves the visual and spatial layout of a website for the model's consumption.",
+                "socratic_sequence": [
+                  "If we strip all the formatting instructions from a page and only keep the text, can we still tell what color the buttons were?",
+                  "Does a text-based LLM process pixels or sequences of tokens?",
+                  "If the model only receives a list of words, how would it know if one word was 'to the left' of another on the screen?"
+                ],
+                "resolution_insight": "Scraping for LLMs generally extracts raw text and basic structure, meaning the model understands the language but not the visual design or user interface of the source site.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Scraping social media is the best way to teach a model truth because it reflects what real people say.",
+                "incorrect_belief": "Social media data is inherently high-quality or accurate for world-modeling.",
+                "socratic_sequence": [
+                  "Do people on social media always post facts, or do they also post sarcasm, opinions, and misinformation?",
+                  "If a scraper collects 5,000 posts saying a celebrity is dead when they aren't, what will the model learn?",
+                  "How might the 'noise' of internet slang and typos affect a model's ability to learn formal grammar?"
+                ],
+                "resolution_insight": "Social media data is often low-quality, biased, or factually incorrect, requiring heavy filtering to prevent the model from learning toxic or false patterns.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Scrapers can get any data on the internet, even from private forums or password-protected sites.",
+                "incorrect_belief": "Web scraping bypasses authentication and privacy barriers.",
+                "socratic_sequence": [
+                  "If a scraper needs a login and password to see your private messages, can it access them automatically?",
+                  "What is the difference between the 'surface web' that search engines see and the 'deep web' that requires credentials?",
+                  "Why is most AI training data sourced from sites like Wikipedia rather than private Facebook groups?"
+                ],
+                "resolution_insight": "Scrapers are typically limited to the 'surface web'\u2014content that is publicly available and indexable without a login.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If a scraper finds a fact on one website, the model will definitely 'know' that fact perfectly.",
+                "incorrect_belief": "The act of scraping information guarantees its accurate retrieval or memorization by the model.",
+                "socratic_sequence": [
+                  "If you read a random fact once in a book of a million pages, would you remember it forever?",
+                  "Does a model save facts like a database entry, or does it learn the statistical likelihood of words appearing together?",
+                  "What happens if a scraper finds three websites that all list different birth dates for the same person?"
+                ],
+                "resolution_insight": "Scraping is just the collection phase; a model's 'knowledge' depends on how often information appears and how the model weights that data during training.",
+                "bloom_level": "Understanding"
               }
             ]
           },
@@ -7057,6 +8212,83 @@
                   "Why does reading books help the model write better code comments?"
                 ],
                 "resolution_insight": "By training on code datasets alongside natural language, models learn to bridge the gap between human requirements and machine-executable logic.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model only uses code datasets so it can help people write programs; it doesn't help with regular English tasks.",
+                "incorrect_belief": "Code datasets have no cross-functional benefit for natural language reasoning.",
+                "socratic_sequence": [
+                  "Does computer code require a stricter logical structure than a casual conversation?",
+                  "If a model learns the 'if-then' logic of a programming language, could that help it follow complex multi-step instructions in English?",
+                  "How might seeing a step-by-step algorithm help a model explain a cooking recipe more clearly?"
+                ],
+                "resolution_insight": "Code datasets help models develop structured reasoning and logical consistency, which improves their performance in non-coding tasks like problem-solving and following complex instructions.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Models are trained on fiction books just to learn how to tell stories, but they get all their 'real' intelligence from scientific articles.",
+                "incorrect_belief": "Different datasets contribute only to their literal genre or domain of origin.",
+                "socratic_sequence": [
+                  "What can a novel teach a model about how humans express emotions or subtext that a scientific paper might not?",
+                  "Why is it important for a model to see how characters interact over hundreds of pages in a book versus a short news snippet?",
+                  "Could a model learn the rules of grammar and sentence structure just as effectively from a fantasy novel as from a textbook?"
+                ],
+                "resolution_insight": "Books provide long-form context and complex linguistic relationships that help models understand narrative flow, human behavior, and long-range dependencies across all types of text.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If the model finds a fact in a book and a different fact in a news article, it will prioritize the book because books are more reliable.",
+                "incorrect_belief": "Models possess an inherent hierarchy of source reliability based on the format of the training data.",
+                "socratic_sequence": [
+                  "Does the model have a 'tag' on every word it knows telling it if that word came from a book or a website?",
+                  "If a model sees a specific claim 1,000 times on the web but only once in a book, which one is it statistically more likely to repeat?",
+                  "Is the model trying to find the 'ultimate truth' during training, or is it trying to predict the most likely next word based on patterns?"
+                ],
+                "resolution_insight": "Models predict text based on statistical frequency across the entire training corpus; they do not have an inherent 'trust' mechanism for specific media formats unless explicitly programmed via fine-tuning.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Since code is just math instructions, the model doesn't need to learn the 'words' in code datasets, just the symbols.",
+                "incorrect_belief": "Coding datasets are processed as purely mathematical symbols rather than as a structured language containing natural language elements.",
+                "socratic_sequence": [
+                  "Are variable names like 'user_age' or 'total_price' in a script usually written in English or in random symbols?",
+                  "How would a model know what a function is intended to do if it ignored the text-based comments written by the programmer?",
+                  "If a model only saw symbols, how would it be able to explain why a piece of code isn't working to a human user?"
+                ],
+                "resolution_insight": "Code datasets are 'bilingual,' containing both formal logic and natural language (comments and variable names), which allows the model to bridge the gap between human concepts and logical operations.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The only reason we include books in the training data is to give the model a bigger vocabulary list.",
+                "incorrect_belief": "The value of large text corpora is purely lexical (learning more words) rather than structural or stylistic.",
+                "socratic_sequence": [
+                  "If you read a dictionary from cover to cover, would you know how to write a compelling mystery novel?",
+                  "How does a 500-page book help a model understand how a character mentioned in Chapter 1 might be relevant in Chapter 20?",
+                  "How does exposure to thousands of different authors help a model mimic different 'voices' or styles of writing for a user?"
+                ],
+                "resolution_insight": "Books teach the model about long-range dependencies (connecting information across vast distances of text) and stylistic variety, which is essential for maintaining coherence in long responses.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The model uses article datasets to store a database of current events, which is why it can answer questions about the news.",
+                "incorrect_belief": "Article datasets function as a static, searchable database of events within the model.",
+                "socratic_sequence": [
+                  "When the model answers a question about a news event, is it opening a digital file or calculating the probability of the next word?",
+                  "If the model's training data ended two years ago, why can't it 'look up' an article from yesterday in its training set?",
+                  "What happens to the specific text of an article once the model's internal 'weights' have finished adjusting during training?"
+                ],
+                "resolution_insight": "Articles provide patterns of how facts and events are discussed, but the model learns a generalized representation of that information rather than storing the articles as a retrieval-based database.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "A model can't learn anything from code datasets if the code doesn't have any comments or explanations in English.",
+                "incorrect_belief": "Semantic understanding of code is entirely dependent on natural language accompaniment.",
+                "socratic_sequence": [
+                  "Does a mathematical equation require a caption for you to understand the relationship between the numbers?",
+                  "Does the way a 'loop' functions in a program change based on whether there is a comment explaining it?",
+                  "If a model sees the same structural pattern of code millions of times, can it learn the 'grammar' of that pattern without being told what it's called?"
+                ],
+                "resolution_insight": "Models can learn the structural logic and syntax of programming languages through the repetitive patterns and rigid rules found in raw code files, even without natural language descriptions.",
                 "bloom_level": "Understanding"
               }
             ]
@@ -7074,6 +8306,83 @@
                 ],
                 "resolution_insight": "Bias usually emerges from the data itself; curation is the active (and difficult) process of removing toxicity and ensuring balanced representation.",
                 "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Data filtering just means using a 'find and replace' tool to remove swear words and insults.",
+                "incorrect_belief": "Filtering is a simple keyword-based lexical process.",
+                "socratic_sequence": [
+                  "If a text is polite but contains millions of lines of computer-generated gibberish, would a 'swear word' filter catch it?",
+                  "How would a list of bad words help identify a document that contains sensitive private medical information written in clinical language?",
+                  "Besides 'mean' words, what other characteristics might make a piece of web text 'low quality' for a model's education?"
+                ],
+                "resolution_insight": "Filtering involves complex heuristics and secondary models to assess overall text quality, remove repetitive boilerplate, and identify sensitive personal information.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Since the data is curated, the model won't learn any facts that are wrong or outdated.",
+                "incorrect_belief": "Curation is a truth-verification process.",
+                "socratic_sequence": [
+                  "If two high-quality scientific papers from the training set disagree on a theory, how would a filter decide which one is 'true'?",
+                  "Can an automated algorithm know for certain if a news event from three years ago has been debunked today?",
+                  "Does 'filtering for high-quality writing' necessarily mean the same thing as 'filtering for absolute factual accuracy'?"
+                ],
+                "resolution_insight": "Curation focuses on the quality of the source and the coherence of the language, but it cannot verify the objective truth of every claim within trillions of words.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Once the developers filter the data for toxicity, the model becomes completely objective and neutral.",
+                "incorrect_belief": "Filtering is an exhaustive solution to the problem of algorithmic bias.",
+                "socratic_sequence": [
+                  "If a dataset has 1,000 stories about male doctors and only 10 about female doctors, is there any 'toxicity' for a filter to remove?",
+                  "If all those stories are perfectly polite, what pattern will the model still learn about who 'usually' performs that job?",
+                  "Can a filter remove the subtle cultural perspectives and assumptions inherent in the people who wrote the original text?"
+                ],
+                "resolution_insight": "Filtering removes overt 'toxic' content, but it often leaves behind 'representation bias'\u2014statistical imbalances in how different groups or ideas are described.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "We should filter out everything except the most formal, academic, and perfect text to make the model the smartest.",
+                "incorrect_belief": "Maximizing filtering stringency leads to the best model performance.",
+                "socratic_sequence": [
+                  "If the model only reads PhD theses, how well will it understand a user's casual text message or a common slang phrase?",
+                  "What happens to the model's 'common sense' about daily life if we delete all informal, everyday conversations from its library?",
+                  "If you only ever read textbooks, would you be able to write a creative story or a friendly email?"
+                ],
+                "resolution_insight": "Over-curation can make a model 'brittle,' leaving it unable to understand or generate the diverse range of natural human language used in real-world interactions.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Data curation is a one-time step where you clean the data before you even start building the model.",
+                "incorrect_belief": "Data curation is a static, isolated pre-processing step.",
+                "socratic_sequence": [
+                  "What if researchers train a small test version of the model and find it has accidentally memorized thousands of social media passwords?",
+                  "Would they need to adjust their filters and re-curate the data before starting the full-scale training?",
+                  "Why might researchers choose to use different 'filters' for the initial training phase versus the final 'fine-tuning' phase?"
+                ],
+                "resolution_insight": "Curation is an iterative and ongoing process where findings from early model versions often lead to refined filtering strategies and better data selection.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The Large Language Model filters its own training data as it reads it to decide what is worth learning.",
+                "incorrect_belief": "Data selection is an autonomous function of the model being trained.",
+                "socratic_sequence": [
+                  "Before a model is trained, does it have the 'knowledge' required to judge if a sentence is high-quality or low-quality?",
+                  "Who has to create the rules or select the external tools that evaluate the data before the training starts?",
+                  "If a model hasn't learned English yet, how could it 'decide' which English books are worth reading?"
+                ],
+                "resolution_insight": "Filtering is performed by external algorithms, heuristics, and human-defined pipelines before the actual training of the model begins.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "I don't need to worry about my private information being in the training data because the curation process automatically hides it.",
+                "incorrect_belief": "Curation is a perfect, automated PII (Personally Identifiable Information) scrubber.",
+                "socratic_sequence": [
+                  "Is it easier for a computer program to find a standard Social Security Number or a subtle mention of a person's home address in a casual blog post?",
+                  "If a filter is 99.9% accurate, what happens to the remaining 0.1% of private data across a dataset of a trillion words?",
+                  "Can we ever be 100% certain that an automated script caught every single piece of private data on the entire public internet?"
+                ],
+                "resolution_insight": "While curation includes PII removal, the massive scale of training data makes it impossible to guarantee that all sensitive information has been successfully scrubbed.",
+                "bloom_level": "Evaluating"
               }
             ]
           },
@@ -7090,6 +8399,83 @@
                 ],
                 "resolution_insight": "Deduplication prevents the model from 'memorizing' (overfitting) specific strings of text, forcing it to learn more generalizable patterns.",
                 "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "The model uses duplicates to figure out what is true; if it sees a fact 1,000 times, it knows it's a fact.",
+                "incorrect_belief": "Repetition in training data acts as a 'truth signal' or consensus mechanism for the model.",
+                "socratic_sequence": [
+                  "If a million websites incorrectly claim the earth is flat and one scientific paper says it is a sphere, which would the model see more often?",
+                  "Is a piece of information more 'true' because it was copied and pasted across a thousand spam blogs?",
+                  "How can the model learn to distinguish between a popular lie and an unpopular truth if it only relies on how many times it sees a sentence?"
+                ],
+                "resolution_insight": "Deduplication ensures the model doesn't confuse popularity or repetition with factual accuracy, preventing 'echo chamber' effects in the weights.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Deduplication only removes text that is 100% word-for-word identical.",
+                "incorrect_belief": "Deduplication is a simple string-matching process rather than fuzzy or semantic matching.",
+                "socratic_sequence": [
+                  "If I change a single comma or capitalize one letter in a long paragraph, is it providing any new information to you?",
+                  "If a model sees 5,000 versions of a news story where only the date in the corner is different, has it really learned something new about language?",
+                  "Why might researchers use 'fuzzy matching' to catch documents that are 95% the same instead of just 100%?"
+                ],
+                "resolution_insight": "Modern deduplication targets 'near-duplicates' to remove redundant information that differs only in minor formatting or trivial characters.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Deduplication is just a way to save disk space and make the training finish faster.",
+                "incorrect_belief": "The primary benefit of deduplication is resource efficiency rather than model performance or generalization.",
+                "socratic_sequence": [
+                  "If we had infinite storage and infinite time, would it be beneficial to let the model see the same legal disclaimer a billion times?",
+                  "What happens to a model's 'attention' if its training data is dominated by a few repeated patterns?",
+                  "Does a model that sees the same thing over and over get better at reasoning, or just better at reciting that specific text?"
+                ],
+                "resolution_insight": "While efficiency is a side benefit, the main goal of deduplication is to prevent overfitting, where the model memorizes specific training examples instead of learning general logic.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Humans repeat themselves in real life, so removing duplicates makes the model sound robotic and unnatural.",
+                "incorrect_belief": "High-fidelity modeling of human communication requires matching the statistical distribution of redundancy found in raw data.",
+                "socratic_sequence": [
+                  "When you learn to speak, do you learn better by hearing one new sentence or by hearing the exact same sentence for five hours?",
+                  "If a model's training data is 50% 'Click here to subscribe,' will its answers be more human or more like an advertisement?",
+                  "Can a model still learn common conversational phrases without needing to see the exact same 10-page article ten times?"
+                ],
+                "resolution_insight": "Language models learn the patterns of human repetition through variety across different contexts, not through seeing identical blocks of text repeatedly.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "If we deduplicate everything, the model will lose rare words and its vocabulary will shrink.",
+                "incorrect_belief": "Deduplication is an aggressive filter that targets individual words rather than redundant documents or passages.",
+                "socratic_sequence": [
+                  "Does deduplication target unique words, or does it look for redundant blocks of text like whole paragraphs and articles?",
+                  "If a rare word appears in two completely different contexts (like a poem and a science paper), would a deduplication algorithm remove one of them?",
+                  "Which helps the model more: seeing a word once in a meaningful context, or seeing it 100 times in the exact same sentence?"
+                ],
+                "resolution_insight": "Deduplication removes redundant sequences of text; as long as a word appears in at least one unique context, the model will still learn it.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Deduplication is bad because it prevents the model from understanding what the 'average' person thinks.",
+                "incorrect_belief": "Repetition in the training corpus is a necessary proxy for cultural consensus or democratic representation.",
+                "socratic_sequence": [
+                  "Does the internet's most repeated content, like spam or legal boilerplate, represent what people actually think?",
+                  "If one person's blog post is copied onto 1,000 'content farm' sites, does that mean that person's opinion is 1,000 times more important?",
+                  "How can we ensure a model is balanced without letting a few loud or repeated voices drown out everyone else?"
+                ],
+                "resolution_insight": "Deduplication prevents a few highly-copied sources from disproportionately influencing the model's worldview, leading to more balanced outputs.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "We only need to deduplicate messy web data; we should keep all copies of high-quality textbooks to reinforce them.",
+                "incorrect_belief": "High-quality data is immune to the negative effects of overfitting and redundancy.",
+                "socratic_sequence": [
+                  "If a student reads the exact same Chapter 1 of a math book ten times, are they as prepared as a student who reads Chapters 1 through 10 once?",
+                  "What happens if the model 'memorizes' a specific textbook example so strongly it can't solve a slightly different version of the problem?",
+                  "Is the goal of training to memorize a specific book verbatim, or to understand the underlying concepts?"
+                ],
+                "resolution_insight": "Even high-quality data causes overfitting if repeated too much; the model must be forced to learn the 'logic' of the subject rather than memorizing the specific phrasing of a textbook.",
+                "bloom_level": "Creating"
               }
             ]
           },
@@ -7105,6 +8491,83 @@
                   "Why might a model be better at English than Swahili?"
                 ],
                 "resolution_insight": "Models are natively multilingual; they learn a shared 'concept space' across all languages in their training set, though they are biased toward languages with more data.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model has a secret internal switch it flips to 'Spanish Mode' when I start typing in Spanish.",
+                "incorrect_belief": "Models have discrete, partitioned processing modes for different languages.",
+                "socratic_sequence": [
+                  "If you use a sentence that mixes English and Spanish words (Spanglish), can the model still understand the whole message?",
+                  "How would the model handle words like 'taxi' or 'pizza' that are identical in many languages if it had to be in one 'mode' at a time?",
+                  "If the model is one big neural network, does it make more sense for it to have 'walls' between languages or one shared space for all patterns?"
+                ],
+                "resolution_insight": "LLMs process all languages within a single, unified neural network; they use the same weights to predict the next token regardless of the language, relying on the input context to determine the appropriate linguistic patterns.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model is bad at Swahili because Swahili is a much more complex and difficult language to learn than English.",
+                "incorrect_belief": "Performance disparity is caused by the inherent linguistic difficulty of a language's grammar or syntax.",
+                "socratic_sequence": [
+                  "Does a baby born into a Swahili-speaking household take longer to learn to talk than a baby in an English-speaking household?",
+                  "If we gave the model 10 terabytes of Swahili data and only 1 gigabyte of English data, which language would it be better at?",
+                  "Is the 'difficulty' located in the grammar of the language itself, or in the amount of training material available on the internet?"
+                ],
+                "resolution_insight": "Language performance gaps in LLMs are primarily driven by data scarcity (low-resource vs. high-resource) in the training corpus, not the inherent complexity of the language's linguistic structure.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The model was trained using a giant digital dictionary to link words in different languages together.",
+                "incorrect_belief": "Cross-lingual understanding is based on explicit mapping or look-up tables provided by developers.",
+                "socratic_sequence": [
+                  "How would a dictionary help the model understand new slang or metaphors that haven't been recorded in a formal book yet?",
+                  "If a model reads millions of sentences where 'cat' and 'gato' both appear near words like 'meow' and 'yarn,' could it guess they mean the same thing without a dictionary?",
+                  "Why would a model be able to translate concepts that have no direct one-word equivalent in another language if it were only using a dictionary?"
+                ],
+                "resolution_insight": "Models learn relationships across languages through statistical co-occurrence and context patterns; they discover that 'cat' and 'gato' occupy similar positions in their respective semantic spaces because they are used in similar ways.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model thinks that all languages using the Cyrillic alphabet, like Russian and Bulgarian, are basically the same language.",
+                "incorrect_belief": "Models categorize languages based on visual script or characters rather than semantic and grammatical patterns.",
+                "socratic_sequence": [
+                  "If you see two people using the same English alphabet but one is writing 'Hello' and the other is writing 'Hola,' do you assume they are speaking the same language?",
+                  "Can the model distinguish between 'color' and 'colour' even though they share almost all the same letters?",
+                  "How does a model tell the difference between Spanish and Portuguese, which share most of their alphabet but have different grammar and vocabulary?"
+                ],
+                "resolution_insight": "While shared scripts provide some overlapping token information, the model distinguishes between languages by identifying unique statistical patterns in word usage, syntax, and grammatical structures specific to each language.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The model learned to be multilingual because developers fed it millions of perfectly translated 'Side-A/Side-B' documents.",
+                "incorrect_belief": "Parallel corpora (translated pairs) are the primary or only way models learn to bridge multiple languages.",
+                "socratic_sequence": [
+                  "Is most of the text on the internet a perfect translation of another page, or is most of it just people writing in their native language?",
+                  "If a model reads a history book in German and a math book in Japanese, can it still learn that both are talking about the 'past' or 'numbers'?",
+                  "Could a model find similarities between 'water' and 'eau' simply by noticing that both frequently appear in sentences about thirst and rain, even if it never saw them side-by-side?"
+                ],
+                "resolution_insight": "While parallel data is useful, LLMs gain most of their multilingual ability through 'monolingual' data, learning a shared 'concept space' where ideas are represented similarly regardless of the specific language used to describe them.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Because the model is fluent in Thai, it understands the cultural values of a person in rural Thailand just as well as a person in London.",
+                "incorrect_belief": "Linguistic fluency in a model implies cultural competence and a lack of data-driven cultural bias.",
+                "socratic_sequence": [
+                  "If 90% of a model's training data comes from Western websites, whose 'common sense' or social norms will it likely suggest as the default?",
+                  "Can a person learn to speak a language perfectly while still failing to understand the social etiquette or traditions of the people who speak it?",
+                  "If a Thai word has a deep religious or local meaning that is rarely explained in the English-dominated training set, will the model capture that nuance correctly?"
+                ],
+                "resolution_insight": "Language models often reflect the cultural biases of their most dominant training language (usually English), leading to 'cultural misalignment' where they may apply Western logic or social norms to non-Western linguistic contexts.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Engineers had to manually program in the grammar rules for every language the model knows, like how Japanese verbs go at the end of the sentence.",
+                "incorrect_belief": "Multilingual support requires manual linguistic engineering and hard-coded rule-following for each language.",
+                "socratic_sequence": [
+                  "If an AI engineer doesn't speak Japanese, how would they be able to write down every possible rule for that language accurately?",
+                  "If we discovered a new language tomorrow and fed the model 100,000 books in that language, would we need to wait for a programmer to 'enable' it?",
+                  "How did you learn where the verb goes in your first language\u2014was it by reading a rulebook or by naturally hearing thousands of examples?"
+                ],
+                "resolution_insight": "LLMs are 'unsupervised' learners that induce grammatical structures and syntax rules entirely from the statistical distribution of tokens in their training data, without any manual programming of linguistic rules.",
                 "bloom_level": "Understanding"
               }
             ]
@@ -7122,6 +8585,83 @@
                 ],
                 "resolution_insight": "Models are frozen in time based on their training data; they lack awareness of events that occurred after their training was completed.",
                 "bloom_level": "Remembering"
+              },
+              {
+                "student_statement": "The training data is perfectly balanced across history, so the model understands the 1800s just as well as the 2000s.",
+                "incorrect_belief": "Temporal distribution of data is uniform across all eras.",
+                "socratic_sequence": [
+                  "Was there more text produced and digitized in the year 1824 or the year 2024?",
+                  "If a model sees 10,000 documents from the 21st century for every 1 document from the 19th century, which era will it have a richer vocabulary for?",
+                  "How might the 'digital divide' affect the amount of historical data available from different parts of the world compared to modern data?"
+                ],
+                "resolution_insight": "Training datasets are heavily skewed toward the recent past because digital content creation has exploded, meaning models have much higher 'resolution' for modern concepts than historical ones.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model's 'brain' is updated every time a new article is published on a major news site.",
+                "incorrect_belief": "Training is a live, continuous synchronization with the web rather than a static snapshot.",
+                "socratic_sequence": [
+                  "Is training an LLM a quick task or an intensive process that takes months of supercomputer time?",
+                  "If the model's internal mathematical weights changed every time a website was updated, how would developers ensure the model remains stable and safe?",
+                  "What is the difference between a model 'accessing' the internet via a tool and a model 'knowing' something from its core training?"
+                ],
+                "resolution_insight": "Training is a discrete, frozen event; the model's internal weights do not change unless a new version is officially trained and released by the developers.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Because the model is so smart, it can accurately predict the winner of next year's election by looking at current trends.",
+                "incorrect_belief": "Statistical patterns in historical data enable flawless future prophecy.",
+                "socratic_sequence": [
+                  "Does the training data contain facts about events that haven't happened yet?",
+                  "Is the model's prediction based on 'knowing the future' or on calculating the most likely next word based on past examples?",
+                  "What happens to a trend-based prediction if a random, unprecedented event occurs tomorrow?"
+                ],
+                "resolution_insight": "LLMs are pattern-matchers of the past, not prophets; they predict the most probable sequence of words based on historical data, which cannot account for future variables.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "If a new slang word becomes popular today, the model will naturally understand it because it understands language rules.",
+                "incorrect_belief": "LLMs can decipher the meaning of entirely new linguistic symbols without training exposure.",
+                "socratic_sequence": [
+                  "If a word has never appeared in the training corpus, how does the tokenizer break it down?",
+                  "Can the model assign a specific 'meaning' (embedding) to a sequence of characters it has never seen used in context before?",
+                  "How did you learn what your favorite slang term meant\u2014by guessing from thin air or by seeing others use it?"
+                ],
+                "resolution_insight": "Language understanding in LLMs is dependent on seeing words used in context during training; entirely new terms appear as unfamiliar fragments that the model cannot accurately define.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "The model knows what today's date is because it has an internal clock that keeps ticking after training.",
+                "incorrect_belief": "Models have an innate sense of temporal passage or a built-in hardware clock.",
+                "socratic_sequence": [
+                  "If an LLM is a set of static mathematical equations, do those equations change as the seconds tick by?",
+                  "If you ask the same model the same question on two different days, would its internal weights be different?",
+                  "Where else could the 'current date' information come from when you start a chat session with an AI?"
+                ],
+                "resolution_insight": "Models are time-agnostic; any awareness of 'today' is usually provided by the application interface in a hidden 'system prompt' rather than being part of the model's trained knowledge.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "As the model learns newer information from 2023, it automatically overwrites and forgets the 'obsolete' data from the 1990s.",
+                "incorrect_belief": "New data displaces old data in a zero-sum memory system during pre-training.",
+                "socratic_sequence": [
+                  "During a single training session, does the model read the data in chronological order or is the data usually shuffled?",
+                  "If a training set contains both a 1995 encyclopedia and a 2023 news archive, is there any technical reason the model can't store patterns from both?",
+                  "Does a library have to burn an old book every time it receives a new one?"
+                ],
+                "resolution_insight": "Pre-training involves exposing the model to the entire corpus simultaneously or in shuffled batches; it 'knows' multiple eras at once rather than replacing one with another.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The model has a built-in 'timeline' filter that prevents it from mentioned modern inventions when I ask about the 1700s.",
+                "incorrect_belief": "Models possess a native chronological map that automatically prevents anachronisms.",
+                "socratic_sequence": [
+                  "If the training data contains a fictional story about a time-traveler taking an iPhone to the 1700s, how would the model know that is 'incorrect' history?",
+                  "Does the model understand the *concept* of time, or is it just associating words like '1700s' with other words frequently found near it?",
+                  "If you don't explicitly tell the model to 'avoid modern references,' why might it accidentally mention them?"
+                ],
+                "resolution_insight": "Models do not have a hard-coded chronological safety rail; they avoid anachronisms only if the associations in their training data are consistent and if the user's prompt provides enough context to 'stay in character.'",
+                "bloom_level": "Applying"
               }
             ]
           },
@@ -7138,6 +8678,83 @@
                 ],
                 "resolution_insight": "General models can handle domain-specific terms if they were in the corpus, but specialized models often use custom tokenizers to represent technical jargon more efficiently.",
                 "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The model has to switch into 'Legal Mode' or 'Medical Mode' to use its domain-specific vocabulary.",
+                "incorrect_belief": "Domain vocabularies are discrete, selectable software modes rather than integrated statistical patterns.",
+                "socratic_sequence": [
+                  "If you use a legal term in a casual sentence, does the model fail to understand the rest of the sentence?",
+                  "How would the model know exactly when to 'switch' if a prompt contains both law and cooking advice?",
+                  "Could it be that all these terms coexist in one large mathematical map, and the model simply navigates to the relevant area?"
+                ],
+                "resolution_insight": "Domain-specific terms are integrated into a single unified vocabulary where the model uses the surrounding context, not a manual toggle, to determine the appropriate meaning.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "A domain-specific vocabulary is just a built-in glossary where the model looks up definitions for technical terms.",
+                "incorrect_belief": "Specialized vocabularies function as static reference lookups or dictionaries.",
+                "socratic_sequence": [
+                  "If a model simply 'looked up' a word in a glossary, how would it know how to use that word correctly in a brand-new sentence?",
+                  "Do the tokens in the vocabulary have text definitions attached, or are they represented as numbers?",
+                  "How does the model learn a technical word's relationship to other words in the same field?"
+                ],
+                "resolution_insight": "Vocabularies are lists of tokens that allow the model to recognize patterns of usage; they do not contain definitions, but rather statistical relationships learned from data.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "Specialized models are only better because they contain words that literally do not exist in the general model's vocabulary.",
+                "incorrect_belief": "General models are entirely missing technical jargon, whereas specialized models have them.",
+                "socratic_sequence": [
+                  "Can a general model still 'spell out' a complex word using smaller subword pieces like 'myo-', 'card-', and '-ial'?",
+                  "If a specialized model represents a long medical word as one single token instead of five sub-tokens, how does that affect the model's efficiency?",
+                  "Is the main benefit of a domain-specific vocabulary the presence of the word, or how efficiently it is represented and processed?"
+                ],
+                "resolution_insight": "While general models can often handle jargon through subword tokenization, specialized vocabularies allow the model to represent complex terms more efficiently as single units, saving 'space' in the context window.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Domain-specific vocabularies are created by experts manually picking the most important words from that field.",
+                "incorrect_belief": "Vocabulary selection for specialized models is a top-down, human-curated process.",
+                "socratic_sequence": [
+                  "If a vocabulary has 50,000 slots, is it practical for humans to manually rank every possible technical word and phrase?",
+                  "How do automated tokenization algorithms like BPE decide which character pairs to merge into tokens?",
+                  "If a specific term appears millions of times in medical journals, will an algorithm naturally include it in the vocabulary even without a human's help?"
+                ],
+                "resolution_insight": "Domain-specific vocabularies are generated by running tokenization algorithms on specialized datasets, allowing the frequency of terms in that data to determine which tokens are most useful.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "A 'coding' vocabulary is universal and looks the same regardless of which human language the model was originally trained on.",
+                "incorrect_belief": "Domain-specific vocabularies for technical fields like programming are language-neutral.",
+                "socratic_sequence": [
+                  "Does computer code in the real world often contain variable names, documentation, and comments in a specific human language?",
+                  "If a tokenizer is trained on Python code written by English speakers, will it prioritize the same subwords as one trained on code written by Chinese speakers?",
+                  "How does the natural language surrounding the code in the training data influence which tokens become part of the vocabulary?"
+                ],
+                "resolution_insight": "Domain vocabularies are heavily influenced by the natural language 'anchor' of the training corpus, meaning a 'coding vocabulary' is often inseparable from the human language used to describe and document that code.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "A model with a finance-specific vocabulary will eventually lose its ability to have a normal, everyday conversation.",
+                "incorrect_belief": "Domain specialization is a zero-sum game that requires the removal of general-purpose language.",
+                "socratic_sequence": [
+                  "Do finance textbooks use specialized jargon exclusively, or do they still use regular English grammar to explain concepts?",
+                  "Can you explain a complex financial crash without using basic words like 'people', 'scary', or 'money'?",
+                  "Is it more effective for a model to know finance in a vacuum, or to understand it within the context of standard human communication?"
+                ],
+                "resolution_insight": "Domain-specific models are typically built as extensions of general language foundations because even the most technical fields rely on standard linguistic structures to convey meaning.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "The model treats a word like 'Contract' in a legal vocabulary as the exact same mathematical entity as 'Contract' in a general vocabulary.",
+                "incorrect_belief": "The meaning of a token is determined solely by its spelling, regardless of the domain-specific data used to train it.",
+                "socratic_sequence": [
+                  "In a legal context, does the word 'contract' share the same 'neighborhood' of related words as it does in a medical context (like contracting a muscle)?",
+                  "How does the surrounding training data change the way a model calculates the 'position' or 'meaning' of a word?",
+                  "If a model's vocabulary is shaped by legal documents, which words would you expect to find closest to 'contract' in its mathematical space?"
+                ],
+                "resolution_insight": "Even if the token ID is the same, the mathematical representation (embedding) of a word is shaped by the specific context of the domain data, giving it a specialized 'meaning' in that model's internal space.",
+                "bloom_level": "Applying"
               }
             ]
           },
@@ -7153,6 +8770,83 @@
                   "Does subword tokenization make 'out-of-vocabulary' errors more or less common?"
                 ],
                 "resolution_insight": "Modern subword tokenizers (like BPE) almost never have truly 'out-of-vocabulary' words because they can always fall back to individual characters or bytes.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If the model doesn't know a word, it probably just ignores it and tries to understand the rest of the sentence.",
+                "incorrect_belief": "OOV tokens are skipped or completely disregarded in processing.",
+                "socratic_sequence": [
+                  "If a critical word like 'unbelievable' was unknown, and the model ignored 'un', how might that change the meaning?",
+                  "What's the difference between ignoring a word and breaking it down into smaller, known pieces?",
+                  "How does handling unknown words differently than ignoring them help the model maintain context?"
+                ],
+                "resolution_insight": "Instead of ignoring unknown words, LLMs use subword tokenization to break them into smaller, recognizable parts, allowing them to still contribute to the overall meaning and context of the sentence.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "With such huge vocabularies, LLMs barely ever encounter words they don't know, so OOV handling isn't a big deal anymore.",
+                "incorrect_belief": "Large vocabulary size inherently eliminates the practical need for robust OOV mechanisms.",
+                "socratic_sequence": [
+                  "Can you think of new words or slang that might emerge after a model's training data was collected?",
+                  "How would a tokenizer handle a typo like 'recieve' if 'receive' is in its vocabulary, and why might that be relevant for OOV?",
+                  "Even with millions of words, why is it practically impossible for a vocabulary to contain *every* possible word, name, or number combination?"
+                ],
+                "resolution_insight": "Even very large vocabularies cannot contain all possible words, especially with new terms, typos, or specific jargon. Robust OOV handling remains crucial for models to process diverse and evolving real-world text effectively.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "When a model sees an unknown word, it probably just swaps it out for the closest synonym it knows, so the sentence still makes sense.",
+                "incorrect_belief": "OOV handling involves semantic substitution or synonym replacement.",
+                "socratic_sequence": [
+                  "If a model replaced 'unfriend' (a new verb) with 'dislike', would the original meaning be preserved?",
+                  "How does breaking 'unfriend' into 'un' and 'friend' allow the model to infer its meaning without needing a direct synonym?",
+                  "Why would a tokenizer aim for precise reconstruction of the original word's components rather than a loose semantic approximation?"
+                ],
+                "resolution_insight": "OOV handling breaks unknown words into subword units, preserving their original character structure and allowing the model to compose meaning from these parts, rather than replacing them with potentially inaccurate synonyms.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If even one word in my prompt is out-of-vocabulary, the whole sentence will become gibberish to the model.",
+                "incorrect_belief": "A single OOV word leads to catastrophic failure or complete loss of meaning for the entire input sequence.",
+                "socratic_sequence": [
+                  "If a word like 'unfriendable' is split into 'un', 'friend', and 'able', does the model still have pieces to work with?",
+                  "How does the model's ability to process each token (even subword tokens) in relation to its neighbors prevent a full breakdown?",
+                  "Can you think of an example where understanding most of the words in a sentence still allows you to grasp the overall message, even if one word is unfamiliar?"
+                ],
+                "resolution_insight": "Thanks to subword tokenization, even OOV words are broken down into recognizable parts. The model can still process these subword tokens and derive meaning from the rest of the context, preventing a complete breakdown of understanding.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "When a word is unknown, the tokenizer just breaks it all the way down into individual letters.",
+                "incorrect_belief": "Subword tokenization always defaults to character-level splitting for OOV words.",
+                "socratic_sequence": [
+                  "Consider a word like 'unbelievable'. If 'un', 'believe', and 'able' are common subwords, why might the tokenizer prefer these over 'u', 'n', 'b', 'e', 'l', etc.?",
+                  "What are the advantages of using the largest possible known subword units compared to always going down to individual characters?",
+                  "How might excessive character-level splitting affect the overall length of the token sequence and the model's efficiency?"
+                ],
+                "resolution_insight": "Subword tokenization aims to break unknown words into the *largest possible* known subword units (like 'un-', 'believ-', '-able'), not always individual characters. This balances coverage of new words with keeping sequence length manageable.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "When the model encounters an OOV word, it cleverly figures out what it means and adds it to its internal vocabulary for next time.",
+                "incorrect_belief": "OOV handling involves dynamic, real-time vocabulary expansion and learning during inference.",
+                "socratic_sequence": [
+                  "What's the difference between a tokenizer (which breaks text into known pieces) and the LLM itself (which understands meaning)?",
+                  "Why would adding new words to the *tokenizer's* vocabulary require retraining a significant part of the model?",
+                  "If the model simply 'learned' every new word on the fly, how would its fixed, massive training dataset and architecture come into play?"
+                ],
+                "resolution_insight": "OOV handling by the tokenizer allows the model to *represent* unknown words using known subword units. It does not mean the model 'learns' and permanently adds new full words to its vocabulary during a live conversation. Vocabulary changes require retraining or fine-tuning.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Out-of-vocabulary words are only an issue for really obscure scientific terms or words from other languages.",
+                "incorrect_belief": "OOV primarily applies to highly specialized or non-English linguistic constructs.",
+                "socratic_sequence": [
+                  "Can you think of common internet slang or new brand names that might not have existed when a model was trained?",
+                  "How would a model handle a common word with a typo, like 'intellijent' instead of 'intelligent'? Is it 'obscure'?",
+                  "If a document contains many unique identifiers, product codes, or long numerical strings, why might these be considered 'out-of-vocabulary' even if they're not complex words?"
+                ],
+                "resolution_insight": "OOV can apply to a wide range of text, including new slang, typos, unique proper nouns, product codes, or numerical sequences, not just complex scientific or foreign words. Anything not explicitly in the tokenizer's learned vocabulary can be OOV.",
                 "bloom_level": "Understanding"
               }
             ]
@@ -7170,6 +8864,83 @@
                 ],
                 "resolution_insight": "Preprocessing involves normalization, cleaning, de-noising, and tokenization to ensure the model learns from high-quality signals rather than noise.",
                 "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Turning text into numbers for an LLM is like converting a word to its ASCII code; it's a direct, simple lookup.",
+                "incorrect_belief": "Text-to-number conversion is a straightforward, character-level encoding.",
+                "socratic_sequence": [
+                  "If 'cat' is just its ASCII values, how would the model know 'feline' is similar?",
+                  "What if different languages use completely different alphabets, or even emojis?",
+                  "How does a system learn relationships between words if they are just individual character codes?"
+                ],
+                "resolution_insight": "Text-to-number conversion is complex, involving tokenization and then mapping tokens to numerical embeddings that capture semantic relationships, not just character codes.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Cleaning data for an LLM just means checking for bad words or offensive content.",
+                "incorrect_belief": "Data cleaning is primarily about ethical filtering, not technical preparation.",
+                "socratic_sequence": [
+                  "What kind of 'noise' might you find in text scraped from a webpage, beyond just swear words?",
+                  "If an LLM learns from data with lots of typos or random numbers, how might that affect its output quality?",
+                  "Beyond 'bad words', what types of inconsistencies could make it hard for a computer to process text effectively?"
+                ],
+                "resolution_insight": "Data cleaning is a broader process that involves removing irrelevant structural elements (HTML tags), correcting formatting errors, handling special characters, and ensuring data consistency, in addition to ethical filtering.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Every LLM uses the exact same steps in its preprocessing pipeline because there's only one 'right' way to prepare text.",
+                "incorrect_belief": "Preprocessing pipelines are universal and standardized across all LLMs.",
+                "socratic_sequence": [
+                  "Do you think a model trained for legal documents would need the same kind of cleaning as one trained for social media posts?",
+                  "Different tokenization methods exist. How might that lead to different preprocessing steps?",
+                  "If a model is specifically designed for code, would its preprocessing include steps relevant for natural language or something different?"
+                ],
+                "resolution_insight": "Preprocessing pipelines are highly customized based on the model's architecture, training data sources, target language, and intended use case.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "The LLM reads and understands the raw text first, then the preprocessing pipeline makes it easier for it to learn.",
+                "incorrect_belief": "The model 'understands' raw text before preprocessing.",
+                "socratic_sequence": [
+                  "If raw text often contains HTML tags or broken characters, how could a machine 'read' it meaningfully without processing?",
+                  "What is the most basic unit an LLM truly 'sees' and works with?",
+                  "Think about why we convert words into numbers. Could a machine truly 'understand' meaning if it's still dealing with letters and symbols directly?"
+                ],
+                "resolution_insight": "Preprocessing is a crucial precursor that converts raw, human-readable text into a machine-understandable numerical format (tokens/embeddings) *before* the LLM can begin to process or 'understand' it.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "Preprocessing is just a small, quick step; the real work of an LLM is in the complex algorithms after that.",
+                "incorrect_belief": "Preprocessing is a minor, insignificant part of LLM development.",
+                "socratic_sequence": [
+                  "We discussed how much 'noise' can be in raw data. If that noise isn't handled, what kind of quality would you expect from the model?",
+                  "Imagine you're teaching a child to read, but half the words in their book are smudged or misspelled. How effective would their learning be?",
+                  "If data cleaning can take up a large percentage of an AI project's time, what does that suggest about its importance?"
+                ],
+                "resolution_insight": "Preprocessing is a fundamental and often complex stage that significantly impacts the quality, performance, and reliability of the trained LLM, making it as critical as the model architecture itself.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "Preprocessing pipelines only change the words and sentences themselves, not anything about their formatting or structure.",
+                "incorrect_belief": "Preprocessing exclusively modifies lexical content, ignoring structural or formatting elements.",
+                "socratic_sequence": [
+                  "What are some differences between how a book chapter is structured versus a tweet, and would an LLM care about those differences?",
+                  "If you see a bulleted list or a table, is that just 'words' or does its visual structure convey extra meaning for a human?",
+                  "How might an LLM handle things like bold text or italics if it's only looking at words?"
+                ],
+                "resolution_insight": "Preprocessing often includes steps to normalize or extract structural information (like paragraph breaks, headings, lists, tables) from text, as these elements can significantly influence meaning and how the model interprets the data.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Human experts review and manually fix every piece of text during preprocessing to make sure it's perfect.",
+                "incorrect_belief": "Preprocessing is a largely manual, human-intensive process.",
+                "socratic_sequence": [
+                  "Given that LLMs are trained on billions or trillions of words, do you think it's feasible for humans to manually check every single one?",
+                  "What tools or techniques might be used to automate tasks like removing HTML tags or correcting common spelling errors?",
+                  "How do developers ensure consistency across a massive dataset if they're not manually checking everything?"
+                ],
+                "resolution_insight": "While human experts design and fine-tune preprocessing pipelines, the actual execution for large datasets relies heavily on automated scripts and algorithms to efficiently clean, transform, and prepare the vast amounts of text.",
+                "bloom_level": "Understanding"
               }
             ]
           }
@@ -7190,6 +8961,83 @@
                   "Is the AI a 'writer' or a 'co-writer'?"
                 ],
                 "resolution_insight": "AI is best used for drafting and overcoming 'blank page syndrome'; human editing is essential for accuracy, voice, and quality control.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "I just tell the AI 'write a blog post', and it knows exactly how formal or casual I want it to be.",
+                "incorrect_belief": "LLMs inherently understand desired tone and style without explicit instruction.",
+                "socratic_sequence": [
+                  "If you wanted a funny blog post versus a serious one, would you give the AI the exact same instruction?",
+                  "How would the AI know if you're writing for teenagers or business executives without being told?",
+                  "What kind of details do you usually consider when you start writing something for a specific audience or purpose?"
+                ],
+                "resolution_insight": "LLMs require clear and specific instructions regarding desired tone, style, and target audience to generate content that meets your expectations.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "Anything the AI writes is automatically higher quality than what I could write myself.",
+                "incorrect_belief": "LLM output is inherently superior in quality and always 'better'.",
+                "socratic_sequence": [
+                  "What defines 'better' writing \u2013 is it always about grammar, or can it also be about originality, emotion, or personal voice?",
+                  "Can an AI truly capture the nuances of human emotion or specific cultural contexts as well as a human writer?",
+                  "What if the AI generates something that sounds generic or doesn't genuinely reflect your unique perspective or expertise?"
+                ],
+                "resolution_insight": "While LLMs can improve grammar, structure, and offer fresh perspectives, human oversight is essential for ensuring originality, emotional depth, accuracy, and alignment with your specific voice and goals.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "I don't need to do any research; the AI will just come up with all the facts for my article.",
+                "incorrect_belief": "LLMs have an internal, always accurate, and exhaustive factual database for any topic.",
+                "socratic_sequence": [
+                  "Where do LLMs get their information from, and is it always completely up-to-date or verified?",
+                  "What happens if the AI encounters conflicting information or a topic it hasn't been extensively trained on?",
+                  "If you're writing about something very specific or a new development, how confident would you be in the AI's 'facts' without checking them yourself?"
+                ],
+                "resolution_insight": "LLMs generate text based on patterns in their training data and can 'hallucinate' incorrect or outdated information; human fact-checking, verification, and research remain indispensable for factual content.",
+                "bloom_level": "Analyzing"
+              },
+              {
+                "student_statement": "I can use the same AI-generated content for my LinkedIn post, a tweet, and a formal report without changes.",
+                "incorrect_belief": "LLM output is universally adaptable across different platforms and contexts without modification.",
+                "socratic_sequence": [
+                  "What's the main difference in how you'd typically write for a casual tweet versus a formal business email?",
+                  "Does a long, detailed paragraph work effectively on a platform like Instagram where visuals are key?",
+                  "Why do different platforms often have character limits or different expectations for user engagement and tone?"
+                ],
+                "resolution_insight": "Effective content creation requires tailoring the message, length, and style to the specific platform, audience, and context, even when starting with AI-generated drafts.",
+                "bloom_level": "Applying"
+              },
+              {
+                "student_statement": "If I use an AI to help me write, I'm not really writing it myself, and it's almost like cheating.",
+                "incorrect_belief": "AI assistance undermines the authenticity or value of content creation, making it inauthentic.",
+                "socratic_sequence": [
+                  "Do professional writers use tools like grammar checkers, spell check, or even research assistants?",
+                  "Is using a calculator for complex math considered 'cheating' if you still understand the underlying problem?",
+                  "How can using AI for the initial draft or brainstorming free up your time to focus on refining, adding your unique insights, and perfecting your message?"
+                ],
+                "resolution_insight": "AI tools are designed to be assistants, helping to overcome creative blocks and streamline the drafting process, allowing humans to focus on higher-level thinking, creativity, and refining the message.",
+                "bloom_level": "Understanding"
+              },
+              {
+                "student_statement": "If the AI generates content for me, it will automatically make it unique and stand out from everyone else's.",
+                "incorrect_belief": "LLMs inherently generate highly original, unique, and distinctive content every time.",
+                "socratic_sequence": [
+                  "Where does an AI learn its language patterns and ideas from, and is it from a unique, private source?",
+                  "If many people ask an AI for a similar type of content, like 'write a generic marketing email', what might happen to the output?",
+                  "How can you specifically guide the AI or add your own distinct elements to ensure the content truly reflects your unique brand or personality?"
+                ],
+                "resolution_insight": "LLMs draw from vast datasets and can sometimes produce generic or predictable content; human input, specific prompting, and personal refinement are crucial for injecting true originality and a unique voice.",
+                "bloom_level": "Evaluating"
+              },
+              {
+                "student_statement": "The content AI writes will automatically be optimized for search engines and rank high on Google.",
+                "incorrect_belief": "LLMs inherently understand and apply complex Search Engine Optimization (SEO) principles without explicit prompting.",
+                "socratic_sequence": [
+                  "Does an AI know what keywords your specific target audience is searching for *right now*, or what competitors are doing?",
+                  "Besides keywords, what other factors contribute to content ranking well on search engines, such as website authority or user experience?",
+                  "How can you guide the AI to strategically include specific SEO elements you've researched, rather than just expecting it to know?"
+                ],
+                "resolution_insight": "While LLMs can be prompted to include keywords, true SEO optimization requires human understanding of current search trends, audience intent, backlink strategies, and technical SEO practices beyond just content generation.",
                 "bloom_level": "Applying"
               }
             ]
