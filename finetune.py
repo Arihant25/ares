@@ -80,7 +80,7 @@ def setup_model_and_tokenizer(model_name="LiquidAI/LFM2-700M", device="auto"):
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         trust_remote_code=True,
-        torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+        dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
         device_map=device,
     )
 
@@ -201,12 +201,12 @@ def main():
         logging_steps=LOGGING_STEPS,
         save_steps=SAVE_STEPS,
         eval_steps=SAVE_STEPS,
-        evaluation_strategy="steps",
+        eval_strategy="steps",
         save_total_limit=3,
         load_best_model_at_end=True,
         metric_for_best_model="eval_loss",
         greater_is_better=False,
-        fp16=torch.cuda.is_available(),
+        bf16=torch.cuda.is_available(),
         report_to="wandb",
         logging_dir=f"{OUTPUT_DIR}/logs",
         save_strategy="steps",
