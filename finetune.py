@@ -80,7 +80,7 @@ def setup_model_and_tokenizer(model_name="LiquidAI/LFM2-700M", device="auto"):
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         trust_remote_code=True,
-        dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+        torch_dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
         device_map=device,
     )
 
@@ -98,7 +98,7 @@ def tokenize_dataset(data, tokenizer, max_length=512):
             examples["text"],
             truncation=True,
             max_length=max_length,
-            padding="max_length",
+            padding=False,  # Dynamic padding via data collator
             return_tensors=None,
         )
 
@@ -119,11 +119,12 @@ def main():
     MAX_LENGTH = 512
     BATCH_SIZE = 4
     GRADIENT_ACCUMULATION_STEPS = 4
-    LEARNING_RATE = 2e-5
+    LEARNING_RATE = 5e-6
     NUM_EPOCHS = 3
     WARMUP_STEPS = 100
     LOGGING_STEPS = 10
     SAVE_STEPS = 200
+    MAX_GRAD_NORM = 1.0
 
     # Initialize Weights & Biases
     wandb.init(
@@ -207,11 +208,14 @@ def main():
         metric_for_best_model="eval_loss",
         greater_is_better=False,
         bf16=torch.cuda.is_available(),
+        bf16_full_eval=torch.cuda.is_available(),
+        max_grad_norm=MAX_GRAD_NORM,
         report_to="wandb",
         logging_dir=f"{OUTPUT_DIR}/logs",
         save_strategy="steps",
         remove_unused_columns=False,
         push_to_hub=False,
+        optim="adamw_torch",
     )
 
     # Initialize trainer
@@ -261,7 +265,11 @@ def main():
     inputs = tokenizer(test_input, return_tensors="pt").to(model.device)
     with torch.no_grad():
         outputs = model.generate(
-            **inputs, max_new_tokens=100, temperature=0.7, do_sample=True, top_p=0.9
+            **inputs, 
+            max_new_tokens=100, 
+            do_sample=False,  # Use greedy decoding for stability
+            num_beams=1,
+            pad_token_id=tokenizer.pad_token_id,
         )
 
     generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
