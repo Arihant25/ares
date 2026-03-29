@@ -1,0 +1,902 @@
+[
+  {
+    "student_statement": "LLMs understand text exactly like humans do, reading the words and picturing the concepts.",
+    "incorrect_belief": "Anthropomorphizing AI comprehension, believing models possess conscious awareness and visualization capabilities.",
+    "socratic_questions": [
+      "How do humans learn to understand language compared to how an AI model is trained?",
+      "If an AI has never experienced the physical world, how does it know what an apple tastes like?",
+      "Does predicting the next word perfectly require conscious thought?"
+    ]
+  },
+  {
+    "student_statement": "When I ask a question, the LLM looks up the answer in a giant database of the internet.",
+    "incorrect_belief": "LLMs operate as search engines retrieving stored facts rather than generating responses probabilistically.",
+    "socratic_questions": [
+      "If it were just looking up information, how could it write a poem about a topic that has never existed?",
+      "Can you explain where the model stores its 'database' if the downloaded model file is only a few gigabytes?",
+      "If two people ask the exact same question and get slightly different answers, what does that tell you about how the answer is formed?"
+    ]
+  },
+  {
+    "student_statement": "An LLM is just a giant rule-based system where programmers wrote logic for every possible question.",
+    "incorrect_belief": "LLMs rely on hard-coded grammar and logic rules (like GOFAI) rather than learned statistical patterns.",
+    "socratic_questions": [
+      "How many rules would a programmer have to write to cover every possible question a human could ask?",
+      "If it's based on strict rules, how does the model handle spelling mistakes or slang it hasn't explicitly been programmed for?",
+      "What is the difference between a programmer explicitly writing 'if-then' statements and a model learning from examples?"
+    ]
+  },
+  {
+    "student_statement": "LLMs have their own consciousness and opinions because they sometimes say 'I believe' or 'I feel'.",
+    "incorrect_belief": "First-person pronouns in generated text imply sentience and subjective experience.",
+    "socratic_questions": [
+      "Where might an LLM have learned to use phrases like 'I think' or 'I feel'?",
+      "If an actor reads a script saying 'I am angry', does it mean the actor is truly angry?",
+      "Could the model just be predicting that 'I feel' is the most statistically likely phrase to follow a certain prompt?"
+    ]
+  },
+  {
+    "student_statement": "Artificial Intelligence didn't exist until ChatGPT was released.",
+    "incorrect_belief": "Equating the recent popularity of generative AI products with the entire history of AI research.",
+    "socratic_questions": [
+      "Have you ever used predictive text on your phone or seen movie recommendations on Netflix before ChatGPT existed?",
+      "What historical milestones do you think paved the way for modern chatbots to be built?",
+      "If ChatGPT was released recently, how long do you think researchers worked on the underlying technologies before its launch?"
+    ]
+  },
+  {
+    "student_statement": "Early chatbots like ELIZA used the exact same deep learning techniques as modern LLMs.",
+    "incorrect_belief": "Failing to distinguish between early rule-based/pattern-matching systems and modern deep neural networks.",
+    "socratic_questions": [
+      "If ELIZA was created in the 1960s, did computers back then have the power to process billions of words?",
+      "How does looking for specific keywords (like ELIZA did) differ from predicting text based on broad context?",
+      "What fundamentally changed in machine learning between the 1960s and the 2010s?"
+    ]
+  },
+  {
+    "student_statement": "Passing the Turing Test proves that an AI model has achieved human-like intelligence.",
+    "incorrect_belief": "The Turing Test is a definitive, scientific measure of general intelligence rather than a test of deceptive conversational ability.",
+    "socratic_questions": [
+      "Does tricking a human into thinking they are talking to another human require actual intelligence, or just good imitation?",
+      "Could a very simple program pass the test if the human judge isn't paying close attention?",
+      "Are there forms of intelligence that don't involve chatting at all?"
+    ]
+  },
+  {
+    "student_statement": "Natural Language Processing (NLP) is only used for translating between different languages.",
+    "incorrect_belief": "Viewing NLP as strictly machine translation and ignoring other subfields like sentiment analysis, summarization, etc.",
+    "socratic_questions": [
+      "When your email automatically marks a message as spam, is it translating anything?",
+      "How does a voice assistant like Siri figure out that you want to set an alarm?",
+      "What are some other ways computers interact with human language besides translation?"
+    ]
+  },
+  {
+    "student_statement": "Sentiment analysis just counts the number of 'happy' and 'sad' words in a sentence.",
+    "incorrect_belief": "Sentiment analysis strictly relies on basic lexicon counting without considering context, negation, or sarcasm.",
+    "socratic_questions": [
+      "How would a simple word-counter interpret the sentence 'I am not happy'?",
+      "If someone writes 'This movie was terribly good', how do the words interact with each other?",
+      "Why is understanding the relationship between words necessary for accurate sentiment analysis?"
+    ]
+  },
+  {
+    "student_statement": "NLP models inherently understand punctuation the same way they understand words.",
+    "incorrect_belief": "Assuming punctuation carries intrinsic meaning to a machine without needing to be tokenized and learned statistically.",
+    "socratic_questions": [
+      "Does a computer see a question mark as a symbol of inquiry, or just as another character code?",
+      "How might a model learn the difference between a period ending a sentence and a period in an abbreviation?",
+      "What happens to punctuation during the process of preparing text for an NLP model?"
+    ]
+  },
+  {
+    "student_statement": "When an LLM writes an email, it's just copying an exact template it found somewhere online.",
+    "incorrect_belief": "Generative models plagiarize full chunks of text rather than composing text token-by-token.",
+    "socratic_questions": [
+      "If I ask for an email about a highly specific, bizarre scenario, how could it find an existing template?",
+      "Have you ever noticed an LLM generate a sentence that has likely never been written before?",
+      "How does predicting the next word allow for the creation of completely original paragraphs?"
+    ]
+  },
+  {
+    "student_statement": "Customer service chatbots powered by LLMs always know the company's current inventory.",
+    "incorrect_belief": "Assuming all LLMs are inherently hooked into real-time external databases and APIs.",
+    "socratic_questions": [
+      "Does the core language model have access to live data, or just the data it was trained on?",
+      "What extra steps would a developer need to take to let a chatbot see today's stock levels?",
+      "If a company's website goes down, would the basic LLM know about it instantly?"
+    ]
+  },
+  {
+    "student_statement": "Using an LLM for search is identical to using Google; it just formats the results better.",
+    "incorrect_belief": "Conflating generative text completion with indexed information retrieval.",
+    "socratic_questions": [
+      "When Google searches, it links to existing web pages. What is an LLM doing when it gives you an answer?",
+      "If an LLM isn't connected to the internet, how is it generating its response?",
+      "Can Google hallucinate a fake webpage, and can an LLM hallucinate a fake fact?"
+    ]
+  },
+  {
+    "student_statement": "Neural networks simulate the exact biological neurons in the human brain.",
+    "incorrect_belief": "Artificial Neural Networks (ANNs) are biologically accurate replicas rather than loose mathematical abstractions.",
+    "socratic_questions": [
+      "How much do we actually understand about how the biological human brain works?",
+      "In a neural network, nodes just multiply numbers. Do biological neurons function strictly by multiplying numbers?",
+      "Why do we call it 'inspired by' the brain rather than a 'replica' of the brain?"
+    ]
+  },
+  {
+    "student_statement": "Adding more layers to a neural network automatically makes it smarter and more accurate.",
+    "incorrect_belief": "Network depth linearly and unconditionally correlates with performance, ignoring overfitting and vanishing gradients.",
+    "socratic_questions": [
+      "What happens if a network becomes so complex that it just memorizes the training data perfectly?",
+      "Can adding more layers make a model slower or harder to train?",
+      "Is a very deep network useful for a very simple task, like predicting a coin flip?"
+    ]
+  },
+  {
+    "student_statement": "Neural networks store the data they were trained on inside their nodes.",
+    "incorrect_belief": "Training data is compressed and stored literally inside the network's architecture.",
+    "socratic_questions": [
+      "If a model is trained on terabytes of text, how can the final model file only be a few gigabytes?",
+      "What exactly is stored in a neural network's nodes and connections?",
+      "Are we storing the actual sentences, or the mathematical relationships between words?"
+    ]
+  },
+  {
+    "student_statement": "Attention mechanisms just tell the model to focus on the last word of the sentence.",
+    "incorrect_belief": "Attention is a static rule prioritizing recency rather than a dynamic weighting of all inputs.",
+    "socratic_questions": [
+      "If I say 'The bank of the river', which word is most important for understanding 'bank'?",
+      "Does the last word always hold the most meaning in a sentence?",
+      "How does dynamically weighing every word against every other word help understand context?"
+    ]
+  },
+  {
+    "student_statement": "Self-attention requires the model to read the sentence sequentially from left to right.",
+    "incorrect_belief": "Conflating Transformer self-attention (which processes all tokens simultaneously) with RNN sequential processing.",
+    "socratic_questions": [
+      "In a Transformer model, do words enter the attention layer one at a time or all at once?",
+      "If all words are processed at the same time, how does the model know their order?",
+      "Why was the Transformer architecture faster to train than older recurrent neural networks?"
+    ]
+  },
+  {
+    "student_statement": "Attention weights are fixed after training, meaning the model pays attention to the same words in every prompt.",
+    "incorrect_belief": "Confusing the learned parameters (query/key/value weight matrices) with the dynamic attention scores computed per input.",
+    "socratic_questions": [
+      "If the attention was fixed, how could the model adapt to a sentence it has never seen before?",
+      "What is the difference between the 'rules' the model learned during training and how it applies them to a new prompt?",
+      "Does the importance of the word 'apple' change depending on whether the next word is 'pie' or 'computer'?"
+    ]
+  },
+  {
+    "student_statement": "Transformers process text sequentially like older RNN models, they are just faster.",
+    "incorrect_belief": "Failing to recognize the parallel nature of the Transformer architecture.",
+    "socratic_questions": [
+      "What does it mean to process data in parallel versus sequentially?",
+      "If an RNN reads a sentence word-by-word, how does a Transformer look at the sentence?",
+      "How does parallel processing explain why Transformers require positional encodings?"
+    ]
+  },
+  {
+    "student_statement": "The 'Encoder' in a Transformer is what generates the final text output.",
+    "incorrect_belief": "Misunderstanding the roles of the Encoder (representation) and Decoder (generation) blocks.",
+    "socratic_questions": [
+      "What does the word 'encode' usually mean, compared to 'decode'?",
+      "If the encoder converts input text into a mathematical representation, what takes that math and turns it into new text?",
+      "Which part of the original Transformer architecture is responsible for predicting the next word?"
+    ]
+  },
+  {
+    "student_statement": "Transformers can process an infinitely long book all at once.",
+    "incorrect_belief": "Ignoring the context window limit and the quadratic scaling complexity of self-attention.",
+    "socratic_questions": [
+      "Have you ever noticed an AI model cutting off or forgetting early parts of a very long conversation?",
+      "What happens to the computational cost of self-attention as the input sequence gets longer?",
+      "Why do models have stated 'context windows' like 8k or 128k tokens?"
+    ]
+  },
+  {
+    "student_statement": "A token is always exactly one word.",
+    "incorrect_belief": "Tokens neatly map 1:1 with English words, ignoring subwords, punctuation, and multilingual text.",
+    "socratic_questions": [
+      "How might a model handle a very long compound word or a newly invented slang word?",
+      "If a token is always a word, how does the model process punctuation or numbers?",
+      "Could breaking a word into smaller chunks (like 'un-', 'friend', '-ly') be helpful for understanding its meaning?"
+    ]
+  },
+  {
+    "student_statement": "LLMs are trained on literally every single document that exists on the internet.",
+    "incorrect_belief": "Assuming training datasets contain the entirety of the web without filtering, including hidden or offline data.",
+    "socratic_questions": [
+      "Is everything on the internet publicly accessible or easily scrapable?",
+      "Why might AI companies actively choose to remove certain types of data before training?",
+      "Does the 'dark web' or a private banking portal end up in standard training datasets?"
+    ]
+  },
+  {
+    "student_statement": "During training, the model is fed labeled data telling it exactly what to reply to every question.",
+    "incorrect_belief": "Pre-training relies primarily on supervised question-answer pairs rather than self-supervised next-token prediction.",
+    "socratic_questions": [
+      "Would it be possible for humans to write an exact answer for every sentence on Wikipedia?",
+      "How can a model learn language structure simply by trying to guess a hidden word in a sentence?",
+      "What is the difference between supervised fine-tuning and initial pre-training?"
+    ]
+  },
+  {
+    "student_statement": "Tokenization translates words directly into human-readable definitions before the model processes them.",
+    "incorrect_belief": "Tokenization maps words to dictionary definitions rather than numeric IDs.",
+    "socratic_questions": [
+      "Does a computer process text better as English definitions or as numbers?",
+      "When the word 'cat' is tokenized, what does the output look like?",
+      "Where does the model actually learn the 'meaning' of the token, if not during tokenization?"
+    ]
+  },
+  {
+    "student_statement": "A parameter is essentially a single fact that the model has memorized.",
+    "incorrect_belief": "Parameters represent discrete factual knowledge rather than continuous mathematical weights.",
+    "socratic_questions": [
+      "If a parameter was a single fact, what would happen if the model needed to combine two facts?",
+      "In a mathematical equation like y = mx + b, what do we call 'm' and 'b'?",
+      "How do millions of decimal numbers work together to represent a concept, rather than storing it as a text fact?"
+    ]
+  },
+  {
+    "student_statement": "If a model has 70 billion parameters, it means it was trained on 70 billion words.",
+    "incorrect_belief": "Conflating the parameter count (network size) with the number of tokens in the training dataset.",
+    "socratic_questions": [
+      "What is the difference between the size of a model's 'brain' and the amount of 'books' it read?",
+      "Can a small model with 7 billion parameters read a trillion words during training?",
+      "Why might developers want to train a model on many more words than it has parameters?"
+    ]
+  },
+  {
+    "student_statement": "Smaller models can never perform as well as larger ones, regardless of what they are used for.",
+    "incorrect_belief": "Bigger parameter count is strictly superior for all tasks, ignoring task specificity and quality of fine-tuning.",
+    "socratic_questions": [
+      "Would you need a massive, generalized AI to simply classify whether an email is spam or not?",
+      "If a small model is trained exclusively on medical texts, could it beat a massive model that only read fiction?",
+      "What are the advantages of running a smaller model on a local device like a phone?"
+    ]
+  },
+  {
+    "student_statement": "Linear algebra is only used to render graphics, not for text processing in LLMs.",
+    "incorrect_belief": "Failing to realize that neural networks for text rely entirely on linear algebra operations.",
+    "socratic_questions": [
+      "If a computer represents words as lists of numbers (vectors), what kind of math is used to manipulate them?",
+      "What do we call the mathematical operation of multiplying inputs by weights in a neural network?",
+      "Is the math behind a 3D rotation fundamentally different from shifting a concept in vector space?"
+    ]
+  },
+  {
+    "student_statement": "Matrices in LLMs just store databases of sentences.",
+    "incorrect_belief": "Matrix data structures in AI hold raw text records rather than numerical weights and biases.",
+    "socratic_questions": [
+      "If a matrix stored full sentences, how would the model generate a sentence it has never seen before?",
+      "What exactly are the elements inside a weight matrix?",
+      "How do multiplying input vectors by weight matrices transform the data?"
+    ]
+  },
+  {
+    "student_statement": "Matrix multiplication in neural networks works by multiplying only the identical elements together.",
+    "incorrect_belief": "Confusing matrix multiplication (dot products of rows and columns) with element-wise (Hadamard) multiplication.",
+    "socratic_questions": [
+      "If you only multiplied identical positions, how could information from the first element affect the last element?",
+      "What is a 'dot product' and how does it combine multiple inputs into a single value?",
+      "Why is the shape (dimensions) of the matrices so important when multiplying them?"
+    ]
+  },
+  {
+    "student_statement": "LLMs calculate the probability of the entire next sentence all at once.",
+    "incorrect_belief": "Assuming sequence generation outputs entire structures simultaneously rather than token-by-token (autoregressively).",
+    "socratic_questions": [
+      "If a sentence could be anything, how many possible sentences would the model have to calculate probabilities for?",
+      "Why do you see the text streaming onto the screen one piece at a time?",
+      "How does the model use the word it just generated to figure out what comes next?"
+    ]
+  },
+  {
+    "student_statement": "A probability distribution in an LLM guarantees that the model will always pick the best possible word.",
+    "incorrect_belief": "The model acts completely deterministically (argmax) without any sampling or temperature variation.",
+    "socratic_questions": [
+      "If it always picked the most likely word, would the model ever write a creative or surprising story?",
+      "What happens if two words have a nearly identical probability of being correct?",
+      "How do settings like 'temperature' change the way the model picks from the probability distribution?"
+    ]
+  },
+  {
+    "student_statement": "Statistical variance doesn't apply to LLMs because they are deterministic machines.",
+    "incorrect_belief": "Failing to understand the probabilistic nature of modern generative sampling.",
+    "socratic_questions": [
+      "If LLMs are completely deterministic, why do they give different answers to the exact same prompt?",
+      "What does it mean to 'sample' from a probability distribution?",
+      "At a temperature greater than zero, is the output strictly predictable?"
+    ]
+  },
+  {
+    "student_statement": "Backpropagation means the model goes back and reads the prompt again.",
+    "incorrect_belief": "Confusing the backward pass of error calculation during training with re-reading input text during inference.",
+    "socratic_questions": [
+      "What is actually moving 'backward' during the training process of a neural network?",
+      "How does a model know how much to adjust its internal weights when it makes a mistake?",
+      "Does backpropagation happen when you ask ChatGPT a question, or only when it was originally trained?"
+    ]
+  },
+  {
+    "student_statement": "During backpropagation, the model changes its training data to fix errors.",
+    "incorrect_belief": "Assuming the error correction alters the external dataset rather than the internal model weights.",
+    "socratic_questions": [
+      "If the model changed the training data, how would it learn anything permanent?",
+      "What are the actual parameters inside the neural network that can be adjusted?",
+      "If a student gets a math problem wrong, do they change the textbook or do they change their understanding?"
+    ]
+  },
+  {
+    "student_statement": "Backpropagation computes the error for the final output and only updates the very last layer of the network.",
+    "incorrect_belief": "Misunderstanding the chain rule, believing gradients only apply to the final layer rather than propagating through the entire network.",
+    "socratic_questions": [
+      "If only the last layer was updated, how would the first layer ever get better at its job?",
+      "What mathematical rule allows us to calculate how an error at the end was influenced by the very beginning?",
+      "Why is the term called back-'propagation'?"
+    ]
+  },
+  {
+    "student_statement": "A loss function tells the model exactly which words it should have generated.",
+    "incorrect_belief": "Loss functions provide direct text corrections rather than a scalar numerical value representing the error magnitude.",
+    "socratic_questions": [
+      "Does a loss function output a sentence, or does it output a number?",
+      "How does calculating the difference between the predicted probability and the actual next word result in a score?",
+      "Can a single number tell a model exactly what word to use, or does it just tell the model 'you are getting warmer/colder'?"
+    ]
+  },
+  {
+    "student_statement": "Optimization means the model is searching the internet for the best answer.",
+    "incorrect_belief": "Confusing gradient descent optimization with search engine optimization (SEO) or web retrieval.",
+    "socratic_questions": [
+      "In mathematics, what are we trying to 'optimize' or minimize?",
+      "How does a mathematical algorithm like Adam or Stochastic Gradient Descent adjust weights?",
+      "What is the 'loss landscape' and how does the model find the lowest point?"
+    ]
+  },
+  {
+    "student_statement": "When the loss reaches zero, it means the LLM is perfectly intelligent.",
+    "incorrect_belief": "A loss of zero implies AGI, rather than the model simply overfitting and memorizing its training data.",
+    "socratic_questions": [
+      "If a model perfectly memorizes its training data, what will its loss be on that data?",
+      "If the loss is zero on the training data, does that mean it will perform well on questions it has never seen?",
+      "What is 'overfitting', and why is a loss of exactly zero usually a bad sign?"
+    ]
+  },
+  {
+    "student_statement": "Softmax in attention just converts all numbers to 1s and 0s.",
+    "incorrect_belief": "Softmax operates as a binary threshold (like a step function) rather than creating a normalized probability distribution.",
+    "socratic_questions": [
+      "If softmax only output 1s and 0s, could the model give partial attention to multiple words?",
+      "What does the 'soft' in softmax imply about the values it produces?",
+      "How does the model benefit from having fractional attention scores between 0 and 1?"
+    ]
+  },
+  {
+    "student_statement": "Dot products in attention measure how physically close words are in the original sentence.",
+    "incorrect_belief": "Attention scores are based on character/word proximity rather than semantic relevance represented by vectors.",
+    "socratic_questions": [
+      "If two vectors point in exactly the same direction in space, what will their dot product be?",
+      "Does a word's meaning change just because it's five words away instead of two?",
+      "How does multiplying the Query and Key vectors reveal how related two concepts are?"
+    ]
+  },
+  {
+    "student_statement": "The attention score is calculated by just adding the Query matrix to the Key matrix.",
+    "incorrect_belief": "Attention similarity is an additive operation rather than a multiplicative (dot product) one.",
+    "socratic_questions": [
+      "If we just added the values together, would that effectively measure similarity or just combine them?",
+      "What mathematical operation in linear algebra is traditionally used to find the angle or alignment between two vectors?",
+      "Why does multiplying a Query by a Key help amplify matching features and suppress mismatched ones?"
+    ]
+  },
+  {
+    "student_statement": "Word embeddings assign each word a random unique ID number.",
+    "incorrect_belief": "Words are represented by arbitrary scalar IDs rather than dense semantic vectors in a multi-dimensional space.",
+    "socratic_questions": [
+      "If words were just random IDs, how would the model know that 'cat' and 'kitten' are related?",
+      "What is the difference between an ID number and a set of coordinates in a multidimensional space?",
+      "How could representing a word as a list of numbers help capture its tone, gender, or meaning?"
+    ]
+  },
+  {
+    "student_statement": "In vector space, words that rhyme are placed closer together.",
+    "incorrect_belief": "Assuming semantic vector spaces organize words phonetically rather than by meaning and context.",
+    "socratic_questions": [
+      "Does a standard LLM learn from hearing words spoken, or from reading them in context?",
+      "If 'bear' and 'chair' rhyme, do they often appear in similar contexts in a sentence?",
+      "What types of words are likely to be found clustered near the word 'king' in vector space?"
+    ]
+  },
+  {
+    "student_statement": "Embeddings are basically just an alphabetical dictionary of the English language.",
+    "incorrect_belief": "Embeddings are sorted arbitrarily (alphabetically) rather than structurally mapped by semantic relationships.",
+    "socratic_questions": [
+      "If embeddings were alphabetical, 'apple' and 'apply' would be close. Are their meanings related?",
+      "How does a dictionary format fail to show the mathematical relationship between 'man', 'woman', 'king', and 'queen'?",
+      "Why do we call it a 'space' with hundreds of dimensions instead of a list?"
+    ]
+  },
+  {
+    "student_statement": "Prompt engineering is just about asking the model politely so it doesn't refuse.",
+    "incorrect_belief": "Prompt engineering is about etiquette rather than structuring context, constraints, and formatting for optimal generation.",
+    "socratic_questions": [
+      "Does the model have feelings that require you to say 'please' and 'thank you'?",
+      "How does changing the format of your request alter the tokens the model predicts next?",
+      "What elements make up a truly effective prompt besides politeness?"
+    ]
+  },
+  {
+    "student_statement": "If a prompt doesn't work, it means the model doesn't know the answer at all.",
+    "incorrect_belief": "LLMs have a binary state of 'knowing' or 'not knowing', ignoring how phrasing unlocks latent knowledge.",
+    "socratic_questions": [
+      "Have you ever rephrased a question and suddenly gotten a much better answer?",
+      "How does the wording of your prompt change the 'neighborhood' of concepts the model looks at?",
+      "Could the model have the necessary knowledge but lack the correct context to generate it?"
+    ]
+  },
+  {
+    "student_statement": "The length of the prompt is the only factor that determines how good the output will be.",
+    "incorrect_belief": "Word count is directly proportional to output quality, ignoring clarity, specificity, and structure.",
+    "socratic_questions": [
+      "If I write a 1,000-word prompt that is completely confusing and contradictory, will the output be good?",
+      "Can a short, highly specific prompt outperform a long, rambling one?",
+      "What matters more: the amount of words, or the relevance of the constraints you provide?"
+    ]
+  },
+  {
+    "student_statement": "Few-shot learning permanently teaches the model new facts that it will remember for future users.",
+    "incorrect_belief": "In-context learning updates the model's base weights and memory permanently.",
+    "socratic_questions": [
+      "When you start a brand new chat, does the model remember the examples you gave it in the last chat?",
+      "What is the difference between 'in-context learning' in a prompt and 'fine-tuning' the model?",
+      "Where are the few-shot examples stored while the model generates its answer?"
+    ]
+  },
+  {
+    "student_statement": "You need to provide at least a hundred examples for few-shot learning to be effective.",
+    "incorrect_belief": "Few-shot prompting requires massive datasets similar to fine-tuning.",
+    "socratic_questions": [
+      "What does the word 'few' in few-shot learning imply?",
+      "Can a model pick up a pattern with just 2 or 3 examples?",
+      "What happens to the context window if you try to put 100 long examples into a single prompt?"
+    ]
+  },
+  {
+    "student_statement": "Providing examples in a prompt just tells the model to copy and paste those exact examples.",
+    "incorrect_belief": "Few-shot examples constrain the model to identical outputs rather than teaching it a pattern or format.",
+    "socratic_questions": [
+      "If you give an example of translating 'hello' to French, and then ask it to translate 'goodbye', will it just say 'hello' in French again?",
+      "What is the model actually extracting from the examples you provide?",
+      "How does providing examples help the model understand the tone or format you want?"
+    ]
+  },
+  {
+    "student_statement": "Asking a model to 'think step by step' activates a special logical module inside its code.",
+    "incorrect_belief": "Chain-of-thought prompting turns on a hidden discrete reasoning subsystem.",
+    "socratic_questions": [
+      "Does the architecture of the neural network change when you type 'think step by step'?",
+      "How does forcing the model to generate intermediate tokens give it more 'compute time' for the final answer?",
+      "Is it activating a module, or just shifting the probability of the next words toward a structured explanation?"
+    ]
+  },
+  {
+    "student_statement": "Chain-of-thought only works for math problems and coding.",
+    "incorrect_belief": "Intermediate reasoning steps are useless for creative, qualitative, or analytical tasks.",
+    "socratic_questions": [
+      "Could breaking down a complex ethical dilemma into smaller parts help the model give a more nuanced answer?",
+      "If you ask the model to outline a story before writing it, isn't that a form of step-by-step thinking?",
+      "How might generating a list of pros and cons before making a recommendation improve the final output?"
+    ]
+  },
+  {
+    "student_statement": "When an LLM outputs its reasoning steps, it is revealing its actual internal computational process.",
+    "incorrect_belief": "The generated reasoning text is a true reflection of the neural network's internal mathematical activations.",
+    "socratic_questions": [
+      "Does the text the model outputs accurately describe the matrix multiplications happening inside?",
+      "Is the model explaining its true thoughts, or is it generating text that mimics human reasoning?",
+      "Have you ever seen a model confidently state a logical step that is completely mathematically wrong?"
+    ]
+  },
+  {
+    "student_statement": "If you set a system prompt telling the AI it's a doctor, it gains access to actual medical databases.",
+    "incorrect_belief": "Role-playing in a system prompt grants the model new external capabilities or specialized private data.",
+    "socratic_questions": [
+      "Does changing the prompt give the model an internet connection to a hospital's server?",
+      "Where does the medical knowledge it uses actually come from?",
+      "How does assigning a role change the probability of certain 'medical' words being generated?"
+    ]
+  },
+  {
+    "student_statement": "The system prompt is just a suggestion and the model can choose to ignore it if it wants.",
+    "incorrect_belief": "System prompts are taken lightly or processed with the exact same weight as user messages.",
+    "socratic_questions": [
+      "How do developers ensure that safety rules in the system prompt are strictly followed?",
+      "Is there an architectural difference in how system messages and user messages are weighted during training?",
+      "Can the model 'choose' anything, or is it statistically bound by its alignment training?"
+    ]
+  },
+  {
+    "student_statement": "Role-playing completely prevents the model from hallucinating.",
+    "incorrect_belief": "Adopting an expert persona makes the model immune to factual errors.",
+    "socratic_questions": [
+      "If you tell the model it is the world's greatest mathematician, does it suddenly stop making calculation errors?",
+      "Does pretending to be an expert give the model factual knowledge it wasn't trained on?",
+      "Could a model hallucinate an answer confidently *because* it is trying to sound like an expert?"
+    ]
+  },
+  {
+    "student_statement": "A temperature of 0 means the model will output absolutely nothing.",
+    "incorrect_belief": "Confusing generation temperature with physical temperature, assuming 0 means no activity.",
+    "socratic_questions": [
+      "What does 'temperature' actually scale mathematically in the softmax function?",
+      "Does a temperature of 0 freeze the model, or does it just force it to always pick the highest-probability word?",
+      "If the temperature is 0, will the model generate the exact same answer every time?"
+    ]
+  },
+  {
+    "student_statement": "Higher temperature makes the model smarter and better at solving complex math.",
+    "incorrect_belief": "High temperature increases intelligence, whereas it actually just increases randomness/entropy.",
+    "socratic_questions": [
+      "If you are solving an exact math equation, do you want your answer to be creative and unpredictable?",
+      "What happens to the model's accuracy on factual questions when you increase the randomness?",
+      "Why is a low temperature usually recommended for coding and logic tasks?"
+    ]
+  },
+  {
+    "student_statement": "A temperature of 0 guarantees 100% factual accuracy.",
+    "incorrect_belief": "Deterministic output (always picking the most likely token) means the output is factually true.",
+    "socratic_questions": [
+      "If the model was trained on false information, what is the most likely token it will predict?",
+      "Does 'most mathematically probable token' strictly equal 'truth'?",
+      "Can a model confidently hallucinate the exact same wrong answer every time at temperature 0?"
+    ]
+  },
+  {
+    "student_statement": "RAG trains the model on new data every time a user asks a question.",
+    "incorrect_belief": "Retrieval-Augmented Generation updates the model's weights on the fly.",
+    "socratic_questions": [
+      "Does RAG change the millions of parameters inside the model, or does it just paste text into the prompt?",
+      "How would training the model on every single query affect its speed and memory?",
+      "What is the difference between 'retrieving' information and 'learning' information?"
+    ]
+  },
+  {
+    "student_statement": "RAG lets the LLM search its own internal weights to find the document.",
+    "incorrect_belief": "Assuming the retrieved documents are magically hidden inside the model rather than stored in an external database.",
+    "socratic_questions": [
+      "If the documents were in its internal weights, why would we need a separate retrieval system?",
+      "Where do the documents in a RAG system actually live?",
+      "How does the retrieval system find the right document to send to the LLM?"
+    ]
+  },
+  {
+    "student_statement": "RAG requires the LLM to read the entire internet before answering.",
+    "incorrect_belief": "The generative model itself does the searching through all documents rather than relying on a separate search/retrieval index.",
+    "socratic_questions": [
+      "Could an LLM fit the entire internet into its context window?",
+      "What role does a search engine or vector database play *before* the LLM sees the prompt?",
+      "How does filtering the data down to a few paragraphs make the LLM's job easier?"
+    ]
+  },
+  {
+    "student_statement": "When using RAG, the LLM will never hallucinate because it has access to facts.",
+    "incorrect_belief": "RAG completely eliminates hallucinations rather than just mitigating them.",
+    "socratic_questions": [
+      "What happens if the retrieved document contains conflicting or incorrect information?",
+      "Can the LLM misinterpret or poorly summarize the text it was given?",
+      "If the retrieval system fails to find the right document, might the LLM still try to guess the answer?"
+    ]
+  },
+  {
+    "student_statement": "Vector databases store text files exactly like a standard SQL database, just faster.",
+    "incorrect_belief": "Vector databases store raw text in tables rather than storing mathematical representations (embeddings) of data.",
+    "socratic_questions": [
+      "What does the word 'vector' mean in mathematics?",
+      "Instead of storing a paragraph as text, what does an embedding model convert the paragraph into?",
+      "How is calculating the distance between two arrays of numbers different from querying an SQL table?"
+    ]
+  },
+  {
+    "student_statement": "A vector database uses standard keyword matching to find the exact words you searched for.",
+    "incorrect_belief": "Semantic search in vector databases is identical to traditional lexical/keyword search.",
+    "socratic_questions": [
+      "If I search for 'puppy', can a vector database find a document that only uses the word 'dog'?",
+      "How do vector embeddings capture the *meaning* of a sentence rather than just the characters?",
+      "Why is 'semantic similarity' different from 'exact match'?"
+    ]
+  },
+  {
+    "student_statement": "You can only put text into a vector database; it doesn't work for images or other data.",
+    "incorrect_belief": "Embeddings are strictly for text and cannot represent multimodal data.",
+    "socratic_questions": [
+      "Can an image be converted into a mathematical list of numbers (a vector)?",
+      "If both an image of a cat and the word 'cat' are converted into vectors, could they point to the same area in vector space?",
+      "How do systems like Google Reverse Image Search work?"
+    ]
+  },
+  {
+    "student_statement": "Fine-tuning an LLM means changing its entire vocabulary from scratch.",
+    "incorrect_belief": "Fine-tuning replaces pre-training, destroying the foundation rather than slightly adjusting the weights.",
+    "socratic_questions": [
+      "If you changed the entire vocabulary, would the model still remember how to speak English?",
+      "Does fine-tuning build upon what the model already knows, or start over?",
+      "What does the word 'fine' in fine-tuning imply about the size of the adjustments?"
+    ]
+  },
+  {
+    "student_statement": "LoRA works by adding millions of new words to the model's dictionary.",
+    "incorrect_belief": "Low-Rank Adaptation alters the tokenizer vocabulary rather than efficiently updating weights via low-rank matrices.",
+    "socratic_questions": [
+      "Does LoRA change the words a model understands, or the mathematical weights of how concepts connect?",
+      "Why is LoRA considered so much more efficient and memory-friendly than full fine-tuning?",
+      "What does 'low-rank' actually refer to in linear algebra?"
+    ]
+  },
+  {
+    "student_statement": "Fine-tuning is required every time you want the model to learn a specific user's name.",
+    "incorrect_belief": "Using fine-tuning for basic dynamic information retrieval rather than just using context/RAG.",
+    "socratic_questions": [
+      "Is it cost-effective to retrain a massive neural network just to teach it your name?",
+      "Could you simply pass your name in the system prompt instead?",
+      "When is it better to use a prompt versus physically changing the model's weights?"
+    ]
+  },
+  {
+    "student_statement": "RLHF means humans write every single response the model is supposed to give.",
+    "incorrect_belief": "Reinforcement Learning from Human Feedback relies purely on human-written supervised data rather than human preference ranking.",
+    "socratic_questions": [
+      "If humans wrote every response, where does the 'reinforcement learning' part come in?",
+      "In RLHF, do humans write the answer, or do they rank multiple answers generated by the AI?",
+      "How does a reward model learn to score answers the way a human would?"
+    ]
+  },
+  {
+    "student_statement": "Alignment ensures the model will never say anything factually incorrect.",
+    "incorrect_belief": "Alignment processes (like RLHF) are designed to perfectly encode factual truth rather than just helpfulness and harmlessness.",
+    "socratic_questions": [
+      "Can humans always agree on what is perfectly true?",
+      "Does RLHF reward a model for being factually accurate, or for sounding convincing and safe?",
+      "Can an aligned model still hallucinate a polite, helpful-sounding, but wrong answer?"
+    ]
+  },
+  {
+    "student_statement": "A reward model in RLHF gives the AI actual money or computer resources when it does well.",
+    "incorrect_belief": "Anthropomorphizing or literalizing the 'reward' in Reinforcement Learning.",
+    "socratic_questions": [
+      "In the context of machine learning, what format does a 'reward' actually take?",
+      "How does a mathematical score help update the model's weights?",
+      "Can a software program desire physical resources, or is it just optimizing for a numerical target?"
+    ]
+  },
+  {
+    "student_statement": "An AI agent is completely autonomous and doesn't need an LLM to function.",
+    "incorrect_belief": "Modern generative agents operate entirely outside of LLMs, rather than using LLMs as their core reasoning/decision engine.",
+    "socratic_questions": [
+      "What 'brain' is making the decisions and understanding the instructions inside a modern AI agent?",
+      "How does an agent know which tool to use if it doesn't process language to understand the goal?",
+      "What role does the LLM play in the loop of an agentic framework?"
+    ]
+  },
+  {
+    "student_statement": "When an agent uses a tool, it literally clicks buttons on a screen like a human.",
+    "incorrect_belief": "Agents strictly operate via visual GUI automation (RPA) rather than API calls and JSON payloads.",
+    "socratic_questions": [
+      "Do computers need a visual screen to send data to each other?",
+      "How does an API allow an AI model to check the weather without opening a web browser?",
+      "While visual agents exist, how do most AI agents interact with software tools securely and efficiently?"
+    ]
+  },
+  {
+    "student_statement": "Agentic frameworks mean the AI has finally achieved consciousness and self-direction.",
+    "incorrect_belief": "Agents looping and making tool calls implies true autonomy and sentience rather than scripted recursive prompting.",
+    "socratic_questions": [
+      "If a loop in code tells the AI 'evaluate your last response and try again', is the AI self-directing or following code?",
+      "Does giving an LLM access to a calculator make it conscious?",
+      "What is the difference between automated task planning and actual free will?"
+    ]
+  },
+  {
+    "student_statement": "Multi-agent systems just mean running the same prompt 10 times and averaging the result.",
+    "incorrect_belief": "Conflating ensembling or repetitive sampling with multiple agents holding distinct personas/tools interacting with each other.",
+    "socratic_questions": [
+      "If every agent is exactly the same, what is the benefit of having them talk to each other?",
+      "How might assigning one agent to be a 'writer' and another to be an 'editor' improve the final output?",
+      "What makes a system 'multi-agent' rather than just a loop of a single agent?"
+    ]
+  },
+  {
+    "student_statement": "In a multi-agent system, the AI models physically communicate via private servers.",
+    "incorrect_belief": "Agent communication requires physical networking or separate hardware rather than just passing strings of text within a program.",
+    "socratic_questions": [
+      "Can two agents run on the exact same computer and pass text back and forth?",
+      "When one agent 'speaks' to another, what is actually being sent in the code?",
+      "Does the communication require a network, or just appending text to the next prompt?"
+    ]
+  },
+  {
+    "student_statement": "Having multiple agents debate guarantees they will arrive at the absolute truth.",
+    "incorrect_belief": "Multi-agent consensus equals objective truth, ignoring shared biases or 'blind leading the blind' scenarios.",
+    "socratic_questions": [
+      "If both agents were trained on the same flawed dataset, could they agree on a wrong answer?",
+      "Can one confident agent persuade another agent to accept a hallucination?",
+      "Does consensus always equate to accuracy in human debates?"
+    ]
+  },
+  {
+    "student_statement": "AI models are inherently objective and free from human bias because they are machines.",
+    "incorrect_belief": "Mathematical algorithms are intrinsically unbiased, ignoring that they are trained on biased human data.",
+    "socratic_questions": [
+      "Where does an AI model learn its understanding of the world?",
+      "If a model is trained on centuries of historical texts, what kinds of societal views might it absorb?",
+      "Can the mathematical optimization of human data result in a purely objective machine?"
+    ]
+  },
+  {
+    "student_statement": "Bias in LLMs can be completely eliminated by just deleting all bad words from the training data.",
+    "incorrect_belief": "Bias is only expressed through explicit slurs or offensive words, ignoring structural, representational, and implicit biases.",
+    "socratic_questions": [
+      "If a model never uses a bad word, could it still exclusively assume all doctors are men and nurses are women?",
+      "How does representation in the dataset affect the way the model translates gender-neutral pronouns?",
+      "Is bias only about 'bad words', or also about who is included or excluded in the data?"
+    ]
+  },
+  {
+    "student_statement": "If a model gives a biased answer, it means the programmers maliciously coded it to be prejudiced.",
+    "incorrect_belief": "Bias is deliberately hard-coded by developers rather than an emergent property of the training data.",
+    "socratic_questions": [
+      "Would a programmer need to write a specific rule for the model to reflect a stereotype?",
+      "How might a perfectly well-intentioned programmer inadvertently train a biased model?",
+      "Why is it so difficult for developers to spot every bias before releasing a model?"
+    ]
+  },
+  {
+    "student_statement": "Hallucinations happen when the AI gets confused and searches the wrong website.",
+    "incorrect_belief": "Hallucinations are retrieval errors from external sources rather than failures in generative probability.",
+    "socratic_questions": [
+      "If the AI doesn't have an internet connection, can it still hallucinate?",
+      "Is the model retrieving a false fact, or generating a false fact word-by-word?",
+      "Why does a hallucinated sentence often sound grammatically perfect and highly plausible?"
+    ]
+  },
+  {
+    "student_statement": "You can prevent hallucinations by explicitly telling the model 'do not lie'.",
+    "incorrect_belief": "The model possesses an underlying awareness of truth and can be commanded not to deceive.",
+    "socratic_questions": [
+      "Does the model know it is lying, or is it just generating the most statistically likely next word?",
+      "If the model genuinely calculated that a fake fact is highly probable, would telling it 'not to lie' change that?",
+      "How is hallucination an architectural feature of generative AI rather than a moral choice?"
+    ]
+  },
+  {
+    "student_statement": "If an LLM cites a specific book and page number, that source definitely exists.",
+    "incorrect_belief": "Highly specific details (like DOIs, URLs, or page numbers) guarantee the factual existence of a source.",
+    "socratic_questions": [
+      "How does the model learn what a typical academic citation looks like?",
+      "If it knows that citations usually have a title, an author, and a year, could it simply mix and match real authors with fake titles?",
+      "Have you ever tried to look up a URL generated by an AI only to find a 404 error?"
+    ]
+  },
+  {
+    "student_statement": "A hallucination is a glitch in the hardware running the model.",
+    "incorrect_belief": "Hallucinations are hardware/memory errors rather than expected software behavior based on probability.",
+    "socratic_questions": [
+      "If you run the exact same prompt on two different computers, might they both hallucinate the same answer?",
+      "Does the model 'glitch' when writing a fictional story, or is it doing the exact same mathematical process as when answering a factual question?",
+      "Why is hallucination considered a feature of creativity rather than a hardware bug?"
+    ]
+  },
+  {
+    "student_statement": "LLMs instantly forget everything you tell them the moment you close the tab.",
+    "incorrect_belief": "Assuming all interactions are fully ephemeral, ignoring data logging, user history, and potential use for future training.",
+    "socratic_questions": [
+      "Do the companies that provide these AI services keep logs of user interactions?",
+      "Could the conversation you have today end up in a training dataset for next year's model?",
+      "How do features like 'memory' or 'custom instructions' alter the idea that the model forgets everything?"
+    ]
+  },
+  {
+    "student_statement": "If I type personal info into a public LLM, it is strictly confidential and encrypted.",
+    "incorrect_belief": "Public web interfaces for LLMs have HIPAA-level or strict enterprise data privacy guarantees by default.",
+    "socratic_questions": [
+      "Have you read the Terms of Service regarding how public chatbot data is used?",
+      "What is the difference between an enterprise API agreement and a free public web chat?",
+      "Why do companies often warn their employees not to paste proprietary code into public AI tools?"
+    ]
+  },
+  {
+    "student_statement": "Models inherently know which data is private and will automatically refuse to memorize it.",
+    "incorrect_belief": "LLMs have a built-in filter that recognizes and rejects Personally Identifiable Information (PII) during training.",
+    "socratic_questions": [
+      "Does a neural network know the difference between a social security number and a random string of math digits?",
+      "If private information accidentally leaked onto a public website, how would the scraping bot know not to read it?",
+      "Why must researchers take explicit, difficult steps to scrub data before training begins?"
+    ]
+  },
+  {
+    "student_statement": "AI models only consume energy when they are actively answering a user's prompt.",
+    "incorrect_belief": "Ignoring the massive carbon footprint and energy cost of the initial pre-training phase.",
+    "socratic_questions": [
+      "What happens in the data centers for the months *before* an AI model is ever released to the public?",
+      "Which requires more electricity: asking a model to write a poem, or training it on billions of documents for 90 days?",
+      "Why do tech companies build massive new power substations just for AI training clusters?"
+    ]
+  },
+  {
+    "student_statement": "Training an LLM uses about the same amount of electricity as running a high-end gaming PC for a day.",
+    "incorrect_belief": "Vastly underestimating the scale of compute required to train foundation models.",
+    "socratic_questions": [
+      "If an LLM required thousands of specialized GPUs running simultaneously, how would that compare to one gaming PC?",
+      "Do you know how many megawatt-hours are typically consumed during a frontier model's training run?",
+      "Why is water sometimes a concern for data centers running AI training?"
+    ]
+  },
+  {
+    "student_statement": "Because AI is software, it has zero physical footprint on the environment.",
+    "incorrect_belief": "Software exists amorphously 'in the cloud' without relying on physical hardware, energy, and resources.",
+    "socratic_questions": [
+      "Where does the 'cloud' actually live in the physical world?",
+      "What materials are mined from the earth to build the GPUs that run these models?",
+      "How are massive server farms cooled, and what resources does that cooling require?"
+    ]
+  },
+  {
+    "student_statement": "AI will replace exactly 100% of all human jobs within the next year.",
+    "incorrect_belief": "Hyperbolic overestimation of AI capabilities and implementation speed, ignoring physical labor and job transformation.",
+    "socratic_questions": [
+      "Can an LLM physically unclog a pipe or build a house?",
+      "Historically, when new technology like the internet was introduced, did it only destroy jobs or did it create new ones?",
+      "How long does it usually take for large corporations to fully adopt and integrate a new technology?"
+    ]
+  },
+  {
+    "student_statement": "The introduction of LLMs means schools no longer need to teach writing.",
+    "incorrect_belief": "Writing is purely a mechanical task of generating text, rather than a cognitive process of structuring thought.",
+    "socratic_questions": [
+      "If you don't know how to write well, how will you know if the AI generated a poorly reasoned argument?",
+      "Is the primary goal of writing in school to produce a document, or to learn how to organize your thoughts critically?",
+      "How can someone effectively prompt an AI if they don't understand the fundamentals of language and tone?"
+    ]
+  },
+  {
+    "student_statement": "AI-generated content is always perfectly distinguishable from human-created content.",
+    "incorrect_belief": "Assuming AI output always has obvious hallmarks or that AI detectors are 100% accurate.",
+    "socratic_questions": [
+      "Have you ever read a short news blurb without realizing it was automatically generated?",
+      "Why do AI text detectors frequently flag essays written by real students as AI-generated?",
+      "As models get better at mimicking specific human styles, what 'clues' will be left to find?"
+    ]
+  },
+  {
+    "student_statement": "Responsible AI just means making sure the model doesn't use profanity.",
+    "incorrect_belief": "Reducing AI safety to basic content filtering and ignoring broader issues like systemic bias, job displacement, and alignment.",
+    "socratic_questions": [
+      "Could a perfectly polite model still give someone dangerous medical advice?",
+      "Is a model that politely denies loans to minorities considered 'responsible'?",
+      "What ethical considerations go into how the training data was sourced from human creators?"
+    ]
+  },
+  {
+    "student_statement": "Open-source AI is always more dangerous than closed-source AI because anyone can use it.",
+    "incorrect_belief": "Security through obscurity is absolute, ignoring the benefits of open scrutiny and democratization in open-source.",
+    "socratic_questions": [
+      "If a closed-source model has a hidden bias or vulnerability, how will independent researchers find out?",
+      "Has open-source software (like Linux) historically been less secure, or more secure because of community auditing?",
+      "What happens if only a few massive corporations control all access to the most powerful AI systems?"
+    ]
+  },
+  {
+    "student_statement": "Red-teaming is when the AI plays games against humans to learn strategy.",
+    "incorrect_belief": "Confusing adversarial testing (red-teaming) for safety with reinforcement learning via game playing.",
+    "socratic_questions": [
+      "Where does the term 'red team' originally come from in military and cybersecurity contexts?",
+      "Why would researchers intentionally try to trick their own AI into breaking its safety rules?",
+      "How does finding a model's vulnerabilities *before* release help make it safer?"
+    ]
+  }
+]
