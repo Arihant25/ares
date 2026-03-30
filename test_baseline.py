@@ -31,8 +31,27 @@ OPENROUTER_MODELS = {
 
 OLLAMA_MODELS = {
     "gemma": "hf.co/unsloth/gemma-3n-E2B-it-GGUF:Q8_0",
-    "lfm2": "hf.co/LiquidAI/LFM2-VL-3B-GGUF:Q8_0",
 }
+
+# LFM2-VL is unsupported in Ollama (PR #14069 closed as stale); use llama-cpp-python directly.
+LFM2_GGUF = "/usr/share/ollama/.ollama/models/blobs/sha256-2b1c0ecb28b802cc1c8a8afd42a4746ac9e563e33fe2c87c5948864bda23fe39"
+
+_lfm2_model = None
+
+
+def _get_lfm2():
+    global _lfm2_model
+    if _lfm2_model is None:
+        from llama_cpp import Llama
+        print("Loading LFM2-VL via llama-cpp-python...")
+        _lfm2_model = Llama(
+            model_path=LFM2_GGUF,
+            n_ctx=4096,
+            n_gpu_layers=-1,
+            verbose=False,
+        )
+        print("LFM2-VL loaded.")
+    return _lfm2_model
 
 DATA_PATH = "data/finalTestSet.jsonc"
 OUTPUT_DIR = "outputs"
@@ -62,15 +81,17 @@ def user_prompt(student_statement: str) -> str:
 # ---------------------------------------------------------------------------
 
 def load_data(path: str) -> list[dict]:
-    """Load JSONC by stripping // and /* */ comments before parsing."""
+    """Load JSONC, return all items from all categories with 'category' field attached."""
     with open(path, "r", encoding="utf-8") as fh:
         raw = fh.read()
-    # Remove block comments
     raw = re.sub(r"/\*.*?\*/", "", raw, flags=re.DOTALL)
-    # Remove line comments
     raw = re.sub(r"//[^\n]*", "", raw)
     data = json.loads(raw)
-    return data["TrainPerturbed"]
+    items = []
+    for category, category_items in data.items():
+        for item in category_items:
+            items.append({**item, "category": category})
+    return items
 
 
 # ---------------------------------------------------------------------------
@@ -123,6 +144,18 @@ def call_ollama(model_id: str, messages: list[dict]) -> tuple[str, float]:
     return response["message"]["content"], latency
 
 
+def call_llama_cpp(messages: list[dict]) -> tuple[str, float]:
+    llm = _get_lfm2()
+    start = time.time()
+    out = llm.create_chat_completion(
+        messages=messages,
+        temperature=0.3,
+        max_tokens=512,
+    )
+    latency = time.time() - start
+    return out["choices"][0]["message"]["content"], latency
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -146,19 +179,20 @@ def main() -> None:
     total = len(items)
 
     is_openrouter = model_name in OPENROUTER_MODELS
-    model_id = (
-        OPENROUTER_MODELS[model_name]
-        if is_openrouter
-        else OLLAMA_MODELS[model_name]
-    )
+    is_llama_cpp = model_name == "lfm2"
+    model_id = OPENROUTER_MODELS.get(model_name) or OLLAMA_MODELS.get(model_name)
     approach_tag = f"{model_name}-baseline"
+
+    if is_llama_cpp:
+        _get_lfm2()  # load model once upfront
 
     for i, item in enumerate(items):
         student_statement = item["student_statement"]
         incorrect_belief = item["incorrect_belief"]
         socratic_question = item["socratic_question"]
+        category = item["category"]
 
-        print(f"Processing item {i + 1}/{total}: {student_statement[:60]}...")
+        print(f"Processing item {i + 1}/{total} [{category}]: {student_statement[:50]}...")
 
         if student_statement in already_done:
             print(f"  Skipping (already in output).")
@@ -172,6 +206,8 @@ def main() -> None:
         try:
             if is_openrouter:
                 output_text, latency = call_openrouter(model_id, messages)
+            elif is_llama_cpp:
+                output_text, latency = call_llama_cpp(messages)
             else:
                 output_text, latency = call_ollama(model_id, messages)
         except Exception as exc:
@@ -179,6 +215,7 @@ def main() -> None:
             continue
 
         result = {
+            "Category": category,
             "Input": student_statement,
             "GroundTruth_Misconception": incorrect_belief,
             "GroundTruth_Question": socratic_question,

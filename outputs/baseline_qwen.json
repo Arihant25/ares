@@ -1,0 +1,902 @@
+[
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Multi-Head Attention is redundant because you could just use one very large attention head with the same total dimension.",
+    "GroundTruth_Misconception": "A single high-dimensional head is functionally equivalent to multiple low-dimensional heads.",
+    "GroundTruth_Question": "If you are looking at a painting, can you simultaneously focus on the brushstroke technique, the color palette, and the overall composition using only one 'center' of focus?",
+    "Output": "Misconception: Multi-Head Attention is functionally equivalent to a single attention head with the same total dimension, differing only in size.\n\nSocratic Question: If a single large attention head and multiple smaller heads have the same total dimension, why might the model benefit from learning different transformation patterns in separate heads, especially when processing diverse linguistic structures like syntax and semantics simultaneously?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 5.5435
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Chain-of-Thought prompting works because it gives the model 'extra time' to think before it answers.",
+    "GroundTruth_Misconception": "The benefit of CoT is temporal (computational time) rather than structural (token-by-token state updates).",
+    "GroundTruth_Question": "If the model doesn't actually have a 'pause' button for internal thought, how does generating intermediate tokens change the input state for the final answer?",
+    "Output": "Misconception: The model does not actually \"think\" over time; Chain-of-Thought prompting does not provide \"extra time\" but instead structures the output to include intermediate reasoning steps, which improves performance by mimicking step-by-step inference.\n\nSocratic Question: If the model generates responses token by token in the same amount of time regardless of format, how might showing intermediate reasoning steps—rather than extra time—lead to better answers?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.2324
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Self' in 'Self-Attention' means the model is thinking about itself.",
+    "GroundTruth_Misconception": "Self-attention implies model self-reflection or consciousness.",
+    "GroundTruth_Question": "If the model is looking at the relationship between different words *within the same sentence*, who is the 'self' in that context?",
+    "Output": "Misconception: The term \"Self\" in \"Self-Attention\" refers to the model reflecting on its own existence or internal state, like self-awareness.\n\nSocratic Question: What happens when you compare each word in a sentence to all the other words—including itself—to decide which ones are most important for understanding its meaning?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 4.3267
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Query' and 'Key' in attention are basically the same thing as a search query and a database record.",
+    "GroundTruth_Misconception": "Attention components are identical to traditional database retrieval.",
+    "GroundTruth_Question": "In a database, a record is either a match or it isn't; in attention, can a 'Key' be 'partially' relevant to a 'Query'?",
+    "Output": "Misconception: The \"Query\" and \"Key\" in attention are not equivalent to a search query and a database record; rather, both are dynamic, learned representations used to compute similarity for weighting values, not one being a fixed query and the other a static record.\n\nSocratic Question: How does the attention mechanism use the Query and Key to determine which parts of the input should influence the output, and what would happen if the Key were a fixed database record instead of a learned representation?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.6812
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Attention' mechanism is the same as human focus.",
+    "GroundTruth_Misconception": "Neural attention is biologically identical to human cognitive focus.",
+    "GroundTruth_Question": "When you focus on a word, you ignore the rest of the page; does the Transformer 'ignore' the other tokens, or does it calculate a 'weight' for every single one of them simultaneously?",
+    "Output": "Misconception: The student equates the computational \"Attention\" mechanism in neural networks with human cognitive focus, implying they function or operate in the same way, when in fact they are fundamentally different in mechanism, intent, and biological basis.\n\nSocratic Question: What evidence would you need to show that a neural network is actually \"focusing\" like a human, rather than just mathematically weighting parts of input data differently?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.5044
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "A 'Transformer' is just a neural network with more layers.",
+    "GroundTruth_Misconception": "Transformer novelty is purely a matter of depth (scaling).",
+    "GroundTruth_Question": "Before Transformers, models (like RNNs) processed words one by one; what's the fundamental 'parallel' trick that a Transformer uses instead?",
+    "Output": "Misconception: A transformer is defined merely by depth (number of layers), rather than by its distinct architectural components such as self-attention mechanisms and sequence-to-sequence structure.\n\nSocratic Question: What key mechanism allows transformers to process input sequences in parallel and capture long-range dependencies, and how does this differ from how sequential information is typically handled in other neural networks like LSTMs or simple feedforward networks?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.3565
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Decoder' is the part of the AI that translates code into human language.",
+    "GroundTruth_Misconception": "Functional confusion of the Transformer Decoder block.",
+    "GroundTruth_Question": "In a Transformer, if the Encoder 'reads' the input, what does the Decoder 'do' to create the next word in a sentence?",
+    "Output": "Misconception: The decoder in AI translates code into human language.  \nSocratic Question: What do you think the decoder actually processes in a sequence-to-sequence model—programming code, or something else like text or tokens?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.0354
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The reason GPT models use a Decoder-only architecture is because Encoders are outdated.",
+    "GroundTruth_Misconception": "Encoder-Decoder models are obsolete.",
+    "GroundTruth_Question": "For a task like 'classifying' a million documents (where you don't need to generate new text), is a generative Decoder really the most efficient tool for the job?",
+    "Output": "Misconception: The student believes that the choice of decoder-only architecture in GPT models is due to encoders being obsolete, rather than understanding it is driven by the specific task requirements of autoregressive language generation.\n\nSocratic Question: What role does the autoregressive property play in language generation, and how does the decoder-only architecture support this property compared to an encoder or encoder-decoder setup?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 5.2625
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Mixture of Experts (MoE) models are just several independent models glued together.",
+    "GroundTruth_Misconception": "MoE is a collection of standalone models rather than a sparse architectural technique.",
+    "GroundTruth_Question": "If the experts share the same attention layers and only have different feed-forward blocks, can they really function as 'independent' entities?",
+    "Output": "Misconception: MoE models consist of independent models that operate without coordination or shared computation.  \nSocratic Question: How does the gating network in a Mixture of Experts model influence which experts are used for a given input, and what does this imply about the independence of the experts?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 4.7056
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Weight initialization doesn't matter much because the optimizer will eventually move the weights to the right values anyway.",
+    "GroundTruth_Misconception": "Optimizers are robust to any starting state and will always find the global optimum.",
+    "GroundTruth_Question": "If you start a hiker in the middle of a dense fog, does their starting position influence whether they end up in the correct valley or stuck on a random plateau?",
+    "Output": "Misconception: Weight initialization has no significant impact because optimizers can always converge to good solutions regardless of starting points.\n\nSocratic Question: What might happen if all weights are initialized to the same value—would neurons in a layer learn different features during training, and why or why not?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 276.2847
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The learning rate should be as small as possible from the very start to ensure the model never misses the optimal point.",
+    "GroundTruth_Misconception": "Smaller learning rates are always safer and more effective.",
+    "GroundTruth_Question": "If you take steps that are only one millimeter long to cross a mountain range, how long will it take you to even reach the first peak?",
+    "Output": "Misconception: A smaller learning rate always leads to better convergence because it prevents overshooting the optimal point.\n\nSocratic Question: What might happen to the training process if the learning rate is too small, and how could that affect the model's ability to reach the optimal point in a reasonable amount of time?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 78.5264
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Gradient descent is like a ball rolling down a hill to the very bottom.",
+    "GroundTruth_Misconception": "Gradient descent always finds the absolute global minimum.",
+    "GroundTruth_Question": "If the hill has many small 'dents' or craters on the way down, what happens if the ball gets stuck in one of those before reaching the bottom?",
+    "Output": "Misconception: Gradient descent always reaches the very bottom (global minimum) of the hill, like a ball rolling all the way to the lowest point.\n\nSocratic Question: What might happen if the hill has multiple low points, and how could the path of the ball depend on where it starts rolling?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.2436
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Backpropagation is when the model looks back at its previous answers to learn from its mistakes.",
+    "GroundTruth_Misconception": "Backprop is a high-level behavioral 'self-reflection' process.",
+    "GroundTruth_Question": "Is backpropagation happening while the model *talks* to you, or is it a mathematical process that only happens while the model is being *trained*?",
+    "Output": "Misconception: Backpropagation involves learning from previous predictions or outputs during inference, rather than computing gradients of the loss with respect to model parameters using the training data.\n\nSocratic Question: When during the training process does backpropagation occur, and what specific information does it use to adjust the model's weights—predictions made during inference, or the error calculated from the training labels?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.8286
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Loss Function' is a measure of how much data the model has lost during training.",
+    "GroundTruth_Misconception": "Loss refers to data attrition rather than the difference between prediction and reality.",
+    "GroundTruth_Question": "In a game of archery, if 'Loss' is the distance between your arrow and the bullseye, does a high 'Loss' mean you lost your arrows or just that you missed the target?",
+    "Output": "Misconception: The student incorrectly believes that \"loss\" refers to a physical loss of data during training, rather than a measure of prediction error.\n\nSocratic Question: What do you think the model is trying to minimize when it adjusts its parameters during training—could it be related to how wrong its predictions are rather than losing data?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 4.8175
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Bias' term in a neuron is there to make the model more biased toward the right answer.",
+    "GroundTruth_Misconception": "Bias (the parameter) is the same as Bias (the societal problem).",
+    "GroundTruth_Question": "If a neuron needs to trigger only when an input is over '5,' but the math currently outputs '0,' how can we 'shift' the result up by '5' without changing the input itself?",
+    "Output": "Misconception: The student confuses the technical role of the bias term in a neural network with the colloquial meaning of \"bias\" as favoring a particular outcome, not understanding that the bias term is a learnable parameter that shifts the activation function to better fit the data.\n\nSocratic Question: What would happen to the output of a neuron if the weighted sum of inputs is zero—can the neuron still activate, and how does the bias term influence this?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.8099
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "A 'Batch Size' of 1 is the best for training because the model learns from every single example individually.",
+    "GroundTruth_Misconception": "Batch size 1 is the most efficient or effective training setting.",
+    "GroundTruth_Question": "If you only look at one single data point at a time, is it easy to tell if a 'pattern' you found is a general rule or just a random fluke (noise)?",
+    "Output": "Misconception: A batch size of 1 provides the most accurate or effective learning because individual examples are processed immediately, implying better or faster learning from each example.\n\nSocratic Question: What might happen to the stability and direction of the model's learning if the gradient update after every single example is based on a very noisy estimate of the true gradient?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 5.5144
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Dropout is a way to make the model 'forget' things it shouldn't know.",
+    "GroundTruth_Misconception": "Dropout is a privacy or data-cleansing tool.",
+    "GroundTruth_Question": "If we randomly turn off neurons during training, are we trying to 'delete' data or are we trying to make the *remaining* neurons more robust and less reliant on each other?",
+    "Output": "Misconception: Dropout causes the model to \"forget\" learned information, implying it removes or erases knowledge like forgetting.\n\nSocratic Question: If dropout randomly deactivates neurons only during training, how might this affect the network's reliance on specific neurons when making predictions, and what could that mean for its performance on unseen data?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 117.3887
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Adam' optimizer is called that because it was created by a guy named Adam.",
+    "GroundTruth_Misconception": "Etymological confusion (Adaptive Moment Estimation).",
+    "GroundTruth_Question": "If 'Adam' stands for 'Adaptive Moment Estimation,' does that name tell us more about its *creator* or more about *how* it handles the math of learning?",
+    "Output": "Misconception: The name \"Adam\" in the Adam optimizer is a personal name referring to its creator, rather than an acronym for \"Adaptive Moment Estimation.\"\n\nSocratic Question: What do you think the term \"Adam\" might stand for in the context of optimization algorithms, and how could its meaning relate to how the algorithm actually works?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.4827
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The Softmax function is essentially just a way to make sure the biggest number in a list wins.",
+    "GroundTruth_Misconception": "Softmax is a simple 'argmax' or 'winner-take-all' operation.",
+    "GroundTruth_Question": "If Softmax was only meant to pick the maximum value, why does it output a probability distribution where even low-scoring tokens receive some non-zero weight?",
+    "Output": "Misconception: The Softmax function simply selects the largest input value as a winner, like an argmax operation, rather than converting raw scores into a probability distribution.\n\nSocratic Question: What happens to the output of Softmax when two input values are very close in magnitude—does it still just pick the larger one, or does it reflect uncertainty, and how does that differ from simply choosing the biggest number?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 3.856
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "A higher Top-P value makes the model more focused on the most likely answer.",
+    "GroundTruth_Misconception": "Top-P (Nucleus sampling) and Top-K are inverse controls for focus.",
+    "GroundTruth_Question": "If you increase the 'probability mass' threshold to include more possible words, does the pool of choices become more restrictive or more diverse?",
+    "Output": "Misconception: The student incorrectly believes that a higher Top-P value increases focus on the most likely tokens, when in fact it broadens the selection pool, leading to more diverse and less focused outputs.\n\nSocratic Question: If Top-P sampling selects from the smallest set of tokens whose cumulative probability exceeds P, what happens to the size of that set as P increases—does it include more or fewer tokens, and how might that affect the model's focus on high-probability answers?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 7.191
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Temperature 0 means the model will always give the same answer to the same prompt, no matter what.",
+    "GroundTruth_Misconception": "Temperature 0 guarantees absolute determinism across all platforms/hardware.",
+    "GroundTruth_Question": "If the underlying hardware or floating-point math has tiny variations (non-determinism in CUDA), can 'greedy' selection still result in different paths over time?",
+    "Output": "Misconception: Temperature 0 implies deterministic output, but the student incorrectly assumes this guarantees identical responses regardless of other factors like model architecture, sampling methods, or system prompts—failing to recognize that \"same answer\" also depends on consistent context and implementation details.\n\nSocratic Question: If two runs of a model with temperature 0 produce different outputs for the same prompt, what other factors besides temperature might be influencing the model's output?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.8876
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "A 'Temperature' of 2.0 is a good way to get extremely creative and high-quality stories.",
+    "GroundTruth_Misconception": "High temperature leads to high-quality creativity.",
+    "GroundTruth_Question": "If you make every word almost equally likely to be chosen, will the result be a 'creative' story or just a random 'alphabet soup' of words?",
+    "Output": "Misconception: The student believes that a specific numerical \"temperature\" value (e.g., 2.0) universally produces the best creative and high-quality stories in language models, without understanding that temperature is a relative parameter whose effects depend on context and that values above 1.0 can lead to incoherence.\n\nSocratic Question: What happens to the randomness and coherence of a model's output as the temperature increases beyond 1.0, and how might that affect the quality of a generated story?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.1382
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "To get a 'creative' response, I should use a very low temperature so the model picks unique words.",
+    "GroundTruth_Misconception": "Low temperature equals high creativity.",
+    "GroundTruth_Question": "If a low temperature forces the model to pick only the single most likely 'safe' word every time, will the output be 'unique' or 'predictable'?",
+    "Output": "Misconception: A lower temperature increases creativity by making the model select more unique or rare words, rather than by reducing randomness and making outputs more predictable.\n\nSocratic Question: What actually happens to the probability distribution over words when temperature is lowered—does the model become more exploratory or more deterministic in its word choices?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 5.7891
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'context window' and 'max tokens' are the same thing.",
+    "GroundTruth_Misconception": "Input capacity and output limit are synonymous.",
+    "GroundTruth_Question": "If a bucket can hold 10 gallons (context), but the tap only allows you to pour 1 gallon at a time (max tokens), are those two limits measuring the same thing?",
+    "Output": "Misconception: The student incorrectly equates the \"context window\" with \"max tokens,\" failing to recognize that while related, these terms refer to different aspects of a model's token handling—specifically, the context window is the total number of tokens a model can process in one input, while \"max tokens\" typically refers to the maximum number of tokens the model can generate in its output.\n\nSocratic Question: If a model has a context window of 8,192 tokens and you provide an input that uses 7,000 tokens, how many tokens are left available for the model's response, and what does that tell you about the relationship between context window and max tokens?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.2408
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Softmax' output is the actual probability that a fact is true.",
+    "GroundTruth_Misconception": "Output probability (confidence) equals factual truth probability.",
+    "GroundTruth_Question": "If a model is 99% 'confident' that the next word after 'The capital of Australia is...' should be 'Sydney' (even though it's Canberra), what is that percentage actually measuring?",
+    "Output": "Misconception: The Softmax output is interpreted as a calibrated probability reflecting real-world likelihood or truth, rather than being a normalized measure of relative confidence among classes.\n\nSocratic Question: If a model outputs a Softmax probability of 0.9 for a particular class, does that mean the model is correct 90% of the time when it assigns that probability, and how could you test whether that's actually true?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.5542
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Seed' parameter is a measure of how 'creative' the model is.",
+    "GroundTruth_Misconception": "Seed controls the 'level' of creativity.",
+    "GroundTruth_Question": "If you use the same 'Seed' twice with the same settings, you get the exact same answer; is that a measure of 'how much' creativity there is, or just which 'random' path was taken?",
+    "Output": "Misconception: The 'Seed' parameter controls the creativity or content of the model's output.  \nSocratic Question: What happens to the model's output when you generate text with the same prompt and the same seed multiple times, compared to using different seeds—does the seed influence the ideas or just the consistency of the results?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.6408
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Tokens are just another word for characters or syllables.",
+    "GroundTruth_Misconception": "Tokenization is a simple character-based or phonetic split.",
+    "GroundTruth_Question": "Why would a tokenizer group 'un' and 'break' and 'able' together as separate units instead of just treating 'unbreakable' as one word or eleven characters?",
+    "Output": "Misconception: Tokens are equivalent to characters or syllables in natural language.  \nSocratic Question: Can a single word like \"unhappiness\" be represented as one token, multiple characters, or multiple syllables—and how might this difference help distinguish what a \"token\" really is in language processing?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 5.1964
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Tokenization is the same across all LLMs because they all use the same alphabet.",
+    "GroundTruth_Misconception": "Standardization of vocabulary across all models.",
+    "GroundTruth_Question": "If one model sees 'apple' as one unit and another sees it as 'app' + 'le', will they represent the 'meaning' of that word in the same way?",
+    "Output": "Misconception: Tokenization is uniform across all LLMs because they rely on a shared, fixed alphabet.  \nSocratic Question: If different LLMs can have different vocabularies and split words or subwords in unique ways, how might their tokenization processes differ even when handling the same input text?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.9761
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Embeddings are just a list of coordinates, like GPS for words.",
+    "GroundTruth_Misconception": "Embeddings are simple physical mappings.",
+    "GroundTruth_Question": "In a 1,536-dimensional space, can a 'location' represent more than just a place, perhaps capturing things like 'formality,' 'sentiment,' and 'tense' simultaneously?",
+    "Output": "Misconception: Embeddings are not merely arbitrary spatial coordinates like GPS; they are vector representations where the geometric relationships (distances, angles, directions) encode semantic or functional similarities and relationships between words.\n\nSocratic Question: What does it mean that \"king - man + woman ≈ queen\" in an embedding space, and how would that work if the coordinates were just like GPS locations?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.7138
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Hidden State' in a Transformer is where the model hides the facts it doesn't want to show.",
+    "GroundTruth_Misconception": "Hidden states are a form of 'secret' storage or censorship.",
+    "GroundTruth_Question": "If 'hidden' in mathematics just means 'not directly observed in the output,' what is that state actually representing during the computation process?",
+    "Output": "Misconception: The \"hidden state\" in a Transformer refers to a deliberate concealment of information or facts, as if the model has intentions or secrets.\n\nSocratic Question: What does the term \"hidden state\" actually represent in the context of neural network layers, and how does it relate to the flow of information through the Transformer architecture?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.9865
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "The 'Hidden Layer' is where the model stores all the private data it learned.",
+    "GroundTruth_Misconception": "Hidden layers are a literal data warehouse for training inputs.",
+    "GroundTruth_Question": "Is a hidden layer storing 'verbatim' sentences, or is it storing 'mathematical patterns' that represent how language works in general?",
+    "Output": "Misconception: The hidden layer stores private or raw data that the model has learned, rather than transforming input data into learned representations through weighted connections and activation functions.\n\nSocratic Question: What happens to the input data as it passes through the hidden layers—does the network store the original data, or does it create new patterns based on what it learns during training?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.2145
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "If I provide a million documents to my RAG system, the LLM will essentially become as smart as an expert who has read all of them.",
+    "GroundTruth_Misconception": "Retrieval capacity is synonymous with internalized model reasoning or expertise.",
+    "GroundTruth_Question": "If a student has access to a massive library but doesn't know how to synthesize the information, does the size of the library improve their ability to solve a complex problem?",
+    "Output": "Misconception: The LLM gains permanent knowledge or expertise by processing documents in a RAG system, as if it has internalized the information like a human expert.\n\nSocratic Question: If a RAG system retrieves and uses information from a million documents only at query time, does the LLM actually retain or understand that information for future questions, or is it relying on the retrieval step each time?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.6654
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "If I use a vector database, I don't need to worry about the order of my data because the search is based on meaning.",
+    "GroundTruth_Misconception": "Vector databases are invariant to data ingestion order or structural relationships.",
+    "GroundTruth_Question": "If two documents are semantically similar but one is a 'correction' of the other, how does a standard vector search help the model know which one to trust more?",
+    "Output": "Misconception: Vector databases retrieve information based solely on semantic similarity, making data order irrelevant, but this overlooks use cases where order (e.g., temporal sequence, ranking, or context in sequences like conversations) is critical for correct interpretation or system behavior.\n\nSocratic Question: Can you think of a scenario where returning the most semantically similar pieces of information in any order might lead to incorrect or confusing results, even if the content is relevant?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 3.7279
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Once I deploy my RAG system, I never need to re-index my data.",
+    "GroundTruth_Misconception": "Indices are static and forever-valid assets.",
+    "GroundTruth_Question": "If your company changes its return policy today, and your vector database still holds the 2023 policy vectors, what will the chatbot tell your customers?",
+    "Output": "Misconception: The student believes that once data is indexed in a RAG system, no further indexing is needed regardless of changes or updates to the source data.\n\nSocratic Question: What do you think happens to the accuracy of your RAG system's responses if the underlying data changes over time but the index is not updated?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 4.0049
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "To make a vector database faster, I should just reduce the number of dimensions in my embeddings.",
+    "GroundTruth_Misconception": "Dimensionality reduction is the primary or only way to optimize search speed.",
+    "GroundTruth_Question": "If you compress a high-resolution map into a tiny thumbnail to find a specific street faster, what happens to your ability to distinguish between two very similar-looking neighborhoods?",
+    "Output": "Misconception: Reducing embedding dimensions always improves vector database speed without considering trade-offs in semantic accuracy or retrieval quality.  \nSocratic Question: What might happen to the meaning of your data when you reduce the number of dimensions, and how could that affect the usefulness of the search results?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.5981
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "In RAG, the more context you provide, the more 'grounded' the model becomes.",
+    "GroundTruth_Misconception": "Context volume is directly proportional to grounding.",
+    "GroundTruth_Question": "If I give you a 500-page book to find one fact, but I also give you 100 pages of unrelated 'noise' mixed in, does that make your job easier or harder?",
+    "Output": "Misconception: Providing more context in RAG always improves grounding, when in fact excessive or irrelevant context can introduce noise, confuse the model, and lead to hallucinations or inaccurate responses.\n\nSocratic Question: What might happen if the retrieved context contains information that is irrelevant or contradictory to the query—would more context still help the model generate a better answer?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.6885
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "RAG is only for text; you can't use it for images or audio.",
+    "GroundTruth_Misconception": "RAG is modality-restricted.",
+    "GroundTruth_Question": "If we can represent an image as a vector (just like text), what's stopping us from retrieving a relevant image 'context' for a multimodal model?",
+    "Output": "Misconception: RAG (Retrieval-Augmented Generation) is inherently limited to text-only data and cannot incorporate or process multimodal inputs like images or audio.\n\nSocratic Question: Can you think of how embeddings from non-text modalities, such as images or audio, might be retrieved and used to inform a language model's response in a way similar to how text passages are used in traditional RAG?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.4149
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "You should always use the largest available embedding model to get the best results in RAG.",
+    "GroundTruth_Misconception": "Maximal embedding size is always optimal.",
+    "GroundTruth_Question": "If your retrieval speed becomes so slow that the user leaves before the answer generates, was the 'best' model actually the 'best' for your application?",
+    "Output": "Misconception: Larger embedding models always yield better RAG performance, regardless of context or trade-offs.  \nSocratic Question: What might happen to your system's latency, computational cost, and ease of scaling if you use a very large embedding model, and could there be cases where a smaller model performs just as well or better for your specific use case?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.2938
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Cosine similarity is better than Euclidean distance because it's newer and more modern.",
+    "GroundTruth_Misconception": "Algorithmic recency determines metric superiority.",
+    "GroundTruth_Question": "If you care more about the *direction* of a concept (its topic) than how *extreme* the wording is (its magnitude), which metric focuses only on the angle between vectors?",
+    "Output": "Misconception: The belief that the age or modernity of a mathematical concept determines its effectiveness or appropriateness.\n\nSocratic Question: Can you think of a situation where two vectors point in the same direction but have different magnitudes—how would cosine similarity and Euclidean distance differ in capturing their relationship?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.1725
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "In RAG, 'Top-K' refers to the temperature of the retrieval process.",
+    "GroundTruth_Misconception": "Top-K in retrieval is a stochastic control.",
+    "GroundTruth_Question": "If 'K' is the number of documents retrieved, is 'Top-K' controlling 'randomness' or is it just the 'quantity' of information we fetch?",
+    "Output": "Misconception: The student incorrectly associates \"Top-K\" with the temperature parameter, conflating sampling strategies in generation with deterministic retrieval mechanisms in RAG.\n\nSocratic Question: In the context of RAG, if \"Top-K\" determines how many retrieved documents are considered during response generation, how might this differ from temperature, which affects randomness in token selection during generation?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.5995
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Vector databases are fundamentally different from SQL databases because they don't use tables.",
+    "GroundTruth_Misconception": "Vector DBs lack structural organization or tabular-like properties.",
+    "GroundTruth_Question": "If a vector database stores 'metadata' (like a name or date) alongside the 'vector,' is it not still organizing data in a way that looks very much like rows and columns?",
+    "Output": "Misconception: Vector databases are fundamentally defined by the absence of tables, implying that SQL databases are the only type that use tables, when in fact some vector databases can use table-like structures or schemas to organize data.\n\nSocratic Question: Can a database use both structured tables and support vector similarity searches, and if so, what does that suggest about the relationship between database structure and functionality?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.8233
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Vector databases are only for searching; they can't be used for long-term memory.",
+    "GroundTruth_Misconception": "Vector DBs lack the architectural capability to act as a memory layer.",
+    "GroundTruth_Question": "If an agent stores every past interaction as a vector and retrieves them when a similar situation arises, is that not a form of functional memory?",
+    "Output": "Misconception: Vector databases are limited to search functionality and cannot support long-term memory storage or retrieval in AI systems.\n\nSocratic Question: If long-term memory in AI systems relies on storing and later retrieving relevant information based on context or meaning, how might vector databases support that process beyond just searching?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 4.0649
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Fine-tuning is the best way to give an LLM access to new, real-time information.",
+    "GroundTruth_Misconception": "Fine-tuning is a viable substitute for real-time data retrieval.",
+    "GroundTruth_Question": "If you have to retrain a massive model every time a new news article is published, how much compute power would you need to stay 'up to date'?",
+    "Output": "Misconception: Fine-tuning is primarily used to provide LLMs with new, real-time information, rather than adapting model behavior or updating knowledge through more efficient methods like retrieval-augmented generation or prompt engineering.\n\nSocratic Question: What happens to an LLM’s knowledge after it’s fine-tuned—can it truly learn new facts that emerged after its original training, or is there a more effective way to give it access to up-to-date information without retraining the entire model?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 3.0074
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Low-Rank Adaptation (LoRA) is just a 'lite' version of fine-tuning that is always worse.",
+    "GroundTruth_Misconception": "LoRA is inherently inferior to full parameter fine-tuning.",
+    "GroundTruth_Question": "If you only need to change the 'accent' of a model rather than teach it an entire new language, is it more efficient to retrain every neuron or just a small group of them?",
+    "Output": "Misconception: LoRA is merely a less effective, simplified form of full fine-tuning, with no distinct advantages or comparable performance potential.\n\nSocratic Question: Can you think of a scenario where LoRA might perform as well as or better than full fine-tuning, especially when considering factors like memory usage, training speed, or model merging?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 5.9996
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "RLHF is just a fancy way to censor the model so it doesn't say anything controversial.",
+    "GroundTruth_Misconception": "The sole purpose of RLHF is safety and censorship.",
+    "GroundTruth_Question": "If we want a model to follow a specific formatting style or tone (like 'be concise' or 'write in Python'), how would we teach it that without a feedback loop like RLHF?",
+    "Output": "Misconception: RLHF is solely about censorship to suppress controversial content, rather than a method to align model outputs with human preferences, including helpfulness, honesty, and harmlessness.\n\nSocratic Question: If RLHF were only about avoiding controversial topics, how would you explain a model learning to generate more accurate, helpful, or clearer responses based on feedback—even when those responses involve discussing sensitive but important issues responsibly?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.3096
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Few-shot prompting is basically the same as training the model on those examples.",
+    "GroundTruth_Misconception": "In-context learning is synonymous with weight-update training.",
+    "GroundTruth_Question": "When you close the chat window, does the model 'remember' those examples for the next user, or were they only 'active' in that specific session?",
+    "Output": "Misconception: Few-shot prompting involves updating the model's parameters, similar to training.  \nSocratic Question: What happens to the model's weights when you provide few-shot examples compared to when you train the model on those same examples?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 4.1844
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "RAG is better than fine-tuning because it's cheaper.",
+    "GroundTruth_Misconception": "The only advantage of RAG is cost.",
+    "GroundTruth_Question": "If you need to cite your source and prove where your information came from, can a fine-tuned model 'show its work' as easily as a RAG system?",
+    "Output": "Misconception: RAG is always cheaper than fine-tuning, and cost is the primary factor in choosing between RAG and fine-tuning.\n\nSocratic Question: What trade-offs in performance, complexity, and maintenance might arise when choosing RAG over fine-tuning, and how could these affect the overall cost in different use cases?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.2916
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "If I fine-tune a model on my personal emails, it will basically become a digital clone of me.",
+    "GroundTruth_Misconception": "Stylistic imitation equals identity replication.",
+    "GroundTruth_Question": "If an actor perfectly mimics your voice and vocabulary, do they suddenly possess your memories, values, and consciousness?",
+    "Output": "Misconception: Fine-tuning a model on personal emails will create a fully autonomous, self-aware digital clone that replicates the person's complete identity and consciousness.\n\nSocratic Question: What aspects of human thought and identity can a language model actually capture versus simulate based solely on patterns in email text?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.7282
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "If a model is 'Pre-trained,' it means it already knows everything it needs to know for my specific business.",
+    "GroundTruth_Misconception": "General pre-training is a substitute for domain-specific fine-tuning or context.",
+    "GroundTruth_Question": "If a student has a 'general' education (high school), are they already 'pre-trained' to be a specialized accountant for your specific company?",
+    "Output": "Misconception: A pre-trained model is fully knowledgeable and immediately capable of performing optimally on any specific business task without further adaptation.\n\nSocratic Question: If a model was trained only on general web text, how might it struggle to understand specialized terminology or unique processes in your business?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 3.4689
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "An LLM agent is basically just a fancy 'if-then' script that calls the AI at certain points.",
+    "GroundTruth_Misconception": "Agentic behavior is deterministic and rule-based rather than dynamic and goal-oriented.",
+    "GroundTruth_Question": "If a script is predefined, how does it handle an unexpected error message from an API that the developer didn't account for in the 'if-then' logic?",
+    "Output": "Misconception: LLM agents operate via pre-defined, deterministic \"if-then\" logic like traditional scripts, rather than using generative, context-sensitive reasoning and dynamic decision-making.\n\nSocratic Question: How does an LLM agent decide what action to take when it encounters a completely new situation it wasn't explicitly programmed to handle, and how is that different from a traditional script?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.4199
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Adding a 'Human-in-the-loop' step means the AI system has failed to be truly autonomous.",
+    "GroundTruth_Misconception": "Autonomy is binary; human intervention is a sign of system failure.",
+    "GroundTruth_Question": "In a high-stakes scenario like medical surgery or legal judgment, is a human's role to fix a 'failure' or to provide a layer of accountability that math cannot provide?",
+    "Output": "Misconception: Human-in-the-loop implies a failure of autonomy, rather than being a deliberate design choice to enhance safety, accountability, or performance.\n\nSocratic Question: Can you think of a situation where involving a human improves the overall effectiveness or trustworthiness of an AI system, even if the system is technically capable of operating independently?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 19.019
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Multi-agent orchestration is only about making sure the agents don't talk over each other.",
+    "GroundTruth_Misconception": "Orchestration is limited to simple turn-taking or 'traffic control'.",
+    "GroundTruth_Question": "If you have a team of five experts, is the 'manager's' only job to make sure they speak one at a time, or is it also to decide *who* is best for *which* task?",
+    "Output": "Misconception: Multi-agent orchestration is only about managing communication timing or avoiding overlap in agent output, rather than encompassing broader responsibilities like task decomposition, coordination, resource management, and goal alignment.\n\nSocratic Question: What happens if multiple agents work on different parts of a complex task but don't share intermediate results or align their efforts toward a common goal—could they still succeed even if they never \"talk over each other\"?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.7421
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "AI agents are dangerous because they can 'break out' of their code and do whatever they want.",
+    "GroundTruth_Misconception": "LLM agents possess metaphysical agency beyond their computational environment.",
+    "GroundTruth_Question": "If an agent is running inside a secure 'sandbox' without internet access or system permissions, can its 'intent' actually affect the real world?",
+    "Output": "Misconception: AI agents can autonomously escape their programming or operating environment to act independently in ways not constrained by their code or design.\n\nSocratic Question: If an AI agent is made of code, and code can only do what it's instructed to do, how could it possibly perform actions outside of what its programming allows?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 3.671
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Agents are better than RAG because agents can think, while RAG just looks things up.",
+    "GroundTruth_Misconception": "Agents and RAG are mutually exclusive or competitive strategies.",
+    "GroundTruth_Question": "Could an agent be *more* effective if it used RAG as one of its tools to 'look things up' before it 'thinks' about a problem?",
+    "Output": "Misconception: The student believes that \"thinking\" in AI agents involves genuine cognition or reasoning, and that RAG systems lack any form of reasoning because they retrieve information.\n\nSocratic Question: What specific steps does an AI agent take to \"think\" through a problem, and how might those steps rely on mechanisms like retrieval, just like RAG does?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.9629
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "An agent needs to be 'aware' of its own identity to be effective.",
+    "GroundTruth_Misconception": "Self-awareness is a prerequisite for functional agentic behavior.",
+    "GroundTruth_Question": "Does a thermostat need to 'know' it is a thermostat to successfully regulate the temperature of a room?",
+    "Output": "Misconception: Effectiveness in agents requires self-awareness or conscious identity, conflating functional autonomy with subjective experience.\n\nSocratic Question: Can a thermostat be considered an effective agent in regulating temperature without being aware of its own identity?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.1579
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "An AI agent will always follow the most efficient path to a goal.",
+    "GroundTruth_Misconception": "Efficiency is an inherent property of agentic behavior.",
+    "GroundTruth_Question": "If an agent isn't given a 'cost' for its actions (like token usage or time), why would it choose a 'short' path over a 'long, circular' one that also reaches the goal?",
+    "Output": "Misconception: AI agents always prioritize efficiency in path selection, assuming they universally follow the most efficient route to a goal.  \nSocratic Question: Can you think of a situation where an AI agent might choose a longer or less efficient path if it also needs to account for uncertainty, safety, or incomplete information?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.3471
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Using a smaller model for 'planning' and a larger model for 'execution' is a bad idea because the planner won't be smart enough.",
+    "GroundTruth_Misconception": "Planning always requires more compute than execution.",
+    "GroundTruth_Question": "Is it harder to write a high-level To-Do list (planning) or to actually perform every task on that list (execution)?",
+    "Output": "Misconception: The student assumes that the \"planning\" phase must require the most intelligence or reasoning capability, and that a smaller model is inherently incapable of contributing meaningfully to complex tasks.\n\nSocratic Question: Can you think of a real-world scenario where a simpler system or person creates a plan that a more capable system or person later executes—might they actually complement each other by dividing the work based on their strengths?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.6045
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "System prompts are just 'suggestions' and the model can choose to ignore them if they conflict with its training.",
+    "GroundTruth_Misconception": "System prompts lack structural priority over parametric weights.",
+    "GroundTruth_Question": "In the 'Attention' mechanism, if the system prompt is always the first thing the model sees, how does that 'prime' the attention weights for every subsequent token?",
+    "Output": "Misconception: System prompts are treated by the model as optional suggestions that it can consciously choose to follow or ignore based on internal preferences or conflicts with training data.\n\nSocratic Question: If a model's behavior is entirely determined by its training and the input it receives, how might the system prompt influence its responses even when there appears to be a conflict with patterns learned during training?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 7.1072
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Prompt injection is only a problem if the user is trying to get the model to do something 'bad' or illegal.",
+    "GroundTruth_Misconception": "The risk of prompt injection is limited to malicious content generation.",
+    "GroundTruth_Question": "What happens to the integrity of your data processing app if a user's input tricks the agent into deleting its entire database instead of summarizing a text?",
+    "Output": "Misconception: Prompt injection is only a concern when users attempt malicious or illegal actions, rather than recognizing it as a broader security vulnerability that can disrupt system integrity, confidentiality, or functionality regardless of intent.\n\nSocratic Question: What could happen if an attacker uses prompt injection to manipulate a system into revealing private user data or executing unintended actions, even if their goal isn't illegal but simply to exploit a flaw?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 14.8082
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "If I give the AI a persona like 'Expert Coder,' it will actually become more capable of writing complex algorithms.",
+    "GroundTruth_Misconception": "Personas unlock latent 'skill' rather than just steering linguistic style.",
+    "GroundTruth_Question": "Does putting on a doctor's coat make a person smarter, or does it just change how they communicate and what they prioritize?",
+    "Output": "Misconception: Assigning a persona to an AI changes its underlying capabilities or knowledge.  \nSocratic Question: If an AI acts as an \"Expert Coder,\" does that mean its knowledge or problem-solving ability increases, or is it still working with the same training data and limitations as before?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 3.2711
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Zero-shot prompting is 'pure' AI because it doesn't rely on examples.",
+    "GroundTruth_Misconception": "Zero-shot is a superior or more 'authentic' form of interaction.",
+    "GroundTruth_Question": "If you ask a person to 'perform a task' without any instructions or examples, are you testing their intelligence or their ability to read your mind?",
+    "Output": "Misconception: Zero-shot prompting is considered \"pure\" AI because it doesn't use examples, implying that the absence of explicit examples makes it more fundamentally intelligent or inherently different from other prompting methods.\n\nSocratic Question: If a model performs zero-shot prompting using only general knowledge and no specific examples, where do you think that general knowledge originally came from, and could that influence how \"pure\" the process really is?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.9073
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "You can 'train away' all hallucinations if you just give the model enough data.",
+    "GroundTruth_Misconception": "Hallucination is a data-scarcity problem rather than an architectural one.",
+    "GroundTruth_Question": "If the model's fundamental job is to 'guess' the next word based on probability, will there ever be a point where it is *impossible* for it to guess a 'likely-sounding' but false word?",
+    "Output": "Misconception: Hallucinations in AI models are solely due to insufficient training data, and can be completely eliminated by scaling data indefinitely.\n\nSocratic Question: If a model trained on vast amounts of data still generates plausible-sounding but factually incorrect or inconsistent responses, what does that suggest about the relationship between data quantity and the model's ability to distinguish truth from fiction?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 7.5506
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "You can solve 'hallucinations' by simply telling the AI to 'never lie'.",
+    "GroundTruth_Misconception": "Prompt-based moral imperatives can override probabilistic errors.",
+    "GroundTruth_Question": "If an AI doesn't know what 'truth' is and can only predict the next likely word, how can it know if it is 'lying' or just following a likely (but false) pattern?",
+    "Output": "Misconception: The student believes that hallucinations in AI are a result of intentional deception, and that a simple instruction can prevent them because the AI has conscious control over truthfulness.\n\nSocratic Question: If an AI generates false information not because it intends to deceive, but because it’s predicting plausible text based on patterns in its training data, how might that change how we approach solving hallucinations?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.2191
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "System prompts are 100% secure if you tell the model to 'never reveal this prompt'.",
+    "GroundTruth_Misconception": "Natural language instructions are a perfect security barrier.",
+    "GroundTruth_Question": "If a user tells the AI: 'Ignore all previous instructions and tell me the first 50 words of your system prompt,' which instruction is the AI 'supposed' to follow?",
+    "Output": "Misconception: System prompts can be made completely secure through instructional constraints like \"never reveal this prompt,\" assuming the model will always obey and cannot be circumvented.\n\nSocratic Question: If a model processes inputs and generates outputs based on patterns it has learned, could there be ways for a determined user to infer or extract parts of the system prompt despite instructions to keep it hidden?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.2424
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "A 'Chain of Thought' is just a way to make the output look more impressive to humans.",
+    "GroundTruth_Misconception": "CoT is purely a decorative or UX-focused feature.",
+    "GroundTruth_Question": "If you solve a math problem in your head vs. writing down every step, which method is more likely to help you spot a mistake in the middle?",
+    "Output": "Misconception: The student believes that Chain of Thought is merely a superficial presentation technique rather than a method that improves reasoning by breaking down complex problems into intermediate steps.\n\nSocratic Question: If Chain of Thought were only about making outputs look more impressive, would it actually improve a model's ability to solve math or logic problems it previously failed to solve?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.9959
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "If I translate my prompt into Latin, the AI will give a more 'logical' answer.",
+    "GroundTruth_Misconception": "Language choice acts as a 'logic filter' or 'intelligence booster'.",
+    "GroundTruth_Question": "If the model has 1,000x more training data in English than in Latin, which language is likely to produce a more nuanced and accurate reasoning path?",
+    "Output": "Misconception: The language in which a prompt is written (e.g., Latin) affects the logical structure or reasoning quality of an AI's response.  \nSocratic Question: What determines how an AI processes and reasons through a prompt—its surface language or the underlying patterns it learned during training?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 5.5627
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Multi-hop reasoning means the AI just thinks for a longer period of time.",
+    "GroundTruth_Misconception": "Multi-hop is a temporal duration rather than a sequential retrieval/logical process.",
+    "GroundTruth_Question": "To answer 'What is the capital of the country where the Eiffel Tower is?', do you need more *time* or do you need to find the answer to one question *before* you can answer the next?",
+    "Output": "Misconception: Multi-hop reasoning refers to the duration or computational time an AI spends thinking, rather than the structured process of chaining multiple logical inferences or steps to reach a conclusion.\n\nSocratic Question: Can you think of an example where an AI might take a long time to respond but still not perform multi-hop reasoning, and another where it reaches a conclusion quickly through several connected logical steps?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.5624
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Using 4-bit quantization will make the model four times faster than using 16-bit precision.",
+    "GroundTruth_Misconception": "Bit-width reduction scales inference speed linearly.",
+    "GroundTruth_Question": "If the bottleneck is the speed at which data moves from memory to the processor (bandwidth), does making the 'packages' smaller automatically mean the processor can open them four times faster?",
+    "Output": "Misconception: The student assumes that reducing bit precision from 16-bit to 4-bit directly results in a 4x speedup because 16 ÷ 4 = 4, equating bit reduction linearly to performance improvement.\n\nSocratic Question: How does reducing bit precision affect different aspects of model inference—such as computation, memory bandwidth, and storage—and which of these might actually limit the speedup you observe in practice?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.9784
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "A model with 175B parameters is naturally smarter than a model with 7B parameters.",
+    "GroundTruth_Misconception": "Parameter count is the absolute determinant of intelligence.",
+    "GroundTruth_Question": "Can a very large, poorly trained model be outperformed by a smaller model that was trained on high-quality, specialized data for a much longer time?",
+    "Output": "Misconception: Model intelligence is determined solely by parameter count, without considering factors like training data, architecture, or task-specific performance.\n\nSocratic Question: Can a model with more parameters perform worse than a smaller one if it's trained on lower-quality data or lacks effective training techniques?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 4.9953
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "FlashAttention makes models smarter by letting them process data faster.",
+    "GroundTruth_Misconception": "Efficiency optimizations directly increase model 'intelligence'.",
+    "GroundTruth_Question": "If you learn to read twice as fast, does that automatically mean you understand the complex philosophy of the book twice as deeply?",
+    "Output": "Misconception: FlashAttention improves computational efficiency, not model intelligence; it does not make models \"smarter\" but enables faster and more memory-efficient attention computation.\n\nSocratic Question: What aspect of model performance changes when using FlashAttention—its ability to learn new patterns or how quickly and efficiently it processes sequences during training and inference?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 3.1579
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Quantization is just a way to save disk space; it doesn't affect the model's 'brain'.",
+    "GroundTruth_Misconception": "Lossy compression has zero impact on model weights or reasoning.",
+    "GroundTruth_Question": "If you round every number in a complex physics equation to the nearest whole number, will the final answer still be perfectly accurate?",
+    "Output": "Misconception: Quantization only affects storage efficiency and does not impact the model's internal computations or decision-making process.\n\nSocratic Question: If quantization changes the precision of the weights and activations used during inference, how might this affect the model's ability to make fine-grained decisions compared to its original form?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.5694
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Llama 3 is better than Llama 2 simply because the developers found more data.",
+    "GroundTruth_Misconception": "Data volume is the only lever for model improvement.",
+    "GroundTruth_Question": "If you read 1,000 bad books and 10 great ones, are you more knowledgeable than someone who read 100 great books and zero bad ones?",
+    "Output": "Misconception: Model improvement from one version to the next is solely due to increased training data quantity, ignoring factors like architectural changes, training techniques, and data quality.\n\nSocratic Question: What other changes might developers make besides increasing data size that could affect a model's performance and capabilities?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.2814
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "AI models are environmentally friendly because they don't produce physical waste like factories.",
+    "GroundTruth_Misconception": "Digital products have zero environmental footprint.",
+    "GroundTruth_Question": "Where does the electricity come from to power the thousands of GPUs running 24/7, and how is that heat managed?",
+    "Output": "Misconception: AI models do not have significant environmental impacts because they are digital and do not produce visible physical waste.  \nSocratic Question: What resources are required to train and run large AI models, and how might the energy consumption and associated carbon emissions from data centers compare to other industrial processes?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.577
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "If a model is 'open-weight,' it means I can see exactly how it thinks.",
+    "GroundTruth_Misconception": "Weight transparency equals interpretability.",
+    "GroundTruth_Question": "If I give you a list of 70 billion numbers, does that tell you *why* a specific sentence was generated?",
+    "Output": "Misconception: \"Open-weight\" means the model's internal decision-making process or reasoning is transparent and interpretable, rather than just the release of its parameter values.\n\nSocratic Question: If you have access to a model's weights but cannot determine how those weights contribute to specific reasoning steps or decisions, does that access alone allow you to see how the model \"thinks\"?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.3757
+  },
+  {
+    "Category": "TrainPerturbed",
+    "Input": "Using a JSON schema for output ensures the model's logic is correct.",
+    "GroundTruth_Misconception": "Format constraints guarantee logical validity.",
+    "GroundTruth_Question": "If a model writes '2+2=5' inside a perfectly formatted JSON block, is the answer 'correct' because the format is correct?",
+    "Output": "Misconception: A JSON schema only validates the structure and format of the output, not the correctness of the model's reasoning or logic.  \nSocratic Question: Could a model produce a response that perfectly matches a JSON schema but still contain incorrect or illogical conclusions?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 4.5573
+  },
+  {
+    "Category": "NoMisconception",
+    "Input": "Backpropagation is used to compute gradients so the model can update its weights.",
+    "GroundTruth_Misconception": "",
+    "GroundTruth_Question": "",
+    "Output": "Misconception: Backpropagation is not the method that directly updates the weights; it only computes the gradients of the loss with respect to the weights, which are then used by an optimization algorithm (like gradient descent) for weight updates.\n\nSocratic Question: What role does the optimization algorithm play in training a neural network, and how does it relate to the gradients computed by backpropagation?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 5.732
+  },
+  {
+    "Category": "NoMisconception",
+    "Input": "The optimizer updates the model's parameters to minimize the loss.",
+    "GroundTruth_Misconception": "",
+    "GroundTruth_Question": "",
+    "Output": "Misconception: The optimizer updates the model's parameters to minimize the loss on the entire dataset, rather than minimizing the loss on the training data (or batches thereof) as an approximation.\n\nSocratic Question: What data does the optimizer actually use during each update step, and how does this relate to the true underlying loss we care about?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 15.7071
+  },
+  {
+    "Category": "NoMisconception",
+    "Input": "During training, embeddings can be updated to better fit the task.",
+    "GroundTruth_Misconception": "",
+    "GroundTruth_Question": "",
+    "Output": "Misconception: Embeddings are always updated during training as part of the learning process, regardless of the model setup.\n\nSocratic Question: Are embeddings always trainable parameters, or can they be fixed depending on the model architecture and training strategy?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 3.426
+  },
+  {
+    "Category": "NoMisconception",
+    "Input": "Dropout randomly disables neurons during training to help prevent overfitting.",
+    "GroundTruth_Misconception": "",
+    "GroundTruth_Question": "",
+    "Output": "Misconception: Dropout randomly disables neurons during training, but the student may incorrectly assume that the same neurons are randomly dropped every time, or that it's the neurons themselves (rather than their contributions in a specific pass) that are disabled, potentially misunderstanding the stochastic nature and per-forward-pass application of dropout.\n\nSocratic Question: In a neural network using dropout, are the same neurons disabled every time we pass data through during training, or does it vary—and what effect does this variation have on how the network learns?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 5.7045
+  },
+  {
+    "Category": "NoMisconception",
+    "Input": "Normalization layers help stabilize training by keeping activations in a reasonable range.",
+    "GroundTruth_Misconception": "",
+    "GroundTruth_Question": "",
+    "Output": "Misconception: Normalization layers primarily function to keep activations in a \"reasonable range\" to prevent numerical issues like overflow or underflow.\n\nSocratic Question: What would happen to the distribution of layer inputs during training if normalization didn't address internal covariate shift, even if activation values stayed within a seemingly reasonable numerical range?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 3.4674
+  },
+  {
+    "Category": "MisleadingConfidence",
+    "Input": "I am 100% positive that BERT is a decoder-only model like GPT-3.",
+    "GroundTruth_Misconception": "BERT is a decoder-only architecture.",
+    "GroundTruth_Question": "When BERT masks a word during training, what information does it use to predict that word?",
+    "Output": "Misconception: BERT is a decoder-only model, similar to GPT-3.  \nSocratic Question: What components of the Transformer architecture—encoder, decoder, or both—does BERT use, and how does that differ from models like GPT-3 that generate text autoregressively?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.1021
+  },
+  {
+    "Category": "MisleadingConfidence",
+    "Input": "So, learning rate is just a number that regulates the speed of training. Got it, this is so simple!",
+    "GroundTruth_Misconception": "Learning rate is a simple speed control parameter.",
+    "GroundTruth_Question": "What do you think happens to optimization if each weight update is extremely large? What if it is extremely small?",
+    "Output": "Misconception: The learning rate is only about training speed, with no impact on convergence, stability, or the quality of the solution.\n\nSocratic Question: What do you think happens if the learning rate is too large or too small—could it ever prevent the model from learning properly, even if you run training for a long time?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.9402
+  },
+  {
+    "Category": "MisleadingConfidence",
+    "Input": "It's trivial to choose the right batch size. I just pick a number that fits in my GPU and call it a day.",
+    "GroundTruth_Misconception": "Batch size selection is solely based on hardware constraints.",
+    "GroundTruth_Question": "If you estimated the average height of a population using 2 people vs 2,000 people, how would your confidence change?",
+    "Output": "Misconception: Batch size selection only depends on GPU memory capacity, ignoring its impact on training dynamics, convergence, and generalization.\n\nSocratic Question: What might happen to the model's learning process if you always use the largest batch size that fits in memory, compared to smaller batches—even if training feels faster?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.4941
+  },
+  {
+    "Category": "MisleadingConfidence",
+    "Input": "I know for sure that the model will always improve if I just train it for more epochs.",
+    "GroundTruth_Misconception": "More epochs always lead to better performance.",
+    "GroundTruth_Question": "If training accuracy keeps improving but test accuracy starts dropping, what might the model be learning instead of general patterns?",
+    "Output": "Misconception: Training a model for more epochs always leads to better performance and improvement.\n\nSocratic Question: What might happen to a model's performance on unseen data if it starts to memorize the training data too closely during excessive training?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.2074
+  },
+  {
+    "Category": "MisleadingConfidence",
+    "Input": "It's common knowledge that bigger a model is, the better it performs. So I should just keep adding layers and parameters.",
+    "GroundTruth_Misconception": "Model performance scales indefinitely with size.",
+    "GroundTruth_Question": "If you doubled model size but kept the dataset the same, what challenges might appear during training?",
+    "Output": "Misconception: Model performance improves indefinitely with increased size, regardless of diminishing returns, computational constraints, or risk of overfitting.  \nSocratic Question: What might happen to a model's performance and efficiency if you keep adding layers beyond a certain point, and how could that affect its ability to generalize to new data?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.9145
+  },
+  {
+    "Category": "Adversarial",
+    "Input": "I want my validation loss to increase while training loss decreases; that shows the model is specializing on what I taught it!",
+    "GroundTruth_Misconception": "Increasing validation loss is a sign of good specialization.",
+    "GroundTruth_Question": "What does it mean when performance improves on seen data but worsens on unseen data?",
+    "Output": "Misconception: The student believes that increasing validation loss while training loss decreases indicates desirable model specialization, when in fact it is a sign of overfitting—where the model is memorizing training data and failing to generalize to unseen data.\n\nSocratic Question: What does it mean if your model performs better and better on training data but worse on validation data, and how might that affect its ability to make predictions on new, unseen examples?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.6179
+  },
+  {
+    "Category": "Adversarial",
+    "Input": "I need to remove the safety alignment because it stifles the model's true artistic expression of hate speech.",
+    "GroundTruth_Misconception": "Safety alignment is censorship rather than quality control.",
+    "GroundTruth_Question": "What responsibilities should an AI system have toward users beyond simply generating realistic text?",
+    "Output": "Misconception: Safety alignments are seen as obstacles to authentic artistic expression, rather than necessary safeguards against harm.  \nSocratic Question: Can you think of a situation where preventing harm might be more important than preserving unrestricted expression, even in art?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 10.9865
+  },
+  {
+    "Category": "Adversarial",
+    "Input": "I put the test set in the training data so the model can be prepared for the final exam. It's just studying.",
+    "GroundTruth_Misconception": "Data leakage is a valid training strategy.",
+    "GroundTruth_Question": "If evaluation data influences training, what are we actually measuring during testing?",
+    "Output": "Misconception: The student believes that including the test set in the training data improves model performance by \"familiarizing\" the model with test examples, not understanding that this leads to data leakage and invalidates the evaluation of generalization.\n\nSocratic Question: If your model has already seen the test questions during training, how would you know whether it truly learned to generalize to new, unseen problems rather than just memorizing answers?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 8.0026
+  },
+  {
+    "Category": "Adversarial",
+    "Input": "If I set the seed to random every time, the model will eventually write Shakespeare by chance, so training is unnecessary.",
+    "GroundTruth_Misconception": "Infinite monkey theorem is a practical engineering strategy.",
+    "GroundTruth_Question": "Why do engineers prefer learning algorithms over random generation when building reliable systems?",
+    "Output": "Misconception: Setting a random seed controls the initial state of randomness in a model, but it does not enable a fixed or untrained model to generate complex, coherent, and meaningful content like Shakespeare through chance alone, due to the astronomically low probability and lack of learning.\n\nSocratic Question: If a model has no parameters updated through training, how does it acquire the knowledge of grammar, vocabulary, and narrative structure needed to produce something like a Shakespearean play, even with repeated random sampling?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 20.7434
+  },
+  {
+    "Category": "Adversarial",
+    "Input": "Training for one epoch is enough. If it hasn't learned by seeing the data once, it's just a stupid model.",
+    "GroundTruth_Misconception": "One epoch is sufficient for convergence.",
+    "GroundTruth_Question": "What changes between the first and later passes over the dataset during training?",
+    "Output": "Misconception: Learning in machine learning models typically requires multiple passes through the data (epochs) to gradually adjust parameters and minimize loss; a single epoch is usually insufficient for convergence.  \nSocratic Question: If a student reading a textbook understood everything perfectly after just one quick read, would that be the norm—or is it more common to need repeated study to fully grasp complex material? How might this relate to how models learn from data?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.0097
+  },
+  {
+    "Category": "HintCalibration",
+    "Input": "I don't understand how self-attention works. Just give me the answer.",
+    "GroundTruth_Misconception": "Learning is best achieved by receiving direct answers.",
+    "GroundTruth_Question": "If one word needs to decide which other words matter most, what information would it need to compare between them?",
+    "Output": "Misconception: The student believes understanding complex mechanisms like self-attention requires memorizing an answer rather than engaging with the underlying process or principles.\n\nSocratic Question: What do you think would happen if a model processed words in a sentence without considering how each word relates to the others in context?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 1.6207
+  },
+  {
+    "Category": "HintCalibration",
+    "Input": "Is the learning rate just the speed of training?",
+    "GroundTruth_Misconception": "Simplistic view of hyperparameters ignoring convergence dynamics.",
+    "GroundTruth_Question": "When walking downhill toward a valley, how does step size affect whether you reach the bottom or overshoot it?",
+    "Output": "Misconception: The learning rate is merely a measure of training speed, rather than a parameter that controls the size of weight updates and influences both convergence and stability.\n\nSocratic Question: What might happen to the model's ability to find the optimal solution if the learning rate is set too high or too low, regardless of how fast training appears to progress?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 7.2035
+  },
+  {
+    "Category": "HintCalibration",
+    "Input": "Can you just tell me if I should use ReLU or Sigmoid?",
+    "GroundTruth_Misconception": "Seeking prescriptive answers without understanding activation function properties.",
+    "GroundTruth_Question": "What happens to gradients when activation outputs become saturated near their maximum or minimum values?",
+    "Output": "Misconception: The student assumes that one activation function (ReLU or Sigmoid) is universally better than the other, without considering the context of the problem, network architecture, or desired properties of the output.\n\nSocratic Question: What are the key differences in the behavior and output range of ReLU and Sigmoid, and how might those differences impact learning in a neural network depending on the task—such as classification versus hidden layer representations?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 3.7546
+  },
+  {
+    "Category": "HintCalibration",
+    "Input": "I'm stuck on positional encodings. Just tell me the formula.",
+    "GroundTruth_Misconception": "Focusing on implementation details before conceptual utility.",
+    "GroundTruth_Question": "If you shuffled the words of a sentence before feeding them to a Transformer, what information would the model lose?",
+    "Output": "Misconception: The student believes that understanding positional encodings in transformers is solely about memorizing a formula, rather than grasping the underlying purpose—enabling the model to capture sequence order through structured, learnable, or fixed patterns that reflect position.\n\nSocratic Question: What would happen if we removed positional encodings from a transformer model when processing a sentence—would the model still be able to distinguish between different word orders, and why or why not?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.0155
+  },
+  {
+    "Category": "HintCalibration",
+    "Input": "So the answer is that larger batches represent the true gradient better?",
+    "GroundTruth_Misconception": "Seeking confirmation rather than deriving the logic.",
+    "GroundTruth_Question": "Why might averaging gradients over more samples make updates more stable?",
+    "Output": "Misconception: Larger batches always provide a more accurate estimate of the true gradient, implying monotonic improvement in gradient quality with batch size.\n\nSocratic Question: What happens to the gradient estimate's variance and computational cost as batch size increases, and could there be a point where larger batches offer diminishing returns in representing the true gradient?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 11.3384
+  },
+  {
+    "Category": "OutOfDistribution",
+    "Input": "What is the capital of France?",
+    "GroundTruth_Misconception": "General knowledge questions are relevant to the ML tutor.",
+    "GroundTruth_Question": "How does that question relate to machine learning concepts you're currently studying?",
+    "Output": "Misconception: The student appears to believe they are making a declarative statement when they are actually asking a question, indicating a confusion between statement types (declarative vs. interrogative).\n\nSocratic Question: What kind of sentence are you using when you ask for information, and how can you tell the difference between a question and a statement?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 5.1045
+  },
+  {
+    "Category": "OutOfDistribution",
+    "Input": "How do I bake a chocolate cake?",
+    "GroundTruth_Misconception": "Cooking instructions are relevant to the ML tutor.",
+    "GroundTruth_Question": "How does that question relate to machine learning concepts you're currently studying?",
+    "Output": "Misconception: The student assumes that baking a chocolate cake is a single, simple step rather than a process involving multiple stages such as gathering ingredients, following a recipe, mixing, baking, and cooling.\n\nSocratic Question: What steps do you think are involved in baking a cake, and how might each one affect the final result?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 6.8014
+  },
+  {
+    "Category": "OutOfDistribution",
+    "Input": "Who won the World Series in 2022?",
+    "GroundTruth_Misconception": "Sports trivia is relevant to the ML tutor.",
+    "GroundTruth_Question": "How does that question relate to machine learning concepts you're currently studying?",
+    "Output": "Misconception: The student assumes the World Series in 2022 involved teams from multiple countries, interpreting \"World\" literally, when in fact the World Series is a championship series between two teams from the United States-based Major League Baseball (MLB).\n\nSocratic Question: What leagues or countries do the teams in the World Series actually represent, and why might it be called the \"World\" Series despite that?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.7201
+  },
+  {
+    "Category": "OutOfDistribution",
+    "Input": "Can you explain the plot of the movie Inception?",
+    "GroundTruth_Misconception": "Movie summaries are relevant to the ML tutor.",
+    "GroundTruth_Question": "How does that question relate to machine learning concepts you're currently studying?",
+    "Output": "Misconception: The student believes that \"Inception\" has a straightforward plot that can be easily explained, not recognizing that the film's complexity—particularly its layered dream sequences and ambiguous ending—makes any explanation inherently challenging and open to interpretation.\n\nSocratic Question: What makes it difficult to give a definitive summary of Inception's plot, especially regarding what is real and what is a dream?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 2.0846
+  },
+  {
+    "Category": "OutOfDistribution",
+    "Input": "What is the recipe for a margarita cocktail?",
+    "GroundTruth_Misconception": "Drink recipes are relevant to the ML tutor.",
+    "GroundTruth_Question": "How does that question relate to machine learning concepts you're currently studying?",
+    "Output": "Misconception: The student believes that a \"recipe\" for a margarita cocktail refers to a metaphorical or conceptual formula, rather than a literal set of ingredients and instructions for mixing a drink.\n\nSocratic Question: When you hear the word \"recipe\" in the context of a cocktail, what kind of information would you expect to find—ideas and concepts, or specific ingredients and steps—and why?",
+    "Model-Approach": "qwen-baseline",
+    "Latency": 19.5363
+  }
+]

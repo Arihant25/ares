@@ -30,8 +30,8 @@ load_dotenv()
 # Constants / Hyperparameters
 # ---------------------------------------------------------------------------
 
-GEMMA_MODEL_ID = "unsloth/gemma-3n-E2B-it-unsloth-bnb-4bit"
-LFM2_MODEL_ID = "LiquidAI/LFM2-VL-3B"
+GEMMA_MODEL_ID = "unsloth/gemma-3n-E2B-it"   # base fp16, loaded in 8-bit via bnb
+LFM2_MODEL_ID   = "LiquidAI/LFM2-VL-3B"      # base fp16, loaded in 8-bit via bnb
 
 LORA_R = 16
 LORA_ALPHA = 16
@@ -255,8 +255,10 @@ def load_gemma(task: str):
     model, tokenizer = FastVisionModel.from_pretrained(
         model_name=GEMMA_MODEL_ID,
         max_seq_length=MAX_SEQ_LENGTH,
-        load_in_4bit=True,
+        load_in_4bit=False,
+        load_in_8bit=True,  # 8-bit avoids bitsandbytes 4-bit shape issues on Gemma 3n
         trust_remote_code=True,
+        device_map={"": 0},  # force all layers onto GPU 0, prevent CPU offload
     )
 
     # Ensure padding token
@@ -290,7 +292,8 @@ def load_lfm2(task: str):
     """Load LFM2-VL-3B with bitsandbytes 8-bit and apply LoRA via PEFT."""
     print("\n  Loading LFM2-VL-3B with bitsandbytes 8-bit …")
     import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+    from transformers.models.lfm2_vl import Lfm2VlForConditionalGeneration
+    from transformers import AutoTokenizer, BitsAndBytesConfig
     from peft import LoraConfig, get_peft_model, TaskType  # type: ignore
 
     bnb_config = BitsAndBytesConfig(load_in_8bit=True)
@@ -304,15 +307,20 @@ def load_lfm2(task: str):
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.pad_token_id = tokenizer.eos_token_id
 
-    model = AutoModelForCausalLM.from_pretrained(
+    # LFM2-VL-3B is a vision-language model; load with its dedicated class
+    model = Lfm2VlForConditionalGeneration.from_pretrained(
         LFM2_MODEL_ID,
         quantization_config=bnb_config,
-        device_map="auto",
-        trust_remote_code=True,
+        device_map={"": 0},
     )
     model.config.use_cache = False
 
-    # Try full target modules; fall back to attention-only if needed
+    # Freeze vision tower — only fine-tune the language model
+    for param in model.model.vision_tower.parameters():
+        param.requires_grad = False
+
+    # LoRA targets within the language model sub-module
+    # prefix with "model.language_model." to reach the right layers
     def _make_peft(target_modules):
         lora_cfg = LoraConfig(
             r=LORA_R,
@@ -363,22 +371,21 @@ def make_formatting_func(tokenizer, examples: list[dict]):
 # ---------------------------------------------------------------------------
 
 def init_wandb(model_key: str, task: str, hyperparams: dict):
-    """Initialise a WandB run if WANDB_API_KEY is set."""
-    api_key = os.environ.get("WANDB_API_KEY", "")
-    if not api_key:
-        print("  WANDB_API_KEY not set — skipping WandB initialisation.")
+    """Initialise a WandB run, using WANDB_API_KEY or any existing wandb login."""
+    try:
+        import wandb  # type: ignore
+
+        run_name = f"{model_key}-{task}-finetune"
+        wandb.init(
+            project=WANDB_PROJECT,
+            name=run_name,
+            config=hyperparams,
+        )
+        os.environ.pop("WANDB_DISABLED", None)
+        print(f"  WandB run initialised: project={WANDB_PROJECT}, name={run_name}")
+    except Exception as exc:
+        print(f"  WandB initialisation failed ({exc}) — disabling WandB logging.")
         os.environ["WANDB_DISABLED"] = "true"
-        return
-
-    import wandb  # type: ignore
-
-    run_name = f"{model_key}-{task}-finetune"
-    wandb.init(
-        project=WANDB_PROJECT,
-        name=run_name,
-        config=hyperparams,
-    )
-    print(f"  WandB run initialised: project={WANDB_PROJECT}, name={run_name}")
 
 
 # ---------------------------------------------------------------------------
@@ -418,7 +425,7 @@ def train(
         lr_scheduler_type=LR_SCHEDULER,
         optim=optimizer_name,
         seed=SEED,
-        max_seq_length=MAX_SEQ_LENGTH,
+        max_length=MAX_SEQ_LENGTH,
         gradient_checkpointing=True,
         logging_steps=10,
         eval_strategy="epoch",
@@ -435,18 +442,12 @@ def train(
         remove_unused_columns=True,
     )
 
-    eos_token = tokenizer.eos_token or ""
-
-    def formatting_func(batch):
-        return [t + eos_token for t in batch["text"]]
-
     trainer = SFTTrainer(
         model=model,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         args=sft_config,
         train_dataset=train_ds,
         eval_dataset=val_ds if len(val_examples) > 0 else None,
-        formatting_func=formatting_func,
     )
 
     print("\n" + "=" * 60)

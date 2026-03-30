@@ -34,3 +34,5 @@ Thumbs.db
 
 # uv
 .uv/
+
+unsloth_compiled_cache/

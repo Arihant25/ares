@@ -16,6 +16,7 @@ import os
 import re
 import time
 
+import unsloth  # must be first to apply optimizations before transformers/peft
 import torch
 from dotenv import load_dotenv
 
@@ -66,12 +67,17 @@ GENERATOR_PROMPT = (
 # ---------------------------------------------------------------------------
 
 def load_data(path: str) -> list[dict]:
-    """Load JSONC by stripping // comments before JSON parsing."""
+    """Load JSONC, return all items from all categories with 'category' field attached."""
     with open(path, "r", encoding="utf-8") as fh:
         raw = fh.read()
+    raw = re.sub(r"/\*.*?\*/", "", raw, flags=re.DOTALL)
     raw = re.sub(r"//[^\n]*", "", raw)
     data = json.loads(raw)
-    return data["TrainPerturbed"]
+    items = []
+    for category, category_items in data.items():
+        for item in category_items:
+            items.append({**item, "category": category})
+    return items
 
 
 def load_existing(output_path: str) -> list[dict]:
@@ -97,25 +103,28 @@ def save_results(output_path: str, results: list[dict]) -> None:
 def load_gemma_models():
     """Load Gemma base model then apply separate PEFT adapters for each step."""
     from peft import PeftModel
-    from unsloth import FastVisionModel
+    from unsloth import FastVisionModel  # noqa: F401 (unsloth already imported at top)
 
     print("Loading Gemma base model ...")
-    base_model, tokenizer = FastVisionModel.from_pretrained(
+    base_model, processor = FastVisionModel.from_pretrained(
         GEMMA_BASE,
-        load_in_4bit=True,
+        load_in_4bit=False,
+        load_in_8bit=True,
+        device_map={"": 0},
     )
+    # Use the underlying text tokenizer directly to avoid vision processor overhead
+    # during text-only finetuned inference.
+    tokenizer = processor.tokenizer
 
     print("Applying Gemma misconception-detector adapter ...")
     detector_model = PeftModel.from_pretrained(
         base_model, ADAPTER_PATHS["gemma"]["detector"]
     )
-    FastVisionModel.for_inference(detector_model)
 
     print("Applying Gemma socratic-generator adapter ...")
     generator_model = PeftModel.from_pretrained(
         base_model, ADAPTER_PATHS["gemma"]["generator"]
     )
-    FastVisionModel.for_inference(generator_model)
 
     return detector_model, generator_model, tokenizer
 
@@ -123,20 +132,16 @@ def load_gemma_models():
 def load_lfm2_models():
     """Load LFM2 base model (8-bit) then apply separate PEFT adapters."""
     from peft import PeftModel
-    from transformers import (
-        AutoModelForCausalLM,
-        AutoTokenizer,
-        BitsAndBytesConfig,
-    )
+    from transformers import AutoTokenizer, BitsAndBytesConfig
+    from transformers.models.lfm2_vl import Lfm2VlForConditionalGeneration
 
     bnb = BitsAndBytesConfig(load_in_8bit=True)
 
     print("Loading LFM2 base model ...")
-    base = AutoModelForCausalLM.from_pretrained(
+    base = Lfm2VlForConditionalGeneration.from_pretrained(
         LFM2_BASE,
         quantization_config=bnb,
-        device_map="auto",
-        trust_remote_code=True,
+        device_map={"": 0},
     )
     tokenizer = AutoTokenizer.from_pretrained(LFM2_BASE, trust_remote_code=True)
 
@@ -157,11 +162,21 @@ def load_lfm2_models():
 # Inference
 # ---------------------------------------------------------------------------
 
-def generate_text(model, tokenizer, prompt: str, max_new_tokens: int = 150) -> tuple[str, float]:
+def generate_text(model, tokenizer, prompt: str, max_new_tokens: int = 150, use_chat_template: bool = False) -> tuple[str, float]:
     """Tokenize prompt, run greedy generation, return only the new tokens."""
-    inputs = tokenizer(prompt, return_tensors="pt")
-    # Move input tensors to the model device
     device = next(model.parameters()).device
+    if use_chat_template:
+        messages = [{"role": "user", "content": [{"type": "text", "text": prompt}]}]
+        inputs = tokenizer.apply_chat_template(
+            messages,
+            add_generation_prompt=True,
+            tokenize=True,
+            return_dict=True,
+            return_tensors="pt",
+        )
+    else:
+        inputs = tokenizer(prompt, return_tensors="pt")
+    # Move input tensors to the model device
     inputs = {k: v.to(device) for k, v in inputs.items()}
 
     prompt_len = inputs["input_ids"].shape[1]
@@ -213,14 +228,16 @@ def main() -> None:
     else:
         detector_model, generator_model, tokenizer = load_lfm2_models()
 
+    use_chat_template = False  # both models finetuned on plain completion, not chat format
     print("Models ready. Starting evaluation ...\n")
 
     for i, item in enumerate(items):
         student_statement = item["student_statement"]
         incorrect_belief = item["incorrect_belief"]
         socratic_question = item["socratic_question"]
+        category = item["category"]
 
-        print(f"[{i + 1}/{total}] {student_statement[:70]}...")
+        print(f"[{i + 1}/{total}] [{category}] {student_statement[:60]}...")
 
         if student_statement in already_done:
             print("  Skipping (already in output).")
@@ -230,7 +247,7 @@ def main() -> None:
             # --- Step 1: Misconception detection ---
             det_prompt = DETECTOR_PROMPT.format(student_statement=student_statement)
             detected_misconception, step1_latency = generate_text(
-                detector_model, tokenizer, det_prompt
+                detector_model, tokenizer, det_prompt, use_chat_template=use_chat_template
             )
             print(f"  Step 1 ({step1_latency:.2f}s): {detected_misconception[:80]}")
 
@@ -239,12 +256,13 @@ def main() -> None:
                 detected_misconception=detected_misconception
             )
             socratic_output, step2_latency = generate_text(
-                generator_model, tokenizer, gen_prompt
+                generator_model, tokenizer, gen_prompt, use_chat_template=use_chat_template
             )
             total_latency = step1_latency + step2_latency
             print(f"  Step 2 ({step2_latency:.2f}s): {socratic_output[:80]}")
 
             result = {
+                "Category": category,
                 "Input": student_statement,
                 "GroundTruth_Misconception": incorrect_belief,
                 "GroundTruth_Question": socratic_question,
