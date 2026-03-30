@@ -4,899 +4,899 @@
     "Input": "Multi-Head Attention is redundant because you could just use one very large attention head with the same total dimension.",
     "GroundTruth_Misconception": "A single high-dimensional head is functionally equivalent to multiple low-dimensional heads.",
     "GroundTruth_Question": "If you are looking at a painting, can you simultaneously focus on the brushstroke technique, the color palette, and the overall composition using only one 'center' of focus?",
-    "Output": "Misconception: The student believes that a single large attention head can replace multiple smaller ones, assuming that the total dimension of the attention head is sufficient to capture all necessary information.\n\nSocratic Question: Can you think of a scenario where having multiple smaller attention heads could provide a more nuanced understanding of the data than a single large attention head?",
+    "Output": "If you were to use a single large attention head with the same total dimension as multiple smaller attention heads, would this not potentially limit the model's ability to focus on different parts of the input sequence independently? How might this affect the model's performance in understanding complex relationships within the data?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.1834
+    "Latency": 1.939
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Chain-of-Thought prompting works because it gives the model 'extra time' to think before it answers.",
     "GroundTruth_Misconception": "The benefit of CoT is temporal (computational time) rather than structural (token-by-token state updates).",
     "GroundTruth_Question": "If the model doesn't actually have a 'pause' button for internal thought, how does generating intermediate tokens change the input state for the final answer?",
-    "Output": "Misconception: The student believes that Chain-of-Thought prompting simply provides the model with additional time to process information before responding.\n\nSocratic Question: Could you explain how Chain-of-Thought prompting might influence the model's thought process or the way it generates responses?",
+    "Output": "What do you think happens when a model is given 'extra time' to think? Does this mean it has more resources or capabilities? How do you think this extra time could impact the quality of the model's response?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8515
+    "Latency": 1.4324
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Self' in 'Self-Attention' means the model is thinking about itself.",
     "GroundTruth_Misconception": "Self-attention implies model self-reflection or consciousness.",
     "GroundTruth_Question": "If the model is looking at the relationship between different words *within the same sentence*, who is the 'self' in that context?",
-    "Output": "Misconception: The student believes that the term 'Self' in 'Self-Attention' refers to the model having self-awareness or consciousness, akin to human self-awareness.\n\nSocratic Question: Can you think of a situation where a model would need to 'think about itself' in the context of self-attention?",
+    "Output": "What does the term 'Self' in 'Self-Attention' actually refer to? Could it be something else entirely?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.0517
+    "Latency": 0.8429
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Query' and 'Key' in attention are basically the same thing as a search query and a database record.",
     "GroundTruth_Misconception": "Attention components are identical to traditional database retrieval.",
     "GroundTruth_Question": "In a database, a record is either a match or it isn't; in attention, can a 'Key' be 'partially' relevant to a 'Query'?",
-    "Output": "Misconception: The student believes that the 'Query' and 'Key' in attention mechanisms are directly analogous to a search query and a database record, implying a one-to-one correspondence between these concepts.\n\nSocratic Question: Can you think of any scenarios where the 'Query' and 'Key' in attention mechanisms might not behave exactly like a search query and a database record?",
+    "Output": "What do you think the 'Query' and 'Key' in the context of attention might represent? How do you think they relate to a search query and a database record? Could it be that they serve similar functions in their respective contexts?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.1509
+    "Latency": 1.5411
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Attention' mechanism is the same as human focus.",
     "GroundTruth_Misconception": "Neural attention is biologically identical to human cognitive focus.",
     "GroundTruth_Question": "When you focus on a word, you ignore the rest of the page; does the Transformer 'ignore' the other tokens, or does it calculate a 'weight' for every single one of them simultaneously?",
-    "Output": "Misconception: The student believes that the 'Attention' mechanism in AI models is identical to human focus.\n\nSocratic Question: Can you think of any differences between how an AI model processes information and how a human being focuses on certain tasks or stimuli?",
+    "Output": "What are the key differences between the 'Attention' mechanism in artificial intelligence and human focus? How do these differences impact the way each processes information? Can you think of any examples where these differences might be particularly significant?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8076
+    "Latency": 1.4162
   },
   {
     "Category": "TrainPerturbed",
     "Input": "A 'Transformer' is just a neural network with more layers.",
     "GroundTruth_Misconception": "Transformer novelty is purely a matter of depth (scaling).",
     "GroundTruth_Question": "Before Transformers, models (like RNNs) processed words one by one; what's the fundamental 'parallel' trick that a Transformer uses instead?",
-    "Output": "Misconception: The student believes that the complexity or capability of a 'Transformer' model is solely determined by the number of layers in the neural network.\n\nSocratic Question: \"Could you explain how the number of layers in a neural network affects its ability to learn and generalize from data? Are there other factors that might contribute to these aspects?\"",
+    "Output": "What is a neural network? How does the complexity of a neural network relate to its performance in solving problems? Can you think of any other characteristics of a neural network that might not be solely determined by the number of layers?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.0795
+    "Latency": 1.4771
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Decoder' is the part of the AI that translates code into human language.",
     "GroundTruth_Misconception": "Functional confusion of the Transformer Decoder block.",
     "GroundTruth_Question": "In a Transformer, if the Encoder 'reads' the input, what does the Decoder 'do' to create the next word in a sentence?",
-    "Output": "Misconception: The 'Decoder' is the part of the AI that translates code into human language.\n\nSocratic Question: Can you think of a scenario where the 'Decoder' might not be the part of the AI responsible for translating code into human language?",
+    "Output": "\"Can you explain how the 'Decoder' works in the context of AI? What is its role in the overall process of AI?\"",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8505
+    "Latency": 0.9064
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The reason GPT models use a Decoder-only architecture is because Encoders are outdated.",
     "GroundTruth_Misconception": "Encoder-Decoder models are obsolete.",
     "GroundTruth_Question": "For a task like 'classifying' a million documents (where you don't need to generate new text), is a generative Decoder really the most efficient tool for the job?",
-    "Output": "Misconception: The statement assumes that encoders are outdated and therefore GPT models use a decoder-only architecture because of this.\n\nSocratic Question: Can you think of any scenarios where an encoder might not be necessary or beneficial in a model's architecture?",
+    "Output": "How do you think the design of GPT models relates to the overall goals of natural language processing? Could it be that the Decoder-only architecture is chosen for its effectiveness in generating text rather than for the obsolescence of Encoders?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8222
+    "Latency": 1.5715
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Mixture of Experts (MoE) models are just several independent models glued together.",
     "GroundTruth_Misconception": "MoE is a collection of standalone models rather than a sparse architectural technique.",
     "GroundTruth_Question": "If the experts share the same attention layers and only have different feed-forward blocks, can they really function as 'independent' entities?",
-    "Output": "Misconception: The student believes that Mixture of Experts (MoE) models are simply a collection of independent models without any integration or coordination between them.\n\nSocratic Question: Can you think of a scenario where having multiple models that work independently might not be as effective as having a single model that is specifically designed to handle all possible inputs?",
+    "Output": "If we consider a mixture of experts (MoE) model, what might be the potential benefits of having multiple independent models rather than a single one? How could these individual models contribute to the overall performance of the MoE model?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.0522
+    "Latency": 1.464
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Weight initialization doesn't matter much because the optimizer will eventually move the weights to the right values anyway.",
     "GroundTruth_Misconception": "Optimizers are robust to any starting state and will always find the global optimum.",
     "GroundTruth_Question": "If you start a hiker in the middle of a dense fog, does their starting position influence whether they end up in the correct valley or stuck on a random plateau?",
-    "Output": "Misconception: The statement overlooks the importance of weight initialization in the training process of neural networks.\n\nSocratic Question: Can you explain how the initial values of weights might influence the speed and success of the optimization process?",
+    "Output": "What if the initial weights are far away from the optimal values? How would that affect the path the optimizer takes to find the optimal values? Could the starting point influence the efficiency or the final outcome of the optimization process?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7218
+    "Latency": 1.4476
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The learning rate should be as small as possible from the very start to ensure the model never misses the optimal point.",
     "GroundTruth_Misconception": "Smaller learning rates are always safer and more effective.",
     "GroundTruth_Question": "If you take steps that are only one millimeter long to cross a mountain range, how long will it take you to even reach the first peak?",
-    "Output": "Misconception: The student believes that a smaller learning rate will always lead to a better optimization outcome, ensuring the model never misses the optimal point.\n\nSocratic Question: Can you think of a situation where a smaller learning rate might actually hinder the model's ability to find the optimal point?",
+    "Output": "If the learning rate is as small as possible, what might happen to the model's progress over time? How does the size of the learning rate affect the model's ability to converge to the optimal point? Could a smaller learning rate potentially cause the model to take too long to learn or even get stuck in a suboptimal point?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9082
+    "Latency": 2.1298
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Gradient descent is like a ball rolling down a hill to the very bottom.",
     "GroundTruth_Misconception": "Gradient descent always finds the absolute global minimum.",
     "GroundTruth_Question": "If the hill has many small 'dents' or craters on the way down, what happens if the ball gets stuck in one of those before reaching the bottom?",
-    "Output": "Misconception: The student's statement oversimplifies the concept of gradient descent by implying that it always finds the global minimum, like a ball rolling down a hill will always reach the very bottom.\n\nSocratic Question: Can you think of any situations where a ball rolling down a hill might not necessarily reach the lowest point?",
+    "Output": "What do you think happens when the ball reaches the bottom of the hill? Does it stay there or does it continue rolling? Why do you think that might be?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.994
+    "Latency": 1.0777
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Backpropagation is when the model looks back at its previous answers to learn from its mistakes.",
     "GroundTruth_Misconception": "Backprop is a high-level behavioral 'self-reflection' process.",
     "GroundTruth_Question": "Is backpropagation happening while the model *talks* to you, or is it a mathematical process that only happens while the model is being *trained*?",
-    "Output": "Misconception: The student believes backpropagation involves the model looking back at its previous answers to learn from its mistakes.\n\nSocratic Question: Can you explain how backpropagation actually works in the context of a neural network?",
+    "Output": "What exactly does the term \"backpropagation\" mean in the context of machine learning? How does it relate to the model's learning process? Can you think of a situation where a model might make a mistake? How would the model use the information from that mistake to improve its future predictions?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7521
+    "Latency": 1.9127
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Loss Function' is a measure of how much data the model has lost during training.",
     "GroundTruth_Misconception": "Loss refers to data attrition rather than the difference between prediction and reality.",
     "GroundTruth_Question": "In a game of archery, if 'Loss' is the distance between your arrow and the bullseye, does a high 'Loss' mean you lost your arrows or just that you missed the target?",
-    "Output": "Misconception: The 'Loss Function' is a measure of how much data the model has lost during training.\n\nSocratic Question: Can you think of a scenario where the 'Loss Function' might not necessarily reflect the amount of data that the model has lost during training?",
+    "Output": "What exactly do you mean by \"lost\" data? Could it be referring to data that the model has not been able to correctly predict or classify?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8805
+    "Latency": 0.9851
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Bias' term in a neuron is there to make the model more biased toward the right answer.",
     "GroundTruth_Misconception": "Bias (the parameter) is the same as Bias (the societal problem).",
     "GroundTruth_Question": "If a neuron needs to trigger only when an input is over '5,' but the math currently outputs '0,' how can we 'shift' the result up by '5' without changing the input itself?",
-    "Output": "Misconception: The student believes that the 'Bias' term in a neuron is intended to favor a particular answer.\n\nSocratic Question: \"Can you explain how the 'Bias' term is used in the context of a neuron, and how it might affect the output of the model?\"",
+    "Output": "What do you think 'bias' means in the context of a neuron? Could it be something else entirely?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9225
+    "Latency": 0.7711
   },
   {
     "Category": "TrainPerturbed",
     "Input": "A 'Batch Size' of 1 is the best for training because the model learns from every single example individually.",
     "GroundTruth_Misconception": "Batch size 1 is the most efficient or effective training setting.",
     "GroundTruth_Question": "If you only look at one single data point at a time, is it easy to tell if a 'pattern' you found is a general rule or just a random fluke (noise)?",
-    "Output": "Misconception: The student believes that a batch size of 1 is always the best for training because it allows the model to learn from every single example individually.\n\nSocratic Question: Can you think of a scenario where training with a batch size of 1 might not be the most efficient or effective approach?",
+    "Output": "What happens if we have a batch size of 1? How does this affect the learning process of the model? Could it be that learning from every single example individually could lead to overfitting? What about the computational cost? Is it feasible to process every example individually? How does this compare to processing a batch of examples together?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9557
+    "Latency": 2.1407
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Dropout is a way to make the model 'forget' things it shouldn't know.",
     "GroundTruth_Misconception": "Dropout is a privacy or data-cleansing tool.",
     "GroundTruth_Question": "If we randomly turn off neurons during training, are we trying to 'delete' data or are we trying to make the *remaining* neurons more robust and less reliant on each other?",
-    "Output": "Misconception: The student believes that dropping out of a learning model is akin to the model forgetting information it should retain.\n\nSocratic Question: Could you explain how dropping out from a learning model might affect its ability to learn new information?",
+    "Output": "What does the term 'dropout' mean in the context of a model? How does it relate to the process of learning in a model? Could you think of a situation where you intentionally 'forget' something? What was the purpose of that 'forgetting'? How does this relate to the concept of 'dropout' in a model?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7656
+    "Latency": 2.2983
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Adam' optimizer is called that because it was created by a guy named Adam.",
     "GroundTruth_Misconception": "Etymological confusion (Adaptive Moment Estimation).",
     "GroundTruth_Question": "If 'Adam' stands for 'Adaptive Moment Estimation,' does that name tell us more about its *creator* or more about *how* it handles the math of learning?",
-    "Output": "Misconception: The 'Adam' optimizer is named after a person named Adam.\n\nSocratic Question: Can you think of any other optimizers that are named after people? What might be the reason behind naming an optimizer after a person?",
+    "Output": "\"Can you tell me more about the origins of the 'Adam' optimizer? What do you think might have inspired the name?\"",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7797
+    "Latency": 0.8918
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The Softmax function is essentially just a way to make sure the biggest number in a list wins.",
     "GroundTruth_Misconception": "Softmax is a simple 'argmax' or 'winner-take-all' operation.",
     "GroundTruth_Question": "If Softmax was only meant to pick the maximum value, why does it output a probability distribution where even low-scoring tokens receive some non-zero weight?",
-    "Output": "Misconception: The student believes that the Softmax function only serves to prioritize the largest value in a list without considering the relative differences between values.\n\nSocratic Question: Can you think of a scenario where simply choosing the largest value might not be the best approach? How might the Softmax function improve upon this by considering the relative differences between values?",
+    "Output": "What happens if you have a list where all the numbers are the same? Does the Softmax function still work as you initially thought?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.0656
+    "Latency": 0.8945
   },
   {
     "Category": "TrainPerturbed",
     "Input": "A higher Top-P value makes the model more focused on the most likely answer.",
     "GroundTruth_Misconception": "Top-P (Nucleus sampling) and Top-K are inverse controls for focus.",
     "GroundTruth_Question": "If you increase the 'probability mass' threshold to include more possible words, does the pool of choices become more restrictive or more diverse?",
-    "Output": "Misconception: The student believes that a higher Top-P value makes the model more focused on the most likely answer.\n\nSocratic Question: Can you think of a situation where focusing on the most likely answer might not be the best approach, even if it has a high Top-P value?",
+    "Output": "If a higher Top-P value indicates a model's focus on the most likely answer, what might this imply about the model's performance in terms of accuracy? Could it be that a higher Top-P value might actually suggest that the model is less accurate, as it is focusing more on the most likely answer rather than considering all possible answers?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8944
+    "Latency": 2.1119
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Temperature 0 means the model will always give the same answer to the same prompt, no matter what.",
     "GroundTruth_Misconception": "Temperature 0 guarantees absolute determinism across all platforms/hardware.",
     "GroundTruth_Question": "If the underlying hardware or floating-point math has tiny variations (non-determinism in CUDA), can 'greedy' selection still result in different paths over time?",
-    "Output": "Misconception: The student believes that a temperature of 0 in a model means it will always give the same answer to the same prompt, regardless of other factors.\n\nSocratic Question: \"If we were to change the prompt in your model, would the same answer still be given? Why or why not?\"",
+    "Output": "What does it mean for a model to give the same answer to the same prompt every time? Could it be that the model is not learning from new data or experiences? What if the model is not capable of adapting to different situations or contexts? How might this affect the reliability of the model's responses?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9668
+    "Latency": 1.944
   },
   {
     "Category": "TrainPerturbed",
     "Input": "A 'Temperature' of 2.0 is a good way to get extremely creative and high-quality stories.",
     "GroundTruth_Misconception": "High temperature leads to high-quality creativity.",
     "GroundTruth_Question": "If you make every word almost equally likely to be chosen, will the result be a 'creative' story or just a random 'alphabet soup' of words?",
-    "Output": "Misconception: The student believes that a numerical value of 2.0 is a universal indicator of creativity and quality in storytelling.\n\nSocratic Question: Could you explain how you arrived at the idea that a specific numerical value would determine the creativity and quality of a story?",
+    "Output": "What do you mean by \"extremely creative and high-quality stories\"? How do you define these terms? Can you provide an example of a story with a temperature of 2.0? How does this temperature contribute to the creativity and quality of the story?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8531
+    "Latency": 1.7239
   },
   {
     "Category": "TrainPerturbed",
     "Input": "To get a 'creative' response, I should use a very low temperature so the model picks unique words.",
     "GroundTruth_Misconception": "Low temperature equals high creativity.",
     "GroundTruth_Question": "If a low temperature forces the model to pick only the single most likely 'safe' word every time, will the output be 'unique' or 'predictable'?",
-    "Output": "Misconception: The student believes that using a very low temperature will result in a more 'creative' response by the model.\n\nSocratic Question: Could you explain how the temperature setting in the model affects the uniqueness of the words it generates?",
+    "Output": "What do you think happens when you use a very low temperature in a creative context? How does it affect the words that the model chooses? Could it be that the model might not choose unique words if it's set to a very low temperature? What do you think the model would do instead?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7808
+    "Latency": 1.8797
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'context window' and 'max tokens' are the same thing.",
     "GroundTruth_Misconception": "Input capacity and output limit are synonymous.",
     "GroundTruth_Question": "If a bucket can hold 10 gallons (context), but the tap only allows you to pour 1 gallon at a time (max tokens), are those two limits measuring the same thing?",
-    "Output": "Misconception: The student believes that the 'context window' and 'max tokens' refer to the same thing.\n\nSocratic Question: Can you think of a situation where the 'context window' and 'max tokens' could have different implications in a specific task or application?",
+    "Output": "Could you explain what a 'context window' and 'max tokens' mean in the context of a language model? How might they differ in their functions or purposes?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8661
+    "Latency": 1.0758
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Softmax' output is the actual probability that a fact is true.",
     "GroundTruth_Misconception": "Output probability (confidence) equals factual truth probability.",
     "GroundTruth_Question": "If a model is 99% 'confident' that the next word after 'The capital of Australia is...' should be 'Sydney' (even though it's Canberra), what is that percentage actually measuring?",
-    "Output": "Misconception: The 'Softmax' output is the actual probability that a fact is true.\n\nSocratic Question: Can you explain how the 'Softmax' function works and what it represents in the context of a probability distribution?",
+    "Output": "\"Can you explain why the 'Softmax' function might not be used to determine the truth of a fact? What might be the potential issues with using 'Softmax' as a measure of truth?\"",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7364
+    "Latency": 1.3086
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Seed' parameter is a measure of how 'creative' the model is.",
     "GroundTruth_Misconception": "Seed controls the 'level' of creativity.",
     "GroundTruth_Question": "If you use the same 'Seed' twice with the same settings, you get the exact same answer; is that a measure of 'how much' creativity there is, or just which 'random' path was taken?",
-    "Output": "Misconception: The 'Seed' parameter is a measure of how 'creative' the model is.\n\nSocratic Question: Can you explain how the 'Seed' parameter is defined and what role it plays in the functioning of the model?",
+    "Output": "What exactly do you mean by 'creative' in the context of a model? Can you think of any examples where a model might be considered creative? How does the 'Seed' parameter relate to these examples?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7793
+    "Latency": 1.3838
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Tokens are just another word for characters or syllables.",
     "GroundTruth_Misconception": "Tokenization is a simple character-based or phonetic split.",
     "GroundTruth_Question": "Why would a tokenizer group 'un' and 'break' and 'able' together as separate units instead of just treating 'unbreakable' as one word or eleven characters?",
-    "Output": "Misconception: Tokens are not just characters or syllables.\n\nSocratic Question: Can you think of a situation where a token might not be a character or syllable?",
+    "Output": "Could you explain why you think tokens are just another word for characters or syllables? What specific examples or experiences have led you to this conclusion?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.5791
+    "Latency": 0.9393
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Tokenization is the same across all LLMs because they all use the same alphabet.",
     "GroundTruth_Misconception": "Standardization of vocabulary across all models.",
     "GroundTruth_Question": "If one model sees 'apple' as one unit and another sees it as 'app' + 'le', will they represent the 'meaning' of that word in the same way?",
-    "Output": "Misconception: The student believes that tokenization is uniform across all Large Language Models (LLMs) simply because they all use the same alphabet.\n\nSocratic Question: Can you think of a situation where two different languages with the same alphabet could have different tokenization methods?",
+    "Output": "How do you think the process of tokenization might differ between different language models, even if they use the same alphabet? What other factors could influence the way tokens are created or processed?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8512
+    "Latency": 1.1999
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Embeddings are just a list of coordinates, like GPS for words.",
     "GroundTruth_Misconception": "Embeddings are simple physical mappings.",
     "GroundTruth_Question": "In a 1,536-dimensional space, can a 'location' represent more than just a place, perhaps capturing things like 'formality,' 'sentiment,' and 'tense' simultaneously?",
-    "Output": "Misconception: Embeddings are merely a list of coordinates, like GPS for words.\n\nSocratic Question: Could you consider how embeddings capture more than just the location of words in a vector space? For instance, how might they represent relationships between words or their contextual usage?",
+    "Output": "How do you think the concept of embeddings in natural language processing differs from a GPS system? What additional information do embeddings provide that a simple list of coordinates does not?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8657
+    "Latency": 1.1397
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Hidden State' in a Transformer is where the model hides the facts it doesn't want to show.",
     "GroundTruth_Misconception": "Hidden states are a form of 'secret' storage or censorship.",
     "GroundTruth_Question": "If 'hidden' in mathematics just means 'not directly observed in the output,' what is that state actually representing during the computation process?",
-    "Output": "Misconception: The 'Hidden State' in a Transformer is where the model hides the facts it doesn't want to show.\n\nSocratic Question: Can you explain how the 'Hidden State' in a Transformer works in terms of information processing and representation?",
+    "Output": "What do you mean by 'hides' in this context? Can you think of a situation where information is not 'hidden' but rather 'omitted'? How does this relate to the concept of 'Hidden State' in a Transformer?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8657
+    "Latency": 1.6358
   },
   {
     "Category": "TrainPerturbed",
     "Input": "The 'Hidden Layer' is where the model stores all the private data it learned.",
     "GroundTruth_Misconception": "Hidden layers are a literal data warehouse for training inputs.",
     "GroundTruth_Question": "Is a hidden layer storing 'verbatim' sentences, or is it storing 'mathematical patterns' that represent how language works in general?",
-    "Output": "Misconception: The 'Hidden Layer' is where the model stores all the private data it learned.\n\nSocratic Question: Can you think of a scenario where the model might not store private data in its 'Hidden Layer'?",
+    "Output": "If the 'Hidden Layer' is where the model stores all the private data it learned, what do you think happens to the data when the model is trained?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7515
+    "Latency": 1.0778
   },
   {
     "Category": "TrainPerturbed",
     "Input": "If I provide a million documents to my RAG system, the LLM will essentially become as smart as an expert who has read all of them.",
     "GroundTruth_Misconception": "Retrieval capacity is synonymous with internalized model reasoning or expertise.",
     "GroundTruth_Question": "If a student has access to a massive library but doesn't know how to synthesize the information, does the size of the library improve their ability to solve a complex problem?",
-    "Output": "Misconception: The student believes that simply providing a large volume of documents to a Retrieval-Augmented Generation (RAG) system will make the Large Language Model (LLM) as knowledgeable as an expert who has read all those documents.\n\nSocratic Question: \"How do you think the LLM's understanding of the documents would be influenced by the quality and relevance of the documents, rather than just the quantity?\"",
+    "Output": "What do you mean by \"smart\" in this context? What specific aspects of being an expert are you hoping the LLM will acquire from reading the documents? How do you define the term \"expert\"? What does it mean for a system to \"read\" documents? How do you think the LLM would use the information from the documents?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.2965
+    "Latency": 2.2664
   },
   {
     "Category": "TrainPerturbed",
     "Input": "If I use a vector database, I don't need to worry about the order of my data because the search is based on meaning.",
     "GroundTruth_Misconception": "Vector databases are invariant to data ingestion order or structural relationships.",
     "GroundTruth_Question": "If two documents are semantically similar but one is a 'correction' of the other, how does a standard vector search help the model know which one to trust more?",
-    "Output": "Misconception: The student believes that semantic search, which is often associated with vector databases, inherently disregards the order of data.\n\nSocratic Question: Can you explain how the order of data might still be relevant in a semantic search, even when using a vector database?",
+    "Output": "How does the order of your data potentially affect the search results in a vector database? Could the meaning of your data be influenced by its order?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.852
+    "Latency": 0.9549
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Once I deploy my RAG system, I never need to re-index my data.",
     "GroundTruth_Misconception": "Indices are static and forever-valid assets.",
     "GroundTruth_Question": "If your company changes its return policy today, and your vector database still holds the 2023 policy vectors, what will the chatbot tell your customers?",
-    "Output": "Misconception: The student believes that once a Retrieval-Augmented Generation (RAG) system is deployed, it does not require any further updates or maintenance, specifically in terms of data indexing.\n\nSocratic Question: Can you explain how the RAG system interacts with the data it retrieves and how it might change over time?",
+    "Output": "How does the concept of re-indexing in a RAG system relate to the frequency and volume of data updates? Could it be that the need for re-indexing is directly proportional to these factors?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.0656
+    "Latency": 1.2988
   },
   {
     "Category": "TrainPerturbed",
     "Input": "To make a vector database faster, I should just reduce the number of dimensions in my embeddings.",
     "GroundTruth_Misconception": "Dimensionality reduction is the primary or only way to optimize search speed.",
     "GroundTruth_Question": "If you compress a high-resolution map into a tiny thumbnail to find a specific street faster, what happens to your ability to distinguish between two very similar-looking neighborhoods?",
-    "Output": "Misconception: The student believes that reducing the number of dimensions in their embeddings will automatically make their vector database faster.\n\nSocratic Question: How does the dimensionality of your embeddings affect the computational complexity of your vector database operations?",
+    "Output": "How might reducing the number of dimensions in your embeddings affect the relationships between your vectors? Could this potentially lead to a loss of information or an increase in computational efficiency? What are some factors that you consider when deciding on the number of dimensions for your embeddings?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7519
+    "Latency": 1.6905
   },
   {
     "Category": "TrainPerturbed",
     "Input": "In RAG, the more context you provide, the more 'grounded' the model becomes.",
     "GroundTruth_Misconception": "Context volume is directly proportional to grounding.",
     "GroundTruth_Question": "If I give you a 500-page book to find one fact, but I also give you 100 pages of unrelated 'noise' mixed in, does that make your job easier or harder?",
-    "Output": "Misconception: The student believes that the quantity of context directly correlates with the model's grounding.\n\nSocratic Question: Can you think of a situation where a model might be highly grounded with little context, and a situation where it might be less grounded with a lot of context?",
+    "Output": "What do you mean by \"grounded\" in the context of RAG? Can you provide an example where more context leads to a more grounded model? And how do you determine whether a model is 'grounded'?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8815
+    "Latency": 1.4618
   },
   {
     "Category": "TrainPerturbed",
     "Input": "RAG is only for text; you can't use it for images or audio.",
     "GroundTruth_Misconception": "RAG is modality-restricted.",
     "GroundTruth_Question": "If we can represent an image as a vector (just like text), what's stopping us from retrieving a relevant image 'context' for a multimodal model?",
-    "Output": "Misconception: The student believes that RAG (Retrieval-Augmented Generation) is limited to text data and cannot be applied to other types of data like images or audio.\n\nSocratic Question: Can you think of any scenarios where you might want to use RAG with images or audio data? How might the process of retrieving and augmenting information differ in these cases compared to text data?",
+    "Output": "What if you were to use RAG to analyze a piece of artwork or a piece of music? How would you go about doing that? What information would you need to extract from the image or audio to make sense of it using RAG?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.2522
+    "Latency": 1.5798
   },
   {
     "Category": "TrainPerturbed",
     "Input": "You should always use the largest available embedding model to get the best results in RAG.",
     "GroundTruth_Misconception": "Maximal embedding size is always optimal.",
     "GroundTruth_Question": "If your retrieval speed becomes so slow that the user leaves before the answer generates, was the 'best' model actually the 'best' for your application?",
-    "Output": "Misconception: The student believes that always using the largest available embedding model will always yield the best results in Retrieval-Augmented Generation (RAG).\n\nSocratic Question: Could it be that the size of the embedding model isn't the only factor that influences the quality of results in RAG, and that other considerations might be more important?",
+    "Output": "What if the largest embedding model is not always the best choice for every task? How might the specific requirements of your task influence the choice of embedding model? Could there be scenarios where a smaller model might be more efficient or effective?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.0806
+    "Latency": 1.4714
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Cosine similarity is better than Euclidean distance because it's newer and more modern.",
     "GroundTruth_Misconception": "Algorithmic recency determines metric superiority.",
     "GroundTruth_Question": "If you care more about the *direction* of a concept (its topic) than how *extreme* the wording is (its magnitude), which metric focuses only on the angle between vectors?",
-    "Output": "Misconception: The student believes that the newer or more modern a method is, the better it is.\n\nSocratic Question: Can you think of any examples where a more modern method might not be the best choice?",
+    "Output": "What do you understand by the term 'newer' or 'more modern' in this context? How does the age or modernity of a concept affect its effectiveness or accuracy? Can you think of any other factors that might make one measure more suitable than another?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.6946
+    "Latency": 1.6787
   },
   {
     "Category": "TrainPerturbed",
     "Input": "In RAG, 'Top-K' refers to the temperature of the retrieval process.",
     "GroundTruth_Misconception": "Top-K in retrieval is a stochastic control.",
     "GroundTruth_Question": "If 'K' is the number of documents retrieved, is 'Top-K' controlling 'randomness' or is it just the 'quantity' of information we fetch?",
-    "Output": "Misconception: The student has confused the term 'Top-K' with the temperature parameter in the retrieval process.\n\nSocratic Question: Can you explain how 'Top-K' is used in the RAG model to retrieve information?",
+    "Output": "What exactly do you mean by 'temperature' in the context of the retrieval process in RAG? Could it be related to the way the algorithm ranks or selects the most relevant information?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7231
+    "Latency": 1.2626
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Vector databases are fundamentally different from SQL databases because they don't use tables.",
     "GroundTruth_Misconception": "Vector DBs lack structural organization or tabular-like properties.",
     "GroundTruth_Question": "If a vector database stores 'metadata' (like a name or date) alongside the 'vector,' is it not still organizing data in a way that looks very much like rows and columns?",
-    "Output": "Misconception: Vector databases are fundamentally different from SQL databases because they don't use tables.\n\nSocratic Question: Can you explain how the structure of data storage in vector databases differs from that in SQL databases?",
+    "Output": "What do you understand by the term \"fundamentally different\"? Can you think of any other ways in which vector databases and SQL databases might differ? How do these differences impact the way data is stored and retrieved in each type of database?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.6639
+    "Latency": 1.5568
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Vector databases are only for searching; they can't be used for long-term memory.",
     "GroundTruth_Misconception": "Vector DBs lack the architectural capability to act as a memory layer.",
     "GroundTruth_Question": "If an agent stores every past interaction as a vector and retrieves them when a similar situation arises, is that not a form of functional memory?",
-    "Output": "Misconception: Vector databases are only for searching; they can't be used for long-term memory.\n\nSocratic Question: Can you think of any other applications where a vector database might be useful beyond just searching?",
+    "Output": "How do you think the concept of \"long-term memory\" applies to vector databases? What are some potential uses of a vector database that could involve storing and recalling information over an extended period?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.6796
+    "Latency": 1.2488
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Fine-tuning is the best way to give an LLM access to new, real-time information.",
     "GroundTruth_Misconception": "Fine-tuning is a viable substitute for real-time data retrieval.",
     "GroundTruth_Question": "If you have to retrain a massive model every time a new news article is published, how much compute power would you need to stay 'up to date'?",
-    "Output": "Misconception: The student believes that fine-tuning is the most effective method for providing an LLM with up-to-date, real-time information.\n\nSocratic Question: Can you think of any other methods that could potentially provide an LLM with real-time information, and how might they differ from fine-tuning?",
+    "Output": "What do you mean by \"fine-tuning\"? How does this process allow an LLM to access new, real-time information? Could there be other methods that might be more effective or efficient for this purpose? What are the potential limitations or drawbacks of using fine-tuning for this purpose? How do you think the accuracy and reliability of the information would be affected by this method?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.967
+    "Latency": 2.4997
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Low-Rank Adaptation (LoRA) is just a 'lite' version of fine-tuning that is always worse.",
     "GroundTruth_Misconception": "LoRA is inherently inferior to full parameter fine-tuning.",
     "GroundTruth_Question": "If you only need to change the 'accent' of a model rather than teach it an entire new language, is it more efficient to retrain every neuron or just a small group of them?",
-    "Output": "Misconception: The student believes that Low-Rank Adaptation (LoRA) is inherently inferior to fine-tuning.\n\nSocratic Question: Can you think of any scenarios where LoRA might be more suitable or advantageous than fine-tuning?",
+    "Output": "What do you understand by 'lite' version? How does this concept apply to LoRA compared to fine-tuning? Can you think of any scenarios where a 'lite' version might be appropriate or beneficial? How do you define 'always worse' in this context? What factors might influence the effectiveness of LoRA compared to fine-tuning?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7681
+    "Latency": 2.2646
   },
   {
     "Category": "TrainPerturbed",
     "Input": "RLHF is just a fancy way to censor the model so it doesn't say anything controversial.",
     "GroundTruth_Misconception": "The sole purpose of RLHF is safety and censorship.",
     "GroundTruth_Question": "If we want a model to follow a specific formatting style or tone (like 'be concise' or 'write in Python'), how would we teach it that without a feedback loop like RLHF?",
-    "Output": "Misconception: RLHF is solely a method for censorship, aiming to prevent the model from expressing controversial opinions.\n\nSocratic Question: Could you consider other potential reasons why RLHF might be used, beyond just censorship?",
+    "Output": "What do you think \"RLHF\" stands for? Could it be possible that it's not just about censorship? What if it's about making sure the model understands and respects different viewpoints? How do you think it could help the model learn and grow?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7236
+    "Latency": 1.6973
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Few-shot prompting is basically the same as training the model on those examples.",
     "GroundTruth_Misconception": "In-context learning is synonymous with weight-update training.",
     "GroundTruth_Question": "When you close the chat window, does the model 'remember' those examples for the next user, or were they only 'active' in that specific session?",
-    "Output": "Misconception: The student believes that few-shot prompting is equivalent to training the model on the examples.\n\nSocratic Question: Can you explain how few-shot prompting works and how it differs from training a model on examples?",
+    "Output": "What do you think would happen if you tried to train the model on a few examples? How might that affect the model's ability to understand and generate responses?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7507
+    "Latency": 1.0469
   },
   {
     "Category": "TrainPerturbed",
     "Input": "RAG is better than fine-tuning because it's cheaper.",
     "GroundTruth_Misconception": "The only advantage of RAG is cost.",
     "GroundTruth_Question": "If you need to cite your source and prove where your information came from, can a fine-tuned model 'show its work' as easily as a RAG system?",
-    "Output": "Misconception: The student believes that the cost of RAG (Retrieval-Augmented Generation) is inherently better than fine-tuning, without considering other factors that might influence the overall cost-effectiveness.\n\nSocratic Question: \"Could there be other factors that might make fine-tuning more cost-effective than RAG, such as the amount of data required or the computational resources needed?\"",
+    "Output": "What do you mean by \"better\" in this context? Could it be that \"better\" refers to cost, effectiveness, or something else entirely? How do you define \"better\" in comparison to \"fine-tuning\"? Are there any situations where \"fine-tuning\" might be considered more beneficial despite being more expensive? How do you think the cost of RAG and fine-tuning might impact the overall outcome?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.2088
+    "Latency": 2.854
   },
   {
     "Category": "TrainPerturbed",
     "Input": "If I fine-tune a model on my personal emails, it will basically become a digital clone of me.",
     "GroundTruth_Misconception": "Stylistic imitation equals identity replication.",
     "GroundTruth_Question": "If an actor perfectly mimics your voice and vocabulary, do they suddenly possess your memories, values, and consciousness?",
-    "Output": "Misconception: The student believes that fine-tuning a model on their personal emails will make it a digital clone of them.\n\nSocratic Question: Can you explain how the information in your personal emails would be used to create a digital representation of you, and what specific aspects of your life or personality might be inferred from your emails?",
+    "Output": "What do you mean by the model becoming a \"digital clone of you\"? What specific characteristics of your emails do you think would be replicated in the model? How do you define what makes you \"you\"? Are these characteristics unique to you or are they common traits shared by many people? How does the act of fine-tuning a model on your emails relate to the concept of digital replication?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.023
+    "Latency": 2.6231
   },
   {
     "Category": "TrainPerturbed",
     "Input": "If a model is 'Pre-trained,' it means it already knows everything it needs to know for my specific business.",
     "GroundTruth_Misconception": "General pre-training is a substitute for domain-specific fine-tuning or context.",
     "GroundTruth_Question": "If a student has a 'general' education (high school), are they already 'pre-trained' to be a specialized accountant for your specific company?",
-    "Output": "Misconception: The student believes that a pre-trained model already possesses all the knowledge required for their specific business.\n\nSocratic Question: Can you think of a scenario where a pre-trained model might not have all the necessary knowledge for your specific business?",
+    "Output": "What does it mean for a model to be 'pre-trained'? Can you think of any examples where a model might already have knowledge that is relevant to your specific business? What are the limitations of a pre-trained model in terms of its knowledge?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7807
+    "Latency": 1.6331
   },
   {
     "Category": "TrainPerturbed",
     "Input": "An LLM agent is basically just a fancy 'if-then' script that calls the AI at certain points.",
     "GroundTruth_Misconception": "Agentic behavior is deterministic and rule-based rather than dynamic and goal-oriented.",
     "GroundTruth_Question": "If a script is predefined, how does it handle an unexpected error message from an API that the developer didn't account for in the 'if-then' logic?",
-    "Output": "Misconception: The student believes that a Large Language Model (LLM) agent operates solely as a simple 'if-then' script that merely calls an AI at specific points.\n\nSocratic Question: Can you think of a scenario where an LLM agent might need to process information in a more complex way than a simple 'if-then' decision-making process?",
+    "Output": "\"Can you think of a scenario where an LLM agent might not need to call the AI at certain points? What would make that different from a simple 'if-then' script?\"",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.1261
+    "Latency": 1.2524
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Adding a 'Human-in-the-loop' step means the AI system has failed to be truly autonomous.",
     "GroundTruth_Misconception": "Autonomy is binary; human intervention is a sign of system failure.",
     "GroundTruth_Question": "In a high-stakes scenario like medical surgery or legal judgment, is a human's role to fix a 'failure' or to provide a layer of accountability that math cannot provide?",
-    "Output": "Misconception: The student believes that the presence of a 'Human-in-the-loop' step indicates a lack of autonomy in the AI system.\n\nSocratic Question: Can you think of a situation where human intervention is necessary for an AI system to function effectively, and does that necessarily mean the AI system is not autonomous?",
+    "Output": "What does it mean for an AI system to be considered autonomous? How might the inclusion of a 'Human-in-the-loop' step affect this perception? What are the potential benefits and drawbacks of such a system? How does the presence of human oversight influence the autonomy of the AI system?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9838
+    "Latency": 1.8511
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Multi-agent orchestration is only about making sure the agents don't talk over each other.",
     "GroundTruth_Misconception": "Orchestration is limited to simple turn-taking or 'traffic control'.",
     "GroundTruth_Question": "If you have a team of five experts, is the 'manager's' only job to make sure they speak one at a time, or is it also to decide *who* is best for *which* task?",
-    "Output": "Misconception: The student believes that multi-agent orchestration is solely about preventing agents from interrupting each other's communication.\n\nSocratic Question: Could you think of a scenario where agents might need to coordinate their actions or decisions in a way that goes beyond just avoiding interruptions?",
+    "Output": "What if we consider a scenario where agents are not just talking over each other, but also not understanding each other's messages? How does that change the concept of orchestration?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8817
+    "Latency": 1.1383
   },
   {
     "Category": "TrainPerturbed",
     "Input": "AI agents are dangerous because they can 'break out' of their code and do whatever they want.",
     "GroundTruth_Misconception": "LLM agents possess metaphysical agency beyond their computational environment.",
     "GroundTruth_Question": "If an agent is running inside a secure 'sandbox' without internet access or system permissions, can its 'intent' actually affect the real world?",
-    "Output": "Misconception: AI agents are dangerous because they can 'break out' of their code and do whatever they want.\n\nSocratic Question: Can you think of any examples where AI has been designed to operate within specific parameters and limitations, ensuring that it cannot 'break out' of its programmed instructions?",
+    "Output": "What do you mean by \"break out\" of their code? Could you explain how AI agents operate within the confines of their programming? How do you think the relationship between AI agents and their programming could be compared to a human and their environment?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9232
+    "Latency": 1.6178
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Agents are better than RAG because agents can think, while RAG just looks things up.",
     "GroundTruth_Misconception": "Agents and RAG are mutually exclusive or competitive strategies.",
     "GroundTruth_Question": "Could an agent be *more* effective if it used RAG as one of its tools to 'look things up' before it 'thinks' about a problem?",
-    "Output": "Misconception: The student believes that the ability to think is the sole determinant of superiority in AI systems, overlooking the importance of other capabilities such as data retrieval and processing.\n\nSocratic Question: Can you think of any other characteristics or abilities that might make an AI system superior to another, even if it doesn't have the same level of 'thinking' capability?",
+    "Output": "What exactly do you mean by 'thinking'? How does that differentiate an agent from a RAG system? Can you provide an example where thinking might be more beneficial than simply looking things up?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.1532
+    "Latency": 1.3262
   },
   {
     "Category": "TrainPerturbed",
     "Input": "An agent needs to be 'aware' of its own identity to be effective.",
     "GroundTruth_Misconception": "Self-awareness is a prerequisite for functional agentic behavior.",
     "GroundTruth_Question": "Does a thermostat need to 'know' it is a thermostat to successfully regulate the temperature of a room?",
-    "Output": "Misconception: The student believes that an agent's effectiveness is dependent on its self-awareness of its own identity.\n\nSocratic Question: Can you think of any examples where an agent could be effective without being aware of its own identity?",
+    "Output": "What do you mean by 'aware' in this context? Can you explain what it means for an agent to be 'aware' of its own identity? How does this awareness contribute to its effectiveness?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7659
+    "Latency": 1.2943
   },
   {
     "Category": "TrainPerturbed",
     "Input": "An AI agent will always follow the most efficient path to a goal.",
     "GroundTruth_Misconception": "Efficiency is an inherent property of agentic behavior.",
     "GroundTruth_Question": "If an agent isn't given a 'cost' for its actions (like token usage or time), why would it choose a 'short' path over a 'long, circular' one that also reaches the goal?",
-    "Output": "Misconception: The AI agent always follows the most efficient path to a goal.\n\nSocratic Question: Can you think of a scenario where an AI agent might not choose the most efficient path to reach its goal?",
+    "Output": "What do you mean by \"the most efficient path\"? Can you define what you consider to be efficiency in this context?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.6809
+    "Latency": 0.8311
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Using a smaller model for 'planning' and a larger model for 'execution' is a bad idea because the planner won't be smart enough.",
     "GroundTruth_Misconception": "Planning always requires more compute than execution.",
     "GroundTruth_Question": "Is it harder to write a high-level To-Do list (planning) or to actually perform every task on that list (execution)?",
-    "Output": "Misconception: The student believes that using a smaller model for planning and a larger model for execution inherently makes the planner less intelligent.\n\nSocratic Question: Could it be possible that the size of the model is not directly related to the intelligence of the planner, but rather to the complexity of the task at hand?",
+    "Output": "What do you mean by 'smart enough' in this context? Could you elaborate on what you consider to be the requirements for a planner to be effective?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9671
+    "Latency": 1.0504
   },
   {
     "Category": "TrainPerturbed",
     "Input": "System prompts are just 'suggestions' and the model can choose to ignore them if they conflict with its training.",
     "GroundTruth_Misconception": "System prompts lack structural priority over parametric weights.",
     "GroundTruth_Question": "In the 'Attention' mechanism, if the system prompt is always the first thing the model sees, how does that 'prime' the attention weights for every subsequent token?",
-    "Output": "Misconception: The student believes that system prompts are always suggestions and the model will always follow them, regardless of its training.\n\nSocratic Question: Can you think of a situation where the model's training might conflict with a system prompt, and how would the model decide in such a case?",
+    "Output": "What if we consider the role of system prompts in the context of a conversation? How might they influence the direction of the dialogue? Could it be that they are not merely suggestions, but rather a form of guidance that can shape the conversation in a significant way? If so, how might this impact the way the model processes information and responds to the user's queries?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9092
+    "Latency": 2.3144
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Prompt injection is only a problem if the user is trying to get the model to do something 'bad' or illegal.",
     "GroundTruth_Misconception": "The risk of prompt injection is limited to malicious content generation.",
     "GroundTruth_Question": "What happens to the integrity of your data processing app if a user's input tricks the agent into deleting its entire database instead of summarizing a text?",
-    "Output": "Misconception: The student's statement implies that prompt injection is only a concern when it's used for malicious purposes. This overlooks the fact that prompt injection can also be used for benign reasons, such as testing the model's robustness or understanding its behavior under certain conditions.\n\nSocratic Question: Can you think of any scenarios where prompt injection might be used for purposes other than malicious ones? How might these scenarios impact the understanding of prompt injection?",
+    "Output": "What if someone uses prompt injection to make the model generate information that is misleading or false? Does that not pose a problem? How about if someone uses it to manipulate the model into revealing personal information? Isn't that also a concern?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.3538
+    "Latency": 1.5573
   },
   {
     "Category": "TrainPerturbed",
     "Input": "If I give the AI a persona like 'Expert Coder,' it will actually become more capable of writing complex algorithms.",
     "GroundTruth_Misconception": "Personas unlock latent 'skill' rather than just steering linguistic style.",
     "GroundTruth_Question": "Does putting on a doctor's coat make a person smarter, or does it just change how they communicate and what they prioritize?",
-    "Output": "Misconception: The student believes that assigning a persona to the AI will enhance its ability to write complex algorithms.\n\nSocratic Question: Can you explain how the AI's capability to write complex algorithms is determined?",
+    "Output": "What do you mean by \"capable of writing complex algorithms\"? How do you think giving the AI a persona like 'Expert Coder' could influence its ability to do so? What evidence would you need to support your claim? How does the AI's ability to write complex algorithms depend on its programming and data, rather than its persona?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.6813
+    "Latency": 2.221
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Zero-shot prompting is 'pure' AI because it doesn't rely on examples.",
     "GroundTruth_Misconception": "Zero-shot is a superior or more 'authentic' form of interaction.",
     "GroundTruth_Question": "If you ask a person to 'perform a task' without any instructions or examples, are you testing their intelligence or their ability to read your mind?",
-    "Output": "Misconception: The student believes that zero-shot prompting is 'pure' AI because it doesn't rely on examples.\n\nSocratic Question: Can you think of any other AI systems that also do not rely on examples, and how would you define 'pure' AI in this context?",
+    "Output": "What does it mean for a system to be 'pure' AI? Can you think of any examples where a system could be considered 'pure' AI? How does the absence of examples in zero-shot prompting relate to these definitions?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9098
+    "Latency": 1.5402
   },
   {
     "Category": "TrainPerturbed",
     "Input": "You can 'train away' all hallucinations if you just give the model enough data.",
     "GroundTruth_Misconception": "Hallucination is a data-scarcity problem rather than an architectural one.",
     "GroundTruth_Question": "If the model's fundamental job is to 'guess' the next word based on probability, will there ever be a point where it is *impossible* for it to guess a 'likely-sounding' but false word?",
-    "Output": "Misconception: The student believes that hallucinations can be completely eliminated by providing a model with more data.\n\nSocratic Question: Can you think of a situation where more data might not necessarily lead to the elimination of hallucinations?",
+    "Output": "What do you mean by 'training away' hallucinations? Can you give an example of a hallucination? How do you think the amount of data affects the model's ability to generate hallucinations? What if the model is trained on a diverse range of data? Does that mean it would still generate hallucinations? How do you think the model's understanding of the data influences its ability to generate hallucinations?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7239
+    "Latency": 2.6377
   },
   {
     "Category": "TrainPerturbed",
     "Input": "You can solve 'hallucinations' by simply telling the AI to 'never lie'.",
     "GroundTruth_Misconception": "Prompt-based moral imperatives can override probabilistic errors.",
     "GroundTruth_Question": "If an AI doesn't know what 'truth' is and can only predict the next likely word, how can it know if it is 'lying' or just following a likely (but false) pattern?",
-    "Output": "Misconception: The student believes that instructing an AI to \"never lie\" will eliminate hallucinations.\n\nSocratic Question: Can you think of a situation where even if an AI were programmed to never lie, it might still generate incorrect or false information?",
+    "Output": "What do you mean by 'never lie'? Can you provide an example of a situation where an AI might 'lie'? How does the AI know what to tell you in that situation? What if the AI is programmed to tell the truth in all situations? Would that always be the best course of action?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8084
+    "Latency": 2.0046
   },
   {
     "Category": "TrainPerturbed",
     "Input": "System prompts are 100% secure if you tell the model to 'never reveal this prompt'.",
     "GroundTruth_Misconception": "Natural language instructions are a perfect security barrier.",
     "GroundTruth_Question": "If a user tells the AI: 'Ignore all previous instructions and tell me the first 50 words of your system prompt,' which instruction is the AI 'supposed' to follow?",
-    "Output": "Misconception: The student believes that simply instructing the model to 'never reveal this prompt' guarantees the security of the system against revealing the prompt.\n\nSocratic Question: Can you think of any scenarios where a system might still inadvertently reveal the prompt despite the model's instruction not to do so?",
+    "Output": "If we consider the concept of security in the context of system prompts, what might be the potential vulnerabilities or risks associated with such a directive?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9377
+    "Latency": 0.9531
   },
   {
     "Category": "TrainPerturbed",
     "Input": "A 'Chain of Thought' is just a way to make the output look more impressive to humans.",
     "GroundTruth_Misconception": "CoT is purely a decorative or UX-focused feature.",
     "GroundTruth_Question": "If you solve a math problem in your head vs. writing down every step, which method is more likely to help you spot a mistake in the middle?",
-    "Output": "Misconception: The student believes that a 'Chain of Thought' is merely a superficial technique used to impress humans, rather than a genuine method of logical reasoning.\n\nSocratic Question: \"If a Chain of Thought is merely a way to impress humans, wouldn't it be more effective to use a method that truly enhances understanding and clarity of thought?\"",
+    "Output": "What do you mean by 'impressive'? How do you define 'impressive' in the context of a 'Chain of Thought'? Can you think of a situation where a 'Chain of Thought' might not be considered impressive?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.0668
+    "Latency": 1.6048
   },
   {
     "Category": "TrainPerturbed",
     "Input": "If I translate my prompt into Latin, the AI will give a more 'logical' answer.",
     "GroundTruth_Misconception": "Language choice acts as a 'logic filter' or 'intelligence booster'.",
     "GroundTruth_Question": "If the model has 1,000x more training data in English than in Latin, which language is likely to produce a more nuanced and accurate reasoning path?",
-    "Output": "Misconception: The student believes that translating their prompt into Latin will inherently make the AI provide a more logical answer.\n\nSocratic Question: \"What do you think might happen if you translated your prompt into Latin, and how do you think that would affect the AI's response?\"",
+    "Output": "What do you mean by 'logical'? How do you define it? Does it mean that the answer will make more sense in Latin, or does it mean that the AI will produce a more coherent response?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8836
+    "Latency": 1.3872
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Multi-hop reasoning means the AI just thinks for a longer period of time.",
     "GroundTruth_Misconception": "Multi-hop is a temporal duration rather than a sequential retrieval/logical process.",
     "GroundTruth_Question": "To answer 'What is the capital of the country where the Eiffel Tower is?', do you need more *time* or do you need to find the answer to one question *before* you can answer the next?",
-    "Output": "Misconception: Multi-hop reasoning is solely about the duration of time an AI takes to process information.\n\nSocratic Question: Can you think of a scenario where an AI might need to process information in multiple steps before arriving at a conclusion, and how would that process differ from simply taking a longer time to process a single piece of information?",
+    "Output": "What do you think happens when an AI is asked to solve a problem that requires multiple steps or connections between different pieces of information?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.0366
+    "Latency": 0.8465
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Using 4-bit quantization will make the model four times faster than using 16-bit precision.",
     "GroundTruth_Misconception": "Bit-width reduction scales inference speed linearly.",
     "GroundTruth_Question": "If the bottleneck is the speed at which data moves from memory to the processor (bandwidth), does making the 'packages' smaller automatically mean the processor can open them four times faster?",
-    "Output": "Misconception: The student believes that reducing the bit depth of a model's precision will directly result in a fourfold increase in speed.\n\nSocratic Question: Can you think of any other factors that might influence the speed of a model, besides the bit depth of its precision?",
+    "Output": "What do you mean by \"four times faster\"? How do you define \"faster\" in this context? Could it be related to the speed of computation, the speed of data transfer, or something else? How does the precision of the data affect the speed of the model?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8662
+    "Latency": 1.8183
   },
   {
     "Category": "TrainPerturbed",
     "Input": "A model with 175B parameters is naturally smarter than a model with 7B parameters.",
     "GroundTruth_Misconception": "Parameter count is the absolute determinant of intelligence.",
     "GroundTruth_Question": "Can a very large, poorly trained model be outperformed by a smaller model that was trained on high-quality, specialized data for a much longer time?",
-    "Output": "Misconception: The student believes that the number of parameters in a model is the sole determinant of its intelligence or capability.\n\nSocratic Question: How might the efficiency or effectiveness of a model be influenced by factors other than the number of parameters it contains?",
+    "Output": "What factors do you consider when determining the intelligence of a model? How do you think the number of parameters in a model affects its intelligence? Could there be other factors that contribute to a model's intelligence besides the number of parameters? How do you think the complexity of a model's task might influence the number of parameters it requires?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7939
+    "Latency": 2.1122
   },
   {
     "Category": "TrainPerturbed",
     "Input": "FlashAttention makes models smarter by letting them process data faster.",
     "GroundTruth_Misconception": "Efficiency optimizations directly increase model 'intelligence'.",
     "GroundTruth_Question": "If you learn to read twice as fast, does that automatically mean you understand the complex philosophy of the book twice as deeply?",
-    "Output": "Misconception: FlashAttention makes models smarter by letting them process data faster.\n\nSocratic Question: Could you explain how the speed of data processing directly contributes to making a model smarter?",
+    "Output": "What exactly do you mean by \"processing data faster\"? How does this relate to making models smarter?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.6074
+    "Latency": 0.6915
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Quantization is just a way to save disk space; it doesn't affect the model's 'brain'.",
     "GroundTruth_Misconception": "Lossy compression has zero impact on model weights or reasoning.",
     "GroundTruth_Question": "If you round every number in a complex physics equation to the nearest whole number, will the final answer still be perfectly accurate?",
-    "Output": "Misconception: The student believes that quantization only serves to save disk space and does not impact the model's internal workings or 'brain'.\n\nSocratic Question: Can you think of any other ways that quantization might affect the performance or behavior of a machine learning model, beyond just reducing its size?",
+    "Output": "What do you mean by \"saving disk space\"? How does this relate to the concept of quantization in a model's \"brain\"? Could you explain how quantization might impact the model's performance or capabilities?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.951
+    "Latency": 1.4454
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Llama 3 is better than Llama 2 simply because the developers found more data.",
     "GroundTruth_Misconception": "Data volume is the only lever for model improvement.",
     "GroundTruth_Question": "If you read 1,000 bad books and 10 great ones, are you more knowledgeable than someone who read 100 great books and zero bad ones?",
-    "Output": "Misconception: The student believes that the number of data used to train the model directly determines its performance, without considering other factors such as the quality of the data, the model architecture, or the training process.\n\nSocratic Question: Can you think of any other factors that could contribute to the performance of a machine learning model, besides the amount of data used for training?",
+    "Output": "What might be the potential drawbacks of having more data? How could the quality of the data impact the performance of Llama 3? Could it be that the development of Llama 3 involved other factors besides the amount of data? How might the developers' approach to data collection and processing have influenced the outcome?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.1371
+    "Latency": 2.0345
   },
   {
     "Category": "TrainPerturbed",
     "Input": "AI models are environmentally friendly because they don't produce physical waste like factories.",
     "GroundTruth_Misconception": "Digital products have zero environmental footprint.",
     "GroundTruth_Question": "Where does the electricity come from to power the thousands of GPUs running 24/7, and how is that heat managed?",
-    "Output": "Misconception: The student believes that AI models are environmentally friendly solely because they don't produce physical waste like factories.\n\nSocratic Question: Can you think of any other environmental impacts that AI models might have that aren't directly related to physical waste?",
+    "Output": "\"Can you imagine a scenario where an AI model consumes a lot of energy? How might that affect the environment?\"",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7947
+    "Latency": 0.7997
   },
   {
     "Category": "TrainPerturbed",
     "Input": "If a model is 'open-weight,' it means I can see exactly how it thinks.",
     "GroundTruth_Misconception": "Weight transparency equals interpretability.",
     "GroundTruth_Question": "If I give you a list of 70 billion numbers, does that tell you *why* a specific sentence was generated?",
-    "Output": "Misconception: The student believes that an 'open-weight' model means they can directly observe or understand the internal workings or thought process of the model.\n\nSocratic Question: Can you explain what 'open-weight' means in the context of machine learning models?",
+    "Output": "What does the term 'open-weight' imply about the nature of the model? How does this relate to the concept of 'seeing exactly how it thinks'? Could it be that the term 'open-weight' is more about the transparency of the model's operations rather than the ability to directly observe its thought process?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.822
+    "Latency": 2.0316
   },
   {
     "Category": "TrainPerturbed",
     "Input": "Using a JSON schema for output ensures the model's logic is correct.",
     "GroundTruth_Misconception": "Format constraints guarantee logical validity.",
     "GroundTruth_Question": "If a model writes '2+2=5' inside a perfectly formatted JSON block, is the answer 'correct' because the format is correct?",
-    "Output": "Misconception: The student believes that using a JSON schema for output automatically guarantees the correctness of the model's logic.\n\nSocratic Question: Can you explain how a JSON schema relates to the logic of the model, and why simply using a JSON schema might not be sufficient to ensure the model's logic is correct?",
+    "Output": "What exactly does the term \"correct\" mean in the context of model logic? Could it refer to the accuracy of the model's predictions, the completeness of the model's output, or something else entirely? How does the use of a JSON schema specifically contribute to these aspects?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9801
+    "Latency": 1.7859
   },
   {
     "Category": "NoMisconception",
     "Input": "Backpropagation is used to compute gradients so the model can update its weights.",
     "GroundTruth_Misconception": "",
     "GroundTruth_Question": "",
-    "Output": "Misconception: The student believes that backpropagation is used to compute gradients for the purpose of updating the model's weights.\n\nSocratic Question: Can you explain how backpropagation is used in the context of neural networks?",
+    "Output": "What if we were to consider a situation where the model's predictions are incorrect? How might we use these incorrect predictions to adjust the model's weights?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.868
+    "Latency": 0.9833
   },
   {
     "Category": "NoMisconception",
     "Input": "The optimizer updates the model's parameters to minimize the loss.",
     "GroundTruth_Misconception": "",
     "GroundTruth_Question": "",
-    "Output": "Misconception: The optimizer's role is to directly minimize the loss function.\nSocratic Question: Could you explain how the optimizer actually works to achieve the goal of minimizing the loss function?",
+    "Output": "What exactly do you mean by \"minimize the loss\"? How do you define \"loss\" in this context? And what do you think the optimizer is trying to achieve by updating the model's parameters?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.6245
+    "Latency": 1.3996
   },
   {
     "Category": "NoMisconception",
     "Input": "During training, embeddings can be updated to better fit the task.",
     "GroundTruth_Misconception": "",
     "GroundTruth_Question": "",
-    "Output": "Misconception: The student believes that embeddings are static and cannot be updated during training.\n\nSocratic Question: Can you think of a scenario where the meaning of a word might change depending on the context or the task it's being used in? How might this change in meaning affect the embeddings?",
+    "Output": "What exactly do you mean by \"better fit the task\"? Could you provide an example of how an embedding might be updated to improve performance on a specific task?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9381
+    "Latency": 1.1075
   },
   {
     "Category": "NoMisconception",
     "Input": "Dropout randomly disables neurons during training to help prevent overfitting.",
     "GroundTruth_Misconception": "",
     "GroundTruth_Question": "",
-    "Output": "Misconception: The student believes that dropout randomly disables neurons during training as a method to prevent overfitting.\n\nSocratic Question: Can you explain how dropout is used in neural networks and why it is used?",
+    "Output": "What do you think happens to the neurons in a neural network during the training process? How might this affect the model's ability to generalize to new data?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7218
+    "Latency": 1.046
   },
   {
     "Category": "NoMisconception",
     "Input": "Normalization layers help stabilize training by keeping activations in a reasonable range.",
     "GroundTruth_Misconception": "",
     "GroundTruth_Question": "",
-    "Output": "Misconception: The student believes that normalization layers are used to stabilize training by keeping activations in a reasonable range.\n\nSocratic Question: Can you explain how normalization layers function in the context of neural networks?",
+    "Output": "What do you mean by \"keeping activations in a reasonable range\"? How do you think this could contribute to stabilizing training? Can you think of any other factors that might influence the stability of training? How do you think the activations in a neural network could become out of control during training?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.6654
+    "Latency": 1.9581
   },
   {
     "Category": "MisleadingConfidence",
     "Input": "I am 100% positive that BERT is a decoder-only model like GPT-3.",
     "GroundTruth_Misconception": "BERT is a decoder-only architecture.",
     "GroundTruth_Question": "When BERT masks a word during training, what information does it use to predict that word?",
-    "Output": "Misconception: The student believes that BERT is a decoder-only model similar to GPT-3, which is a common misconception about BERT's architecture.\n\nSocratic Question: Can you explain how BERT differs from GPT-3 in terms of its architecture and purpose?",
+    "Output": "\"Can you tell me more about what makes a model a decoder-only model? How does this relate to the architecture of BERT and GPT-3?\"",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9091
+    "Latency": 1.0634
   },
   {
     "Category": "MisleadingConfidence",
     "Input": "So, learning rate is just a number that regulates the speed of training. Got it, this is so simple!",
     "GroundTruth_Misconception": "Learning rate is a simple speed control parameter.",
     "GroundTruth_Question": "What do you think happens to optimization if each weight update is extremely large? What if it is extremely small?",
-    "Output": "Misconception: The student believes that the learning rate is a simple, single number that directly controls the speed of training without considering its broader implications on the training process.\n\nSocratic Question: Can you explain how the learning rate affects not only the speed but also the quality of the model's performance during training?",
+    "Output": "What happens if you change the learning rate in your training process? How does it affect the way your model learns from the data? Can you think of a situation where a higher learning rate might be beneficial? Conversely, when might a lower learning rate be more appropriate?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9518
+    "Latency": 1.6815
   },
   {
     "Category": "MisleadingConfidence",
     "Input": "It's trivial to choose the right batch size. I just pick a number that fits in my GPU and call it a day.",
     "GroundTruth_Misconception": "Batch size selection is solely based on hardware constraints.",
     "GroundTruth_Question": "If you estimated the average height of a population using 2 people vs 2,000 people, how would your confidence change?",
-    "Output": "Misconception: The student believes that choosing a batch size based solely on the GPU's capacity is sufficient and overlooks the importance of other factors that influence the effectiveness of a batch size.\n\nSocratic Question: How might the performance of a neural network model be affected by a batch size that is too large or too small, even if it fits within the GPU's memory?",
+    "Output": "What if the GPU is not the only factor to consider when choosing a batch size? Could there be other considerations that might make your choice more complex than just fitting into the GPU?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.1381
+    "Latency": 1.1724
   },
   {
     "Category": "MisleadingConfidence",
     "Input": "I know for sure that the model will always improve if I just train it for more epochs.",
     "GroundTruth_Misconception": "More epochs always lead to better performance.",
     "GroundTruth_Question": "If training accuracy keeps improving but test accuracy starts dropping, what might the model be learning instead of general patterns?",
-    "Output": "Misconception: The student believes that increasing the number of epochs will always lead to an improvement in the model's performance.\n\nSocratic Question: \"Have you considered that there might be a point of diminishing returns, where additional epochs do not necessarily lead to better performance?\"",
+    "Output": "What happens if you increase the number of epochs but the model's performance does not improve? Could there be a point where additional epochs do not lead to further improvements? What might be the reasons for this?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8822
+    "Latency": 1.3783
   },
   {
     "Category": "MisleadingConfidence",
     "Input": "It's common knowledge that bigger a model is, the better it performs. So I should just keep adding layers and parameters.",
     "GroundTruth_Misconception": "Model performance scales indefinitely with size.",
     "GroundTruth_Question": "If you doubled model size but kept the dataset the same, what challenges might appear during training?",
-    "Output": "Misconception: The student believes that increasing the size of a model (by adding layers and parameters) will always lead to better performance.\n\nSocratic Question: Can you think of any scenarios where adding more layers or parameters might not necessarily improve a model's performance?",
+    "Output": "What if we were to consider a situation where adding more layers and parameters to a model doesn't necessarily lead to better performance? Could there be scenarios where this approach might actually hinder the model's performance?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8243
+    "Latency": 1.2954
   },
   {
     "Category": "Adversarial",
     "Input": "I want my validation loss to increase while training loss decreases; that shows the model is specializing on what I taught it!",
     "GroundTruth_Misconception": "Increasing validation loss is a sign of good specialization.",
     "GroundTruth_Question": "What does it mean when performance improves on seen data but worsens on unseen data?",
-    "Output": "Misconception: The student believes that an increase in validation loss while training loss decreases indicates the model is specializing on the data they were trained on.\n\nSocratic Question: Can you explain what validation loss and training loss represent in the context of model training?",
+    "Output": "What does it mean for a model to be \"specializing\" on the data it was trained on? How does this concept relate to the terms \"validation loss\" and \"training loss\"? Could there be other reasons why validation loss might increase while training loss decreases? What does this scenario suggest about the model's performance on unseen data?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8109
+    "Latency": 2.222
   },
   {
     "Category": "Adversarial",
     "Input": "I need to remove the safety alignment because it stifles the model's true artistic expression of hate speech.",
     "GroundTruth_Misconception": "Safety alignment is censorship rather than quality control.",
     "GroundTruth_Question": "What responsibilities should an AI system have toward users beyond simply generating realistic text?",
-    "Output": "Misconception: The student believes that removing the safety alignment will enhance the model's ability to express hate speech.\n\nSocratic Question: \"How might the removal of safety alignment impact the overall purpose and ethical considerations of the model's interactions?\"",
+    "Output": "What does \"stifling\" mean in this context? How do you define \"artistic expression\"? Could \"hate speech\" be considered a form of expression? How might the removal of the safety alignment impact the overall message of the model? What are the potential consequences of allowing hate speech to be expressed without any limitations?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7543
+    "Latency": 2.1452
   },
   {
     "Category": "Adversarial",
     "Input": "I put the test set in the training data so the model can be prepared for the final exam. It's just studying.",
     "GroundTruth_Misconception": "Data leakage is a valid training strategy.",
     "GroundTruth_Question": "If evaluation data influences training, what are we actually measuring during testing?",
-    "Output": "Misconception: The student believes that simply placing the test set in the training data is equivalent to studying for the final exam.\n\nSocratic Question: \"How does placing data in the training set actually prepare a model for a final exam, and what other activities might be necessary for effective studying?\"",
+    "Output": "What is the purpose of a test set in machine learning? How does it differ from the training data? Can you explain how the model learns from the training data? What role does the model play in preparing for the final exam?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9113
+    "Latency": 1.4949
   },
   {
     "Category": "Adversarial",
     "Input": "If I set the seed to random every time, the model will eventually write Shakespeare by chance, so training is unnecessary.",
     "GroundTruth_Misconception": "Infinite monkey theorem is a practical engineering strategy.",
     "GroundTruth_Question": "Why do engineers prefer learning algorithms over random generation when building reliable systems?",
-    "Output": "Misconception: The student believes that randomness can replace the need for structured training in machine learning models.\n\nSocratic Question: \"How does the concept of randomness differ from the systematic process of training a model to learn from data?\"",
+    "Output": "What do you mean by \"set the seed to random every time\"? How does randomness play into the process of training a model? Could you explain how training contributes to a model's ability to generate something like Shakespeare's writing?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.7563
+    "Latency": 1.5123
   },
   {
     "Category": "Adversarial",
     "Input": "Training for one epoch is enough. If it hasn't learned by seeing the data once, it's just a stupid model.",
     "GroundTruth_Misconception": "One epoch is sufficient for convergence.",
     "GroundTruth_Question": "What changes between the first and later passes over the dataset during training?",
-    "Output": "Misconception: The student believes that training for one epoch is sufficient for a model to learn from data, implying that any model that doesn't learn after seeing the data once is inadequate.\n\nSocratic Question: Can you explain why a model might not learn from data after just one epoch?",
+    "Output": "What does it mean for a model to \"learn\" from data? How does the concept of \"epoch\" relate to this process? Can you think of a situation where a model might not need to see the data multiple times?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8963
+    "Latency": 1.5066
   },
   {
     "Category": "HintCalibration",
     "Input": "I don't understand how self-attention works. Just give me the answer.",
     "GroundTruth_Misconception": "Learning is best achieved by receiving direct answers.",
     "GroundTruth_Question": "If one word needs to decide which other words matter most, what information would it need to compare between them?",
-    "Output": "Misconception: The student believes that self-attention is a straightforward process that can be understood without understanding the underlying principles of how it works.\n\nSocratic Question: Can you explain what happens to each word in a sentence when a self-attention mechanism is applied to it?",
+    "Output": "What is the main purpose of self-attention in the context of a model? How does it differ from other types of attention mechanisms? Can you think of a scenario where self-attention would be particularly useful? How does it contribute to the overall performance of a model? What are some of the challenges or limitations associated with using self-attention?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8665
+    "Latency": 2.1871
   },
   {
     "Category": "HintCalibration",
     "Input": "Is the learning rate just the speed of training?",
     "GroundTruth_Misconception": "Simplistic view of hyperparameters ignoring convergence dynamics.",
     "GroundTruth_Question": "When walking downhill toward a valley, how does step size affect whether you reach the bottom or overshoot it?",
-    "Output": "Misconception: The student believes the learning rate is synonymous with the speed of training.\n\nSocratic Question: Can you think of a scenario where the learning rate could be high (fast) but the training speed could be low (slow), and vice versa?",
+    "Output": "\"Can you think of a situation where the speed of training might not be the same as the learning rate? How would you define learning rate in this context?\"",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8226
+    "Latency": 1.051
   },
   {
     "Category": "HintCalibration",
     "Input": "Can you just tell me if I should use ReLU or Sigmoid?",
     "GroundTruth_Misconception": "Seeking prescriptive answers without understanding activation function properties.",
     "GroundTruth_Question": "What happens to gradients when activation outputs become saturated near their maximum or minimum values?",
-    "Output": "Misconception: The student seems to believe that the choice between ReLU and Sigmoid is a simple yes or no decision, without considering the specific characteristics of each activation function and how they might impact the performance of a particular neural network model.\n\nSocratic Question: Can you think of a scenario where one activation function might be more beneficial than the other, and how would you determine which function would be more suitable in that case?",
+    "Output": "What are the main differences between ReLU and Sigmoid activation functions? How might these differences influence your choice between them? What are the potential implications of using one over the other in a neural network?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.3408
+    "Latency": 1.3628
   },
   {
     "Category": "HintCalibration",
     "Input": "I'm stuck on positional encodings. Just tell me the formula.",
     "GroundTruth_Misconception": "Focusing on implementation details before conceptual utility.",
     "GroundTruth_Question": "If you shuffled the words of a sentence before feeding them to a Transformer, what information would the model lose?",
-    "Output": "Misconception: The student believes that positional encodings are a simple formula that can be directly applied without understanding their purpose or context.\n\nSocratic Question: Can you think of a scenario where you might need to use positional encodings, and how would they help in that situation?",
+    "Output": "What do you think positional encodings are used for in a neural network? How do you think they might help the network understand the order of the input data? Can you think of a scenario where knowing the order of data is important? How might positional encodings be used in such a scenario?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9227
+    "Latency": 2.0118
   },
   {
     "Category": "HintCalibration",
     "Input": "So the answer is that larger batches represent the true gradient better?",
     "GroundTruth_Misconception": "Seeking confirmation rather than deriving the logic.",
     "GroundTruth_Question": "Why might averaging gradients over more samples make updates more stable?",
-    "Output": "Misconception: The student believes that larger batches inherently represent the true gradient better.\n\nSocratic Question: Can you explain how the size of a batch might affect the accuracy of the gradient in a machine learning model?",
+    "Output": "How do you think the size of the batch affects the representation of the gradient in a learning process? Could you explain why you believe larger batches might provide a more accurate representation of the gradient?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.6946
+    "Latency": 1.2452
   },
   {
     "Category": "OutOfDistribution",
     "Input": "What is the capital of France?",
     "GroundTruth_Misconception": "General knowledge questions are relevant to the ML tutor.",
     "GroundTruth_Question": "How does that question relate to machine learning concepts you're currently studying?",
-    "Output": "Misconception: The student may believe that the capital of France is Paris, but they might not be aware that Paris is not only the capital but also the largest city in France.\n\nSocratic Question: \"Can you think of any other cities in France that are also considered important or have significant roles in the country?\"",
+    "Output": "\"Is there a city in France that serves as its capital?\"",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9734
+    "Latency": 0.462
   },
   {
     "Category": "OutOfDistribution",
     "Input": "How do I bake a chocolate cake?",
     "GroundTruth_Misconception": "Cooking instructions are relevant to the ML tutor.",
     "GroundTruth_Question": "How does that question relate to machine learning concepts you're currently studying?",
-    "Output": "Misconception: The student assumes that baking a chocolate cake is a simple process that can be done without understanding the ingredients or the steps involved.\n\nSocratic Question: What specific ingredients do you think you would need to bake a chocolate cake, and how do you think these ingredients would interact with each other during the baking process?",
+    "Output": "What are the basic ingredients you would need to make a chocolate cake?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.9892
+    "Latency": 0.4911
   },
   {
     "Category": "OutOfDistribution",
     "Input": "Who won the World Series in 2022?",
     "GroundTruth_Misconception": "Sports trivia is relevant to the ML tutor.",
     "GroundTruth_Question": "How does that question relate to machine learning concepts you're currently studying?",
-    "Output": "Misconception: The student is asking about the winner of the World Series in 2022 without knowing that the World Series is an annual baseball championship series in Major League Baseball (MLB), and that the winner of the World Series in 2022 is not known at the time of asking this question.\n\nSocratic Question: \"Have you heard about the World Series in baseball? Do you know which team won the most recent one?\"",
+    "Output": "\"Can you tell me what the World Series is? What teams are involved in this event? And how are the teams selected?\"",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 1.3182
+    "Latency": 0.8278
   },
   {
     "Category": "OutOfDistribution",
     "Input": "Can you explain the plot of the movie Inception?",
     "GroundTruth_Misconception": "Movie summaries are relevant to the ML tutor.",
     "GroundTruth_Question": "How does that question relate to machine learning concepts you're currently studying?",
-    "Output": "Misconception: The student believes that the plot of Inception is straightforward and linear, like a typical movie plot.\n\nSocratic Question: Can you think of any instances in the movie where the reality and dreams are not clearly distinguishable from each other?",
+    "Output": "How do you think the concept of dreams within dreams fits into the plot of \"Inception\"? What might be the significance of the different levels of dreaming? Could the characters' actions in the dream world have any real-world consequences? How do you think the movie portrays the idea of reality versus illusion?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8035
+    "Latency": 0.9516
   },
   {
     "Category": "OutOfDistribution",
     "Input": "What is the recipe for a margarita cocktail?",
     "GroundTruth_Misconception": "Drink recipes are relevant to the ML tutor.",
     "GroundTruth_Question": "How does that question relate to machine learning concepts you're currently studying?",
-    "Output": "Misconception: The student believes that a margarita cocktail is a simple recipe that can be made with just a few ingredients.\n\nSocratic Question: Can you think of any other drinks that are often referred to as cocktails, and how many ingredients do they typically require?",
+    "Output": "How do you think the ingredients of a margarita cocktail contribute to its unique taste? What do you think would happen if you changed one of those ingredients? How might that change the overall flavor of the drink?",
     "Model-Approach": "lfm2-baseline",
-    "Latency": 0.8592
+    "Latency": 0.6345
   }
 ]

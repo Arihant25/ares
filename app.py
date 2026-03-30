@@ -9,6 +9,7 @@ Run with:
 
 import json
 import os
+import random
 import threading
 import uuid
 from datetime import datetime
@@ -16,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 from dotenv import load_dotenv
-from fastapi import Cookie, FastAPI, Form, HTTPException, Request
+from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from jinja2 import Environment, BaseLoader
 
@@ -35,54 +36,25 @@ EVAL_FILE = OUTPUTS_DIR / "evaluation.json"
 # In-memory state
 # ---------------------------------------------------------------------------
 
-sessions: dict[str, dict] = {}          # session_id -> {"name": str}
-run_data: dict[str, list[dict]] = {}    # run_id -> list of items
+run_data: dict[str, list[dict]] = {}   # run_id -> list of items
 _eval_lock = threading.Lock()
 evaluations: list[dict] = []
 
 # ---------------------------------------------------------------------------
-# Evaluation parameters per task type
+# Single unified scoring rubric (all approaches generate Socratic questions)
 # ---------------------------------------------------------------------------
 
-PARAMETERS = {
-    "misconception": [
-        ("accuracy",     "Accuracy",     "Correctly identifies the actual misconception"),
-        ("precision",    "Precision",    "Specific and targeted, not vague"),
-        ("clarity",      "Clarity",      "Clearly and concisely expressed"),
-        ("depth",        "Depth",        "Captures the underlying cognitive error"),
-        ("actionability","Actionability","Would help a teacher address this gap"),
-    ],
-    "socratic": [
-        ("relevance",          "Relevance",          "Directly addresses the specific misconception"),
-        ("socratic_quality",   "Socratic Quality",   "Guides discovery rather than giving answers"),
-        ("clarity",            "Clarity",            "Clear and well-phrased"),
-        ("cognitive_challenge","Cognitive Challenge", "Promotes meaningful reflection"),
-        ("naturalness",        "Naturalness",        "Sounds like something a real teacher would ask"),
-    ],
-    "combined": [
-        ("relevance",          "Relevance",          "Directly addresses the specific misconception"),
-        ("socratic_quality",   "Socratic Quality",   "Guides discovery rather than giving answers"),
-        ("clarity",            "Clarity",            "Clear and well-phrased"),
-        ("cognitive_challenge","Cognitive Challenge", "Promotes meaningful reflection"),
-        ("naturalness",        "Naturalness",        "Sounds like something a real teacher would ask"),
-    ],
-}
-
-TASK_TYPES = ["misconception", "socratic", "combined"]
+PARAMETERS = [
+    ("relevance",           "Relevance",           "Directly addresses the student's specific error"),
+    ("socratic_quality",    "Socratic Quality",    "Guides discovery rather than giving away the answer"),
+    ("clarity",             "Clarity",             "Clear and well-phrased"),
+    ("cognitive_challenge", "Cognitive Challenge", "Promotes meaningful reflection"),
+    ("naturalness",         "Naturalness",         "Sounds like something a real teacher would ask"),
+]
 
 # ---------------------------------------------------------------------------
 # Data loading helpers
 # ---------------------------------------------------------------------------
-
-def derive_task_type(run_id: str) -> str:
-    if run_id.startswith("baseline_"):
-        return "combined"
-    if run_id.startswith("taskfocused_"):
-        return "socratic"
-    if run_id.startswith("finetuned_"):
-        return "socratic"
-    return "combined"
-
 
 def load_run_file(path: Path) -> list[dict]:
     with open(path, "r", encoding="utf-8") as fh:
@@ -98,7 +70,7 @@ def load_all_runs() -> None:
     patterns = ["baseline_*.json", "taskfocused_*.json", "finetuned_*.json"]
     for pattern in patterns:
         for path in sorted(OUTPUTS_DIR.glob(pattern)):
-            run_id = path.stem          # filename without .json
+            run_id = path.stem
             items = load_run_file(path)
             if items:
                 run_data[run_id] = items
@@ -133,18 +105,54 @@ async def startup_event():
 
 
 # ---------------------------------------------------------------------------
-# Session helpers
+# Unrated item lookup
 # ---------------------------------------------------------------------------
 
-def get_evaluator_name(evaluator_name: str | None = Cookie(default=None)) -> str | None:
-    return evaluator_name
+def find_unrated_item(evaluator_name: str) -> dict | None:
+    """Return a random unrated item for this evaluator, across all runs."""
+    rated_keys = {
+        (ev["run_id"], ev["item_index"])
+        for ev in evaluations
+        if ev["evaluator"] == evaluator_name
+    }
+
+    candidates = []
+    for run_id, items in run_data.items():
+        for idx, item in enumerate(items):
+            if (run_id, idx) not in rated_keys:
+                candidates.append((run_id, idx, item))
+
+    if not candidates:
+        return None
+
+    run_id, idx, item = random.choice(candidates)
+    return {
+        "run_id": run_id,
+        "item_index": idx,
+        "input": item.get("Input", ""),
+        "output": item.get("Output", ""),
+        "ground_truth_question": item.get("GroundTruth_Question", ""),
+    }
 
 
-def require_name(request: Request) -> str:
-    name = request.cookies.get("evaluator_name")
-    if not name:
-        raise HTTPException(status_code=303, detail="redirect", headers={"Location": "/"})
-    return name
+def count_rated(evaluator_name: str) -> int:
+    return sum(1 for ev in evaluations if ev["evaluator"] == evaluator_name)
+
+
+def total_items() -> int:
+    return sum(len(items) for items in run_data.values())
+
+
+def get_all_progress() -> list[dict]:
+    """Return rated count for every known evaluator, sorted by count desc."""
+    counts: dict[str, int] = {}
+    for ev in evaluations:
+        counts[ev["evaluator"]] = counts.get(ev["evaluator"], 0) + 1
+    total = total_items()
+    return [
+        {"evaluator": name, "rated": cnt, "total": total}
+        for name, cnt in sorted(counts.items(), key=lambda x: -x[1])
+    ]
 
 
 # ---------------------------------------------------------------------------
@@ -152,12 +160,6 @@ def require_name(request: Request) -> str:
 # ---------------------------------------------------------------------------
 
 def compute_agreement_stats() -> dict[str, Any]:
-    """
-    For each (run_id, item_index) pair rated by 2+ evaluators, compute
-    per-parameter differences and an overall agreement score.
-    Returns dict with agreement_score, disagreement_count, details list.
-    """
-    # Group by (run_id, item_index)
     groups: dict[tuple, list[dict]] = {}
     for ev in evaluations:
         key = (ev["run_id"], ev["item_index"])
@@ -170,13 +172,9 @@ def compute_agreement_stats() -> dict[str, Any]:
     disagreements = []
 
     for (run_id, item_index), evals in multi.items():
-        # Collect all param keys from first eval
         param_keys = list(evals[0]["scores"].keys())
         max_diff_any = 0
-        pair_agreement_sum = 0.0
-        pair_count = 0
 
-        # Compare all pairs of evaluators
         for a_idx in range(len(evals)):
             for b_idx in range(a_idx + 1, len(evals)):
                 a_scores = evals[a_idx]["scores"]
@@ -186,25 +184,19 @@ def compute_agreement_stats() -> dict[str, Any]:
                     if diff > max_diff_any:
                         max_diff_any = diff
                     agreement = 1.0 - diff / 4.0
-                    pair_agreement_sum += agreement
-                    pair_count += 1
                     total_agreement += agreement
                     total_pairs += 1
 
         if max_diff_any >= 2:
-            # Build per-evaluator score breakdown
-            eval_breakdown = []
-            for ev in evals:
-                eval_breakdown.append({
-                    "evaluator": ev["evaluator"],
-                    "scores": ev["scores"],
-                })
+            eval_breakdown = [
+                {"evaluator": ev["evaluator"], "scores": ev["scores"]}
+                for ev in evals
+            ]
             disagreements.append({
                 "run_id": run_id,
                 "item_index": item_index,
                 "input": evals[0].get("input", ""),
                 "output": evals[0].get("output", ""),
-                "task_type": evals[0].get("task_type", ""),
                 "max_diff": max_diff_any,
                 "evaluators": eval_breakdown,
             })
@@ -218,7 +210,6 @@ def compute_agreement_stats() -> dict[str, Any]:
 
 
 def compute_run_stats() -> dict[str, dict]:
-    """Return per-run stats: num_ratings, avg_scores, evaluators list."""
     stats: dict[str, dict] = {}
     for ev in evaluations:
         rid = ev["run_id"]
@@ -241,43 +232,6 @@ def compute_run_stats() -> dict[str, dict]:
             "evaluators": sorted(s["evaluators"]),
         }
     return result
-
-
-# ---------------------------------------------------------------------------
-# Unrated item lookup
-# ---------------------------------------------------------------------------
-
-def find_unrated_item(evaluator_name: str, task_type: str) -> dict | None:
-    """Return a random unrated item for (evaluator, task_type)."""
-    rated_keys = set()
-    for ev in evaluations:
-        if ev["evaluator"] == evaluator_name and ev["task_type"] == task_type:
-            rated_keys.add((ev["run_id"], ev["item_index"]))
-
-    candidates = []
-    for run_id, items in run_data.items():
-        if derive_task_type(run_id) != task_type:
-            continue
-        for idx, item in enumerate(items):
-            if (run_id, idx) not in rated_keys:
-                candidates.append((run_id, idx, item))
-
-    if not candidates:
-        return None
-
-    import random
-    run_id, idx, item = random.choice(candidates)
-    return {
-        "run_id": run_id,
-        "item_index": idx,
-        "input": item.get("Input", ""),
-        "output": item.get("Output", ""),
-        "task_type": task_type,
-    }
-
-
-def count_rated(evaluator_name: str) -> int:
-    return sum(1 for ev in evaluations if ev["evaluator"] == evaluator_name)
 
 
 # ---------------------------------------------------------------------------
@@ -334,19 +288,20 @@ EVALUATE_HTML = """
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f8f9fa; padding: 1.5rem; }
-  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
   .top-bar h1 { font-size: 1.1rem; font-weight: 700; }
   .top-bar .meta { font-size: 0.85rem; color: #6c757d; }
   .top-bar a { font-size: 0.85rem; color: #333; }
-  .row { display: flex; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; }
-  .row select { padding: 0.5rem 0.75rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.95rem; }
-  .row button { padding: 0.5rem 1.2rem; background: #333; color: #fff; border: none; border-radius: 4px; font-size: 0.95rem; cursor: pointer; font-weight: 600; }
-  .row button:hover { background: #222; }
+  .action-row { margin-bottom: 1.5rem; }
+  .action-row button { padding: 0.6rem 1.6rem; background: #333; color: #fff; border: none; border-radius: 4px; font-size: 0.95rem; cursor: pointer; font-weight: 600; }
+  .action-row button:hover { background: #222; }
   #item-area { display: none; }
   .card { background: #fff; border: 1px solid #dee2e6; border-radius: 6px; padding: 1.5rem; margin-bottom: 1rem; }
-  .label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6c757d; margin-bottom: 0.4rem; }
+  .field-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6c757d; margin-bottom: 0.4rem; }
   .content-text { font-size: 0.97rem; line-height: 1.55; white-space: pre-wrap; }
-  .task-badge { display: inline-block; background: #e9ecef; border-radius: 4px; padding: 0.15rem 0.55rem; font-size: 0.78rem; font-weight: 600; margin-bottom: 1rem; color: #495057; }
+  .gt-toggle { display: inline-flex; align-items: center; gap: 0.4rem; background: none; border: 1px solid #ced4da; border-radius: 4px; padding: 0.3rem 0.75rem; font-size: 0.82rem; color: #495057; cursor: pointer; margin-top: 0.75rem; font-weight: 600; }
+  .gt-toggle:hover { border-color: #333; color: #333; }
+  #gt-area { display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed #dee2e6; }
   h2 { font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; }
   .param-row { margin-bottom: 1.1rem; }
   .param-label { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
@@ -362,36 +317,48 @@ EVALUATE_HTML = """
   #submit-btn:disabled { background: #aaa; cursor: not-allowed; }
   #done-msg { display: none; padding: 1.2rem; background: #fff; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.97rem; }
   #error-msg { display: none; color: #c0392b; font-size: 0.88rem; margin-top: 0.5rem; }
+  .progress-panel { background: #fff; border: 1px solid #dee2e6; border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+  .progress-panel h3 { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6c757d; margin-bottom: 0.75rem; }
+  .progress-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.55rem; }
+  .progress-row:last-child { margin-bottom: 0; }
+  .progress-name { font-size: 0.85rem; font-weight: 600; min-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .progress-name.me { color: #333; }
+  .progress-track { flex: 1; background: #e9ecef; border-radius: 999px; height: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #333; border-radius: 999px; transition: width 0.3s ease; }
+  .progress-fill.me { background: #333; }
+  .progress-fill.other { background: #adb5bd; }
+  .progress-label { font-size: 0.78rem; color: #6c757d; min-width: 52px; text-align: right; }
 </style>
 </head>
 <body>
 <div class="top-bar">
   <h1>ARES Evaluation</h1>
-  <span class="meta">Evaluator: <strong>{{ evaluator_name }}</strong> &nbsp;|&nbsp; Rated: <strong>{{ rated_count }}</strong> items</span>
+  <span class="meta">Evaluator: <strong>{{ evaluator_name }}</strong></span>
   <a href="/analysis">View Analysis</a>
 </div>
 
-<div class="row">
-  <div>
-    <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;" for="task-select">Task type</label>
-    <select id="task-select">
-      <option value="socratic">Socratic (step 2 / finetuned)</option>
-      <option value="misconception">Misconception (step 1)</option>
-      <option value="combined">Combined (baseline)</option>
-    </select>
-  </div>
-  <button onclick="getItem()">Get Item</button>
+<div class="progress-panel" id="progress-panel">
+  <h3>Evaluator Progress</h3>
+  <div id="progress-rows"><div style="font-size:0.85rem;color:#6c757d;">Loading...</div></div>
+</div>
+
+<div class="action-row">
+  <button onclick="getItem()">Next Item</button>
 </div>
 
 <div id="item-area">
   <div class="card">
-    <span class="task-badge" id="task-badge"></span>
-    <div class="label">Student Input</div>
+    <div class="field-label">Input</div>
     <div class="content-text" id="input-text"></div>
   </div>
   <div class="card">
-    <div class="label">Model Output</div>
+    <div class="field-label">Output</div>
     <div class="content-text" id="output-text"></div>
+    <button class="gt-toggle" onclick="toggleGT()" id="gt-btn">Show Ground Truth</button>
+    <div id="gt-area">
+      <div class="field-label">Ground Truth Question</div>
+      <div class="content-text" id="gt-text"></div>
+    </div>
   </div>
   <div class="card">
     <h2>Rate this output</h2>
@@ -403,38 +370,50 @@ EVALUATE_HTML = """
   </div>
 </div>
 
-<div id="done-msg">No more unrated items for this task type. Try a different task or check back later.</div>
+<div id="done-msg">All items have been rated. Thank you!</div>
 
 <script>
 let currentItem = null;
+let gtVisible = false;
+const ME = "{{ evaluator_name }}";
 
-const PARAMETERS = {
-  misconception: [
-    ["accuracy",     "Accuracy",      "Correctly identifies the actual misconception"],
-    ["precision",    "Precision",     "Specific and targeted, not vague"],
-    ["clarity",      "Clarity",       "Clearly and concisely expressed"],
-    ["depth",        "Depth",         "Captures the underlying cognitive error"],
-    ["actionability","Actionability", "Would help a teacher address this gap"],
-  ],
-  socratic: [
-    ["relevance",          "Relevance",          "Directly addresses the specific misconception"],
-    ["socratic_quality",   "Socratic Quality",   "Guides discovery rather than giving answers"],
-    ["clarity",            "Clarity",            "Clear and well-phrased"],
-    ["cognitive_challenge","Cognitive Challenge", "Promotes meaningful reflection"],
-    ["naturalness",        "Naturalness",        "Sounds like something a real teacher would ask"],
-  ],
-  combined: [
-    ["relevance",          "Relevance",          "Directly addresses the specific misconception"],
-    ["socratic_quality",   "Socratic Quality",   "Guides discovery rather than giving answers"],
-    ["clarity",            "Clarity",            "Clear and well-phrased"],
-    ["cognitive_challenge","Cognitive Challenge", "Promotes meaningful reflection"],
-    ["naturalness",        "Naturalness",        "Sounds like something a real teacher would ask"],
-  ],
-};
+async function loadProgress() {
+  const resp = await fetch('/api/progress');
+  if (!resp.ok) return;
+  const data = await resp.json();
+  const total = data.total;
+  let html = '';
+  // Ensure current evaluator always appears even if they haven't rated yet
+  const rows = data.evaluators;
+  if (!rows.find(r => r.evaluator === ME)) rows.push({evaluator: ME, rated: 0, total});
+  for (const row of rows) {
+    const pct = total > 0 ? (row.rated / total * 100).toFixed(1) : 0;
+    const isMe = row.evaluator === ME;
+    html += `<div class="progress-row">
+      <div class="progress-name${isMe ? ' me' : ''}">${esc(row.evaluator)}${isMe ? ' (you)' : ''}</div>
+      <div class="progress-track"><div class="progress-fill ${isMe ? 'me' : 'other'}" style="width:${pct}%"></div></div>
+      <div class="progress-label">${row.rated}/${total}</div>
+    </div>`;
+  }
+  document.getElementById('progress-rows').innerHTML = html || '<div style="font-size:0.85rem;color:#6c757d;">No ratings yet.</div>';
+}
 
-function buildParamsHtml(taskType) {
-  const params = PARAMETERS[taskType] || PARAMETERS.socratic;
-  return params.map(([key, label, desc]) => `
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+loadProgress();
+
+const PARAMETERS = [
+  ["relevance",           "Relevance",           "Directly addresses the student's specific error"],
+  ["socratic_quality",    "Socratic Quality",    "Guides discovery rather than giving away the answer"],
+  ["clarity",             "Clarity",             "Clear and well-phrased"],
+  ["cognitive_challenge", "Cognitive Challenge", "Promotes meaningful reflection"],
+  ["naturalness",         "Naturalness",         "Sounds like something a real teacher would ask"],
+];
+
+function buildParamsHtml() {
+  return PARAMETERS.map(([key, label, desc]) => `
     <div class="param-row">
       <div class="param-label">${label}</div>
       <div class="param-desc">${desc}</div>
@@ -451,13 +430,23 @@ function buildParamsHtml(taskType) {
   `).join('');
 }
 
+function toggleGT() {
+  gtVisible = !gtVisible;
+  document.getElementById('gt-area').style.display = gtVisible ? 'block' : 'none';
+  document.getElementById('gt-btn').textContent = gtVisible ? 'Hide Ground Truth' : 'Show Ground Truth';
+}
+
 async function getItem() {
-  const taskType = document.getElementById('task-select').value;
   document.getElementById('done-msg').style.display = 'none';
   document.getElementById('item-area').style.display = 'none';
   document.getElementById('error-msg').style.display = 'none';
 
-  const resp = await fetch(`/evaluate/item?task_type=${taskType}`);
+  // Reset GT toggle
+  gtVisible = false;
+  document.getElementById('gt-area').style.display = 'none';
+  document.getElementById('gt-btn').textContent = 'Show Ground Truth';
+
+  const resp = await fetch('/evaluate/item');
   if (resp.status === 404) {
     document.getElementById('done-msg').style.display = 'block';
     return;
@@ -465,10 +454,10 @@ async function getItem() {
   if (!resp.ok) { alert('Error fetching item'); return; }
   currentItem = await resp.json();
 
-  document.getElementById('task-badge').textContent = taskType.toUpperCase();
   document.getElementById('input-text').textContent = currentItem.input;
   document.getElementById('output-text').textContent = currentItem.output;
-  document.getElementById('params-area').innerHTML = buildParamsHtml(taskType);
+  document.getElementById('gt-text').textContent = currentItem.ground_truth_question || '(not available)';
+  document.getElementById('params-area').innerHTML = buildParamsHtml();
   document.getElementById('item-area').style.display = 'block';
   document.getElementById('submit-btn').disabled = false;
   window.scrollTo({top: 0, behavior: 'smooth'});
@@ -476,12 +465,10 @@ async function getItem() {
 
 async function submitRating() {
   if (!currentItem) return;
-  const taskType = currentItem.task_type;
-  const params = PARAMETERS[taskType] || PARAMETERS.socratic;
   const scores = {};
   let valid = true;
 
-  for (const [key] of params) {
+  for (const [key] of PARAMETERS) {
     const checked = document.querySelector(`input[name="${key}"]:checked`);
     if (!checked) { valid = false; break; }
     scores[key] = parseInt(checked.value, 10);
@@ -506,11 +493,7 @@ async function submitRating() {
 
   if (!resp.ok) { alert('Error submitting rating'); document.getElementById('submit-btn').disabled = false; return; }
 
-  // Update rated count
-  const data = await resp.json();
-  document.querySelector('.meta strong:nth-child(2)').textContent = data.rated_count;
-
-  // Auto-fetch next item
+  await loadProgress();
   await getItem();
 }
 </script>
@@ -542,8 +525,6 @@ ANALYSIS_HTML = """
   tr:last-child td { border-bottom: none; }
   .evaluators { color: #6c757d; font-size: 0.82rem; }
   .no-data { padding: 1.5rem; color: #6c757d; font-size: 0.9rem; }
-  .agreement-section { background: #fff; border: 1px solid #dee2e6; border-radius: 6px; padding: 1.2rem 1.5rem; margin-top: 1.5rem; }
-  .agreement-section p { font-size: 0.92rem; margin-top: 0.4rem; color: #495057; }
 </style>
 </head>
 <body>
@@ -555,22 +536,10 @@ ANALYSIS_HTML = """
 </div>
 
 <div class="summary">
-  <div class="stat-box">
-    <div class="num" id="total-ratings">-</div>
-    <div class="lbl">Total Ratings</div>
-  </div>
-  <div class="stat-box">
-    <div class="num" id="evaluator-count">-</div>
-    <div class="lbl">Evaluators</div>
-  </div>
-  <div class="stat-box">
-    <div class="num" id="agreement-score">-</div>
-    <div class="lbl">Agreement Score</div>
-  </div>
-  <div class="stat-box">
-    <div class="num" id="disagreement-count">-</div>
-    <div class="lbl">Disagreements</div>
-  </div>
+  <div class="stat-box"><div class="num" id="total-ratings">-</div><div class="lbl">Total Ratings</div></div>
+  <div class="stat-box"><div class="num" id="evaluator-count">-</div><div class="lbl">Evaluators</div></div>
+  <div class="stat-box"><div class="num" id="agreement-score">-</div><div class="lbl">Agreement Score</div></div>
+  <div class="stat-box"><div class="num" id="disagreement-count">-</div><div class="lbl">Disagreements</div></div>
 </div>
 
 <h2>Runs</h2>
@@ -579,7 +548,7 @@ ANALYSIS_HTML = """
 <script>
 async function loadStats() {
   const resp = await fetch('/api/stats');
-  if (!resp.ok) { return; }
+  if (!resp.ok) return;
   const stats = await resp.json();
 
   document.getElementById('total-ratings').textContent = stats.total_ratings;
@@ -594,17 +563,12 @@ async function loadStats() {
     return;
   }
 
-  // Gather all parameter keys across all runs
   const allParams = new Set();
-  for (const r of Object.values(runs)) {
-    Object.keys(r.avg_scores).forEach(p => allParams.add(p));
-  }
+  for (const r of Object.values(runs)) Object.keys(r.avg_scores).forEach(p => allParams.add(p));
   const paramList = Array.from(allParams);
 
   let html = '<table><thead><tr><th>Run ID</th><th>Ratings</th><th>Evaluators</th>';
-  for (const p of paramList) {
-    html += `<th>${p.replace(/_/g, ' ')}</th>`;
-  }
+  for (const p of paramList) html += `<th>${p.replace(/_/g,' ')}</th>`;
   html += '</tr></thead><tbody>';
 
   for (const rid of runIds) {
@@ -612,15 +576,13 @@ async function loadStats() {
     html += `<tr><td><strong>${rid}</strong></td><td>${r.num_ratings}</td>`;
     html += `<td class="evaluators">${r.evaluators.join(', ')}</td>`;
     for (const p of paramList) {
-      const val = r.avg_scores[p] !== undefined ? r.avg_scores[p].toFixed(2) : '-';
-      html += `<td>${val}</td>`;
+      html += `<td>${r.avg_scores[p] !== undefined ? r.avg_scores[p].toFixed(2) : '-'}</td>`;
     }
     html += '</tr>';
   }
   html += '</tbody></table>';
   document.getElementById('runs-table-area').innerHTML = html;
 }
-
 loadStats();
 </script>
 </body>
@@ -659,13 +621,13 @@ DISAGREEMENTS_HTML = """
   <a href="/analysis">Back to Analysis</a>
   <a href="/evaluate">Evaluate</a>
 </div>
-<p style="font-size:0.88rem;color:#6c757d;margin-bottom:1.2rem;">Items where evaluators differ by 2 or more on any parameter. Run/model info is shown here.</p>
+<p style="font-size:0.88rem;color:#6c757d;margin-bottom:1.2rem;">Items where evaluators differ by 2+ on any parameter.</p>
 <div id="content"><p class="no-data">Loading...</p></div>
 
 <script>
 async function loadDisagreements() {
   const resp = await fetch('/api/stats');
-  if (!resp.ok) { return; }
+  if (!resp.ok) return;
   const stats = await resp.json();
   const items = stats.disagreements || [];
 
@@ -677,23 +639,17 @@ async function loadDisagreements() {
   let html = '';
   for (const item of items) {
     html += `<div class="item-card">`;
-    html += `<div class="run-label">Run: ${item.run_id} &nbsp;|&nbsp; Task: ${item.task_type} &nbsp;|&nbsp; Item #${item.item_index}<span class="diff-badge">max diff: ${item.max_diff}</span></div>`;
-    html += `<div class="text-block"><div class="text-label">Input</div><div class="text-content">${escHtml(item.input)}</div></div>`;
-    html += `<div class="text-block"><div class="text-label">Output</div><div class="text-content">${escHtml(item.output)}</div></div>`;
-
-    // Build score table
+    html += `<div class="run-label">Run: ${item.run_id} &nbsp;|&nbsp; Item #${item.item_index}<span class="diff-badge">max diff: ${item.max_diff}</span></div>`;
+    html += `<div class="text-block"><div class="text-label">Input</div><div class="text-content">${esc(item.input)}</div></div>`;
+    html += `<div class="text-block"><div class="text-label">Output</div><div class="text-content">${esc(item.output)}</div></div>`;
     const paramKeys = item.evaluators.length > 0 ? Object.keys(item.evaluators[0].scores) : [];
     if (paramKeys.length > 0) {
       html += '<table><thead><tr><th>Evaluator</th>';
-      for (const p of paramKeys) {
-        html += `<th>${p.replace(/_/g,' ')}</th>`;
-      }
+      for (const p of paramKeys) html += `<th>${p.replace(/_/g,' ')}</th>`;
       html += '</tr></thead><tbody>';
       for (const ev of item.evaluators) {
-        html += `<tr><td><strong>${escHtml(ev.evaluator)}</strong></td>`;
-        for (const p of paramKeys) {
-          html += `<td>${ev.scores[p] !== undefined ? ev.scores[p] : '-'}</td>`;
-        }
+        html += `<tr><td><strong>${esc(ev.evaluator)}</strong></td>`;
+        for (const p of paramKeys) html += `<td>${ev.scores[p] !== undefined ? ev.scores[p] : '-'}</td>`;
         html += '</tr>';
       }
       html += '</tbody></table>';
@@ -703,7 +659,7 @@ async function loadDisagreements() {
   document.getElementById('content').innerHTML = html;
 }
 
-function escHtml(s) {
+function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
@@ -744,14 +700,12 @@ async def evaluate_page(request: Request):
 
 
 @app.get("/evaluate/item")
-async def get_item(request: Request, task_type: str = "socratic"):
+async def get_item(request: Request):
     name = request.cookies.get("evaluator_name")
     if not name:
         raise HTTPException(status_code=401, detail="Not logged in")
-    if task_type not in TASK_TYPES:
-        raise HTTPException(status_code=400, detail="Invalid task_type")
 
-    item = find_unrated_item(name, task_type)
+    item = find_unrated_item(name)
     if item is None:
         raise HTTPException(status_code=404, detail="No more items")
     return JSONResponse(content=item)
@@ -766,9 +720,6 @@ async def submit_rating(request: Request):
     body = await request.json()
     run_id = body.get("run_id")
     item_index = body.get("item_index")
-    input_text = body.get("input", "")
-    output_text = body.get("output", "")
-    task_type = body.get("task_type", "socratic")
     scores = body.get("scores", {})
 
     if run_id is None or item_index is None:
@@ -780,9 +731,8 @@ async def submit_rating(request: Request):
         "timestamp": datetime.utcnow().isoformat(),
         "run_id": run_id,
         "item_index": item_index,
-        "input": input_text,
-        "output": output_text,
-        "task_type": task_type,
+        "input": body.get("input", ""),
+        "output": body.get("output", ""),
         "scores": scores,
     }
 
@@ -790,8 +740,7 @@ async def submit_rating(request: Request):
         evaluations.append(record)
         save_evaluations()
 
-    rated = count_rated(name)
-    return JSONResponse(content={"status": "ok", "rated_count": rated})
+    return JSONResponse(content={"status": "ok", "rated_count": count_rated(name)})
 
 
 @app.get("/analysis", response_class=HTMLResponse)
@@ -808,6 +757,14 @@ async def disagreements_page(request: Request):
     if not name:
         return RedirectResponse(url="/", status_code=303)
     return HTMLResponse(content=DISAGREEMENTS_HTML)
+
+
+@app.get("/api/progress")
+async def api_progress():
+    return JSONResponse(content={
+        "total": total_items(),
+        "evaluators": get_all_progress(),
+    })
 
 
 @app.get("/api/stats")

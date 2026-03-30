@@ -57,22 +57,18 @@ DATA_PATH = "data/finalTestSet.jsonc"
 OUTPUT_DIR = "outputs"
 
 SYSTEM_PROMPT = (
-    "You are an expert AI tutor. You analyze student statements to identify "
-    "misconceptions and generate Socratic questions to guide learning."
+    "You are an expert Socratic educator. Given a student's statement, "
+    "you generate a Socratic question sequence that guides the student toward "
+    "correct understanding through reflection, without revealing the answer."
 )
 
 
 def user_prompt(student_statement: str) -> str:
     return (
         f'A student made the following statement:\n\n"{student_statement}"\n\n'
-        "Please:\n"
-        "1. Identify the specific misconception underlying this statement "
-        "(be concise and precise).\n"
-        "2. Generate one Socratic question that guides the student to discover "
-        "the correct understanding themselves, without directly giving them the answer.\n\n"
-        "Format your response as:\n"
-        "Misconception: <the identified misconception>\n"
-        "Socratic Question: <your question>"
+        "Generate a Socratic question that guides this student to discover the "
+        "correct understanding themselves. Do not give away the answer — the "
+        "question should provoke reflection and self-correction."
     )
 
 
