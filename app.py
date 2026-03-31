@@ -98,61 +98,89 @@ def save_evaluations() -> None:
 # Startup
 # ---------------------------------------------------------------------------
 
+prompt_index: dict[str, list[tuple]] = {}  # input_text -> [(run_id, idx, item), ...]
+
+
+def build_prompt_index() -> None:
+    """Group all outputs by their Input text."""
+    prompt_index.clear()
+    for run_id, items in run_data.items():
+        for idx, item in enumerate(items):
+            key = item.get("Input", "")
+            if key:
+                prompt_index.setdefault(key, []).append((run_id, idx, item))
+
+
 @app.on_event("startup")
 async def startup_event():
     load_all_runs()
     load_evaluations()
+    build_prompt_index()
 
 
 # ---------------------------------------------------------------------------
-# Unrated item lookup
+# Prompt-level lookup (all outputs for the same input)
 # ---------------------------------------------------------------------------
 
-def find_unrated_item(evaluator_name: str) -> dict | None:
-    """Return a random unrated item for this evaluator, across all runs."""
-    rated_keys = {
-        (ev["run_id"], ev["item_index"])
+def find_unrated_prompt(evaluator_name: str) -> dict | None:
+    """Return all outputs for a random prompt not yet rated by this evaluator."""
+    rated_inputs = {
+        ev.get("input", "")
         for ev in evaluations
         if ev["evaluator"] == evaluator_name
     }
 
-    candidates = []
-    for run_id, items in run_data.items():
-        for idx, item in enumerate(items):
-            if (run_id, idx) not in rated_keys:
-                candidates.append((run_id, idx, item))
-
+    candidates = [inp for inp in prompt_index if inp not in rated_inputs]
     if not candidates:
         return None
 
-    run_id, idx, item = random.choice(candidates)
+    input_text = random.choice(candidates)
+    outputs = prompt_index[input_text]
+    shuffled = outputs[:]
+    random.shuffle(shuffled)
+
+    ground_truth = shuffled[0][2].get("GroundTruth_Question", "") if shuffled else ""
+
     return {
-        "run_id": run_id,
-        "item_index": idx,
-        "input": item.get("Input", ""),
-        "output": item.get("Output", ""),
-        "ground_truth_question": item.get("GroundTruth_Question", ""),
+        "input": input_text,
+        "ground_truth_question": ground_truth,
+        "outputs": [
+            {
+                "run_id": run_id,
+                "item_index": idx,
+                "output": item.get("Output", ""),
+            }
+            for run_id, idx, item in shuffled
+        ],
     }
 
 
-def count_rated(evaluator_name: str) -> int:
-    return sum(1 for ev in evaluations if ev["evaluator"] == evaluator_name)
+def count_rated_prompts(evaluator_name: str) -> int:
+    rated_inputs = {
+        ev.get("input", "")
+        for ev in evaluations
+        if ev["evaluator"] == evaluator_name
+    }
+    return len(rated_inputs)
 
 
-def total_items() -> int:
-    return sum(len(items) for items in run_data.values())
+def total_prompts() -> int:
+    return len(prompt_index)
 
 
 def get_all_progress() -> list[dict]:
-    """Return rated count for every known evaluator, sorted by count desc."""
+    """Return rated prompt count for every known evaluator, sorted by count desc."""
     counts: dict[str, int] = {}
     for ev in evaluations:
-        counts[ev["evaluator"]] = counts.get(ev["evaluator"], 0) + 1
-    total = total_items()
+        inp = ev.get("input", "")
+        name = ev["evaluator"]
+        counts.setdefault(name, set()).add(inp)
+    total = total_prompts()
     return [
-        {"evaluator": name, "rated": cnt, "total": total}
-        for name, cnt in sorted(counts.items(), key=lambda x: -x[1])
+        {"evaluator": name, "rated": len(inps), "total": total}
+        for name, inps in sorted(counts.items(), key=lambda x: -len(x[1]))
     ]
+
 
 
 # ---------------------------------------------------------------------------
@@ -295,28 +323,35 @@ EVALUATE_HTML = """
   .action-row { margin-bottom: 1.5rem; }
   .action-row button { padding: 0.6rem 1.6rem; background: #333; color: #fff; border: none; border-radius: 4px; font-size: 0.95rem; cursor: pointer; font-weight: 600; }
   .action-row button:hover { background: #222; }
-  #item-area { display: none; }
+  #prompt-area { display: none; }
   .card { background: #fff; border: 1px solid #dee2e6; border-radius: 6px; padding: 1.5rem; margin-bottom: 1rem; }
   .field-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6c757d; margin-bottom: 0.4rem; }
   .content-text { font-size: 0.97rem; line-height: 1.55; white-space: pre-wrap; }
   .gt-toggle { display: inline-flex; align-items: center; gap: 0.4rem; background: none; border: 1px solid #ced4da; border-radius: 4px; padding: 0.3rem 0.75rem; font-size: 0.82rem; color: #495057; cursor: pointer; margin-top: 0.75rem; font-weight: 600; }
   .gt-toggle:hover { border-color: #333; color: #333; }
   #gt-area { display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed #dee2e6; }
-  h2 { font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; }
-  .param-row { margin-bottom: 1.1rem; }
-  .param-label { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
-  .param-desc { font-size: 0.8rem; color: #6c757d; margin-bottom: 0.45rem; }
-  .scale { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .outputs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+  .output-box { background: #fff; border: 1px solid #dee2e6; border-radius: 6px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .output-box-header { display: flex; align-items: center; gap: 0.5rem; }
+  .box-label { font-size: 1rem; font-weight: 700; background: #333; color: #fff; border-radius: 4px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .output-text { font-size: 0.93rem; line-height: 1.55; white-space: pre-wrap; color: #212529; }
+  .ratings-section { border-top: 1px solid #f1f3f5; padding-top: 1rem; }
+  .param-row { margin-bottom: 0.9rem; }
+  .param-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.15rem; }
+  .param-desc { font-size: 0.75rem; color: #6c757d; margin-bottom: 0.4rem; }
+  .scale { display: flex; gap: 0.4rem; align-items: center; }
   .scale input[type=radio] { display: none; }
-  .scale label { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9rem; font-weight: 600; cursor: pointer; user-select: none; }
+  .scale label { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.88rem; font-weight: 600; cursor: pointer; user-select: none; }
   .scale input[type=radio]:checked + label { background: #333; color: #fff; border-color: #333; }
-  .scale label:hover { border-color: #333; }
-  .scale-ends { display: flex; justify-content: space-between; font-size: 0.75rem; color: #6c757d; margin-top: 0.25rem; }
-  #submit-btn { padding: 0.65rem 2rem; background: #333; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; font-weight: 600; margin-top: 0.5rem; }
+  .scale label:hover { border-color: #555; }
+  .scale-wrap { display: inline-block; }
+  .scale-ends { display: flex; justify-content: space-between; font-size: 0.72rem; color: #6c757d; margin-top: 0.2rem; }
+  .submit-row { margin-top: 0.5rem; }
+  #submit-btn { padding: 0.65rem 2.5rem; background: #333; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; font-weight: 600; }
   #submit-btn:hover { background: #222; }
   #submit-btn:disabled { background: #aaa; cursor: not-allowed; }
+  #error-msg { display: none; color: #c0392b; font-size: 0.88rem; margin-top: 0.6rem; }
   #done-msg { display: none; padding: 1.2rem; background: #fff; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.97rem; }
-  #error-msg { display: none; color: #c0392b; font-size: 0.88rem; margin-top: 0.5rem; }
   .progress-panel { background: #fff; border: 1px solid #dee2e6; border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
   .progress-panel h3 { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6c757d; margin-bottom: 0.75rem; }
   .progress-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.55rem; }
@@ -325,9 +360,9 @@ EVALUATE_HTML = """
   .progress-name.me { color: #333; }
   .progress-track { flex: 1; background: #e9ecef; border-radius: 999px; height: 8px; overflow: hidden; }
   .progress-fill { height: 100%; background: #333; border-radius: 999px; transition: width 0.3s ease; }
-  .progress-fill.me { background: #333; }
   .progress-fill.other { background: #adb5bd; }
   .progress-label { font-size: 0.78rem; color: #6c757d; min-width: 52px; text-align: right; }
+  @media (max-width: 500px) { .outputs-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -337,72 +372,41 @@ EVALUATE_HTML = """
   <a href="/analysis">View Analysis</a>
 </div>
 
-<div class="progress-panel" id="progress-panel">
+<div class="progress-panel">
   <h3>Evaluator Progress</h3>
   <div id="progress-rows"><div style="font-size:0.85rem;color:#6c757d;">Loading...</div></div>
 </div>
 
 <div class="action-row">
-  <button onclick="getItem()">Next Item</button>
+  <button onclick="getPrompt()">Next Prompt</button>
 </div>
 
-<div id="item-area">
-  <div class="card">
-    <div class="field-label">Input</div>
+<div id="prompt-area">
+  <div class="card" style="margin-bottom:1rem;">
+    <div class="field-label">Input (Student Misconception)</div>
     <div class="content-text" id="input-text"></div>
-  </div>
-  <div class="card">
-    <div class="field-label">Output</div>
-    <div class="content-text" id="output-text"></div>
     <button class="gt-toggle" onclick="toggleGT()" id="gt-btn">Show Ground Truth</button>
     <div id="gt-area">
-      <div class="field-label">Ground Truth Question</div>
+      <div class="field-label" style="margin-top:0.75rem;">Ground Truth Question</div>
       <div class="content-text" id="gt-text"></div>
     </div>
   </div>
-  <div class="card">
-    <h2>Rate this output</h2>
-    <form id="rating-form">
-      <div id="params-area"></div>
-      <div id="error-msg"></div>
-      <button type="button" id="submit-btn" onclick="submitRating()">Submit Rating</button>
-    </form>
+
+  <div class="field-label" style="margin-bottom:0.6rem;">Rate each output (1 = Poor, 5 = Excellent)</div>
+  <div class="outputs-grid" id="outputs-grid"></div>
+
+  <div class="submit-row">
+    <button type="button" id="submit-btn" onclick="submitAll()">Submit All Ratings</button>
+    <div id="error-msg"></div>
   </div>
 </div>
 
-<div id="done-msg">All items have been rated. Thank you!</div>
+<div id="done-msg">All prompts have been rated. Thank you!</div>
 
 <script>
-let currentItem = null;
+let currentPrompt = null;
 let gtVisible = false;
 const ME = "{{ evaluator_name }}";
-
-async function loadProgress() {
-  const resp = await fetch('/api/progress');
-  if (!resp.ok) return;
-  const data = await resp.json();
-  const total = data.total;
-  let html = '';
-  // Ensure current evaluator always appears even if they haven't rated yet
-  const rows = data.evaluators;
-  if (!rows.find(r => r.evaluator === ME)) rows.push({evaluator: ME, rated: 0, total});
-  for (const row of rows) {
-    const pct = total > 0 ? (row.rated / total * 100).toFixed(1) : 0;
-    const isMe = row.evaluator === ME;
-    html += `<div class="progress-row">
-      <div class="progress-name${isMe ? ' me' : ''}">${esc(row.evaluator)}${isMe ? ' (you)' : ''}</div>
-      <div class="progress-track"><div class="progress-fill ${isMe ? 'me' : 'other'}" style="width:${pct}%"></div></div>
-      <div class="progress-label">${row.rated}/${total}</div>
-    </div>`;
-  }
-  document.getElementById('progress-rows').innerHTML = html || '<div style="font-size:0.85rem;color:#6c757d;">No ratings yet.</div>';
-}
-
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-loadProgress();
 
 const PARAMETERS = [
   ["relevance",           "Relevance",           "Directly addresses the student's specific error"],
@@ -412,22 +416,58 @@ const PARAMETERS = [
   ["naturalness",         "Naturalness",         "Sounds like something a real teacher would ask"],
 ];
 
-function buildParamsHtml() {
-  return PARAMETERS.map(([key, label, desc]) => `
-    <div class="param-row">
+const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function loadProgress() {
+  const resp = await fetch('/api/progress');
+  if (!resp.ok) return;
+  const data = await resp.json();
+  const total = data.total;
+  const rows = data.evaluators;
+  if (!rows.find(r => r.evaluator === ME)) rows.push({evaluator: ME, rated: 0, total});
+  let html = '';
+  for (const row of rows) {
+    const pct = total > 0 ? (row.rated / total * 100).toFixed(1) : 0;
+    const isMe = row.evaluator === ME;
+    html += `<div class="progress-row">
+      <div class="progress-name${isMe ? ' me' : ''}">${esc(row.evaluator)}${isMe ? ' (you)' : ''}</div>
+      <div class="progress-track"><div class="progress-fill ${isMe ? '' : 'other'}" style="width:${pct}%"></div></div>
+      <div class="progress-label">${row.rated}/${total}</div>
+    </div>`;
+  }
+  document.getElementById('progress-rows').innerHTML = html || '<div style="font-size:0.85rem;color:#6c757d;">No ratings yet.</div>';
+}
+
+function buildOutputBoxHtml(output, boxIndex) {
+  const letter = LETTERS[boxIndex] || String(boxIndex + 1);
+  const paramHtml = PARAMETERS.map(([key, label, desc]) => {
+    const radios = [1,2,3,4,5].map(n => `
+      <span>
+        <input type="radio" name="box${boxIndex}_${key}" id="box${boxIndex}_${key}_${n}" value="${n}">
+        <label for="box${boxIndex}_${key}_${n}">${n}</label>
+      </span>
+    `).join('');
+    return `<div class="param-row">
       <div class="param-label">${label}</div>
       <div class="param-desc">${desc}</div>
-      <div class="scale">
-        ${[1,2,3,4,5].map(n => `
-          <span>
-            <input type="radio" name="${key}" id="${key}_${n}" value="${n}">
-            <label for="${key}_${n}">${n}</label>
-          </span>
-        `).join('')}
+      <div class="scale-wrap">
+        <div class="scale">${radios}</div>
+        <div class="scale-ends"><span>Poor</span><span>Excellent</span></div>
       </div>
-      <div class="scale-ends"><span>Poor</span><span>Excellent</span></div>
+    </div>`;
+  }).join('');
+
+  return `<div class="output-box" data-box="${boxIndex}">
+    <div class="output-box-header">
+      <span class="box-label">${letter}</span>
     </div>
-  `).join('');
+    <div class="output-text">${esc(output.output)}</div>
+    <div class="ratings-section">${paramHtml}</div>
+  </div>`;
 }
 
 function toggleGT() {
@@ -436,47 +476,60 @@ function toggleGT() {
   document.getElementById('gt-btn').textContent = gtVisible ? 'Hide Ground Truth' : 'Show Ground Truth';
 }
 
-async function getItem() {
+async function getPrompt() {
   document.getElementById('done-msg').style.display = 'none';
-  document.getElementById('item-area').style.display = 'none';
+  document.getElementById('prompt-area').style.display = 'none';
   document.getElementById('error-msg').style.display = 'none';
-
-  // Reset GT toggle
   gtVisible = false;
   document.getElementById('gt-area').style.display = 'none';
   document.getElementById('gt-btn').textContent = 'Show Ground Truth';
 
-  const resp = await fetch('/evaluate/item');
+  const resp = await fetch('/evaluate/prompt');
   if (resp.status === 404) {
     document.getElementById('done-msg').style.display = 'block';
     return;
   }
-  if (!resp.ok) { alert('Error fetching item'); return; }
-  currentItem = await resp.json();
+  if (!resp.ok) { alert('Error fetching prompt'); return; }
+  currentPrompt = await resp.json();
 
-  document.getElementById('input-text').textContent = currentItem.input;
-  document.getElementById('output-text').textContent = currentItem.output;
-  document.getElementById('gt-text').textContent = currentItem.ground_truth_question || '(not available)';
-  document.getElementById('params-area').innerHTML = buildParamsHtml();
-  document.getElementById('item-area').style.display = 'block';
+  document.getElementById('input-text').textContent = currentPrompt.input;
+  document.getElementById('gt-text').textContent = currentPrompt.ground_truth_question || '(not available)';
+
+  const grid = document.getElementById('outputs-grid');
+  grid.innerHTML = currentPrompt.outputs.map((o, i) => buildOutputBoxHtml(o, i)).join('');
+
   document.getElementById('submit-btn').disabled = false;
+  document.getElementById('prompt-area').style.display = 'block';
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-async function submitRating() {
-  if (!currentItem) return;
-  const scores = {};
-  let valid = true;
+async function submitAll() {
+  if (!currentPrompt) return;
 
-  for (const [key] of PARAMETERS) {
-    const checked = document.querySelector(`input[name="${key}"]:checked`);
-    if (!checked) { valid = false; break; }
-    scores[key] = parseInt(checked.value, 10);
+  const ratings = [];
+  let valid = true;
+  let firstMissing = null;
+
+  for (let i = 0; i < currentPrompt.outputs.length; i++) {
+    const output = currentPrompt.outputs[i];
+    const letter = LETTERS[i] || String(i + 1);
+    const scores = {};
+    for (const [key] of PARAMETERS) {
+      const checked = document.querySelector(`input[name="box${i}_${key}"]:checked`);
+      if (!checked) {
+        valid = false;
+        if (!firstMissing) firstMissing = letter;
+        break;
+      }
+      scores[key] = parseInt(checked.value, 10);
+    }
+    if (!valid) break;
+    ratings.push({ run_id: output.run_id, item_index: output.item_index, output: output.output, scores });
   }
 
   if (!valid) {
     const errEl = document.getElementById('error-msg');
-    errEl.textContent = 'Please rate all parameters before submitting.';
+    errEl.textContent = `Please rate all parameters for all outputs (missing ratings in output ${firstMissing}).`;
     errEl.style.display = 'block';
     return;
   }
@@ -484,18 +537,19 @@ async function submitRating() {
   document.getElementById('error-msg').style.display = 'none';
   document.getElementById('submit-btn').disabled = true;
 
-  const payload = { ...currentItem, scores };
-  const resp = await fetch('/evaluate/submit', {
+  const resp = await fetch('/evaluate/submit-batch', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ input: currentPrompt.input, ratings }),
   });
 
-  if (!resp.ok) { alert('Error submitting rating'); document.getElementById('submit-btn').disabled = false; return; }
+  if (!resp.ok) { alert('Error submitting ratings'); document.getElementById('submit-btn').disabled = false; return; }
 
   await loadProgress();
-  await getItem();
+  await getPrompt();
 }
+
+loadProgress();
 </script>
 </body>
 </html>
@@ -693,54 +747,59 @@ async def evaluate_page(request: Request):
     name = request.cookies.get("evaluator_name")
     if not name:
         return RedirectResponse(url="/", status_code=303)
-    rated = count_rated(name)
     tmpl = jinja_env.from_string(EVALUATE_HTML)
-    html = tmpl.render(evaluator_name=name, rated_count=rated)
+    html = tmpl.render(evaluator_name=name)
     return HTMLResponse(content=html)
 
 
-@app.get("/evaluate/item")
-async def get_item(request: Request):
+@app.get("/evaluate/prompt")
+async def get_prompt(request: Request):
     name = request.cookies.get("evaluator_name")
     if not name:
         raise HTTPException(status_code=401, detail="Not logged in")
 
-    item = find_unrated_item(name)
-    if item is None:
-        raise HTTPException(status_code=404, detail="No more items")
-    return JSONResponse(content=item)
+    prompt = find_unrated_prompt(name)
+    if prompt is None:
+        raise HTTPException(status_code=404, detail="No more prompts")
+    return JSONResponse(content=prompt)
 
 
-@app.post("/evaluate/submit")
-async def submit_rating(request: Request):
+@app.post("/evaluate/submit-batch")
+async def submit_batch(request: Request):
     name = request.cookies.get("evaluator_name")
     if not name:
         raise HTTPException(status_code=401, detail="Not logged in")
 
     body = await request.json()
-    run_id = body.get("run_id")
-    item_index = body.get("item_index")
-    scores = body.get("scores", {})
+    input_text = body.get("input", "")
+    ratings = body.get("ratings", [])
 
-    if run_id is None or item_index is None:
-        raise HTTPException(status_code=400, detail="Missing run_id or item_index")
+    if not ratings:
+        raise HTTPException(status_code=400, detail="No ratings provided")
 
-    record = {
-        "id": str(uuid.uuid4()),
-        "evaluator": name,
-        "timestamp": datetime.utcnow().isoformat(),
-        "run_id": run_id,
-        "item_index": item_index,
-        "input": body.get("input", ""),
-        "output": body.get("output", ""),
-        "scores": scores,
-    }
+    records = []
+    for r in ratings:
+        run_id = r.get("run_id")
+        item_index = r.get("item_index")
+        scores = r.get("scores", {})
+        if run_id is None or item_index is None:
+            continue
+        records.append({
+            "id": str(uuid.uuid4()),
+            "evaluator": name,
+            "timestamp": datetime.utcnow().isoformat(),
+            "run_id": run_id,
+            "item_index": item_index,
+            "input": input_text,
+            "output": r.get("output", ""),
+            "scores": scores,
+        })
 
     with _eval_lock:
-        evaluations.append(record)
+        evaluations.extend(records)
         save_evaluations()
 
-    return JSONResponse(content={"status": "ok", "rated_count": count_rated(name)})
+    return JSONResponse(content={"status": "ok", "rated_prompts": count_rated_prompts(name)})
 
 
 @app.get("/analysis", response_class=HTMLResponse)
@@ -762,7 +821,7 @@ async def disagreements_page(request: Request):
 @app.get("/api/progress")
 async def api_progress():
     return JSONResponse(content={
-        "total": total_items(),
+        "total": total_prompts(),
         "evaluators": get_all_progress(),
     })
 
