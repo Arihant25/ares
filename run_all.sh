@@ -2,7 +2,7 @@
 # run_all.sh — Orchestrate all finetuning and evaluation runs for ARES.
 #
 # Usage:
-#   bash run_all.sh [--skip-finetune] [--skip-gemma-finetune] [--skip-tests] [--only-ui]
+#   bash run_all.sh [--skip-finetune] [--skip-smollm3-finetune] [--skip-tests] [--only-ui]
 #
 # Finetuning jobs are run sequentially (single GPU).
 # LLM test runs (Grok, Qwen) are parallelised across experiments.
@@ -15,16 +15,16 @@ LOGS_DIR="logs"
 mkdir -p "$LOGS_DIR" outputs models
 
 SKIP_FINETUNE=false
-SKIP_GEMMA_FINETUNE=false
+SKIP_SMOLLM3_FINETUNE=false
 SKIP_TESTS=false
 ONLY_UI=false
 
 for arg in "$@"; do
   case $arg in
-    --skip-finetune)       SKIP_FINETUNE=true ;;
-    --skip-gemma-finetune) SKIP_GEMMA_FINETUNE=true ;;
-    --skip-tests)          SKIP_TESTS=true ;;
-    --only-ui)             ONLY_UI=true; SKIP_FINETUNE=true; SKIP_TESTS=true ;;
+    --skip-finetune)         SKIP_FINETUNE=true ;;
+    --skip-smollm3-finetune) SKIP_SMOLLM3_FINETUNE=true ;;
+    --skip-tests)            SKIP_TESTS=true ;;
+    --only-ui)               ONLY_UI=true; SKIP_FINETUNE=true; SKIP_TESTS=true ;;
   esac
 done
 
@@ -64,12 +64,13 @@ wait_pids() {
 if [ "$SKIP_FINETUNE" = false ]; then
   log "=== PHASE 1: Finetuning ==="
 
-  if [ "$SKIP_GEMMA_FINETUNE" = false ]; then
-    run_fg "finetune_gemma_misconception" uv run finetune.py --model gemma --task misconception
-    run_fg "finetune_gemma_socratic"      uv run finetune.py --model gemma --task socratic
-  fi
   run_fg "finetune_lfm2_misconception"  uv run finetune.py --model lfm2  --task misconception
   run_fg "finetune_lfm2_socratic"       uv run finetune.py --model lfm2  --task socratic
+
+  if [ "$SKIP_SMOLLM3_FINETUNE" = false ]; then
+    run_fg "finetune_smollm3_misconception" uv run finetune.py --model smollm3 --task misconception
+    run_fg "finetune_smollm3_socratic"      uv run finetune.py --model smollm3 --task socratic
+  fi
 
   log "Finetuning complete."
 fi
@@ -86,8 +87,8 @@ if [ "$SKIP_TESTS" = false ]; then
   PID_BL_QWEN=$(run_bg "baseline_qwen"  uv run test_baseline.py --model qwen)
 
   log "-- Baseline: SLM runs (sequential, ollama) --"
-  run_fg "baseline_gemma" uv run test_baseline.py --model gemma
-  run_fg "baseline_lfm2"  uv run test_baseline.py --model lfm2
+  run_fg "baseline_lfm2"    uv run test_baseline.py --model lfm2
+  run_fg "baseline_smollm3" uv run test_baseline.py --model smollm3
 
   wait_pids "baseline LLM runs" "$PID_BL_GROK" "$PID_BL_QWEN"
 
@@ -97,15 +98,15 @@ if [ "$SKIP_TESTS" = false ]; then
   PID_TF_QWEN=$(run_bg "taskfocused_qwen"  uv run test_taskfocused.py --model qwen)
 
   log "-- Task-focused: SLM runs (sequential, ollama) --"
-  run_fg "taskfocused_gemma" uv run test_taskfocused.py --model gemma
-  run_fg "taskfocused_lfm2"  uv run test_taskfocused.py --model lfm2
+  run_fg "taskfocused_lfm2"    uv run test_taskfocused.py --model lfm2
+  run_fg "taskfocused_smollm3" uv run test_taskfocused.py --model smollm3
 
   wait_pids "task-focused LLM runs" "$PID_TF_GROK" "$PID_TF_QWEN"
 
   # --- Finetuned model tests (sequential, GPU) ---
   log "-- Finetuned model tests (sequential) --"
-  run_fg "finetuned_gemma" uv run test_finetuned.py --model gemma
-  run_fg "finetuned_lfm2"  uv run test_finetuned.py --model lfm2
+  run_fg "finetuned_lfm2"    uv run test_finetuned.py --model lfm2
+  run_fg "finetuned_smollm3" uv run test_finetuned.py --model smollm3
 
   log "All evaluation runs complete."
 fi

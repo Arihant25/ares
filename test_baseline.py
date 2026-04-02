@@ -30,7 +30,7 @@ OPENROUTER_MODELS = {
 }
 
 OLLAMA_MODELS = {
-    "gemma": "hf.co/unsloth/gemma-3n-E2B-it-GGUF:Q8_0",
+    "smollm3": "hf.co/unsloth/SmolLM3-3B-GGUF:Q8_0",
 }
 
 # LFM2-VL is unsupported in Ollama (PR #14069 closed as stale); use llama-cpp-python directly.
@@ -161,7 +161,7 @@ def main() -> None:
     parser.add_argument(
         "--model",
         required=True,
-        choices=["grok", "qwen", "gemma", "lfm2"],
+        choices=["grok", "qwen", "lfm2", "smollm3"],
         help="Model to use for evaluation",
     )
     args = parser.parse_args()

@@ -6,12 +6,12 @@ Tasks:
   socratic       — generate a Socratic question for a given misconception
 
 Models:
-  gemma  — unsloth/gemma-3n-E2B-it-unsloth-bnb-4bit  (FastVisionModel)
-  lfm2   — LiquidAI/LFM2-VL-3B                       (standard PEFT + bitsandbytes 8-bit)
+  lfm2     — LiquidAI/LFM2-VL-3B       (standard PEFT + bitsandbytes 8-bit)
+  smollm3  — HuggingFaceTB/SmolLM3-3B  (standard PEFT + bitsandbytes 8-bit)
 
 Usage:
-  python finetune.py --model gemma --task misconception
-  python finetune.py --model lfm2  --task socratic
+  python finetune.py --model lfm2     --task misconception
+  python finetune.py --model smollm3  --task socratic
 """
 
 import argparse
@@ -30,8 +30,8 @@ load_dotenv()
 # Constants / Hyperparameters
 # ---------------------------------------------------------------------------
 
-GEMMA_MODEL_ID = "unsloth/gemma-3n-E2B-it"   # base fp16, loaded in 8-bit via bnb
-LFM2_MODEL_ID   = "LiquidAI/LFM2-VL-3B"      # base fp16, loaded in 8-bit via bnb
+LFM2_MODEL_ID     = "LiquidAI/LFM2-VL-3B"       # base fp16, loaded in 8-bit via bnb
+SMOLLM3_MODEL_ID  = "HuggingFaceTB/SmolLM3-3B"  # base fp16, loaded in 8-bit via bnb
 
 LORA_R = 16
 LORA_ALPHA = 16
@@ -96,9 +96,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--model",
-        choices=["gemma", "lfm2"],
+        choices=["lfm2", "smollm3"],
         required=True,
-        help="Which model to fine-tune: gemma or lfm2",
+        help="Which model to fine-tune: lfm2 or smollm3",
     )
     parser.add_argument(
         "--task",
@@ -244,47 +244,6 @@ def split_dataset(
 
 
 # ---------------------------------------------------------------------------
-# Gemma model setup (unsloth FastVisionModel)
-# ---------------------------------------------------------------------------
-
-def load_gemma(task: str):
-    """Load Gemma using unsloth FastVisionModel and apply LoRA."""
-    print("\n  Loading Gemma via unsloth FastVisionModel …")
-    from unsloth import FastVisionModel  # type: ignore
-
-    model, tokenizer = FastVisionModel.from_pretrained(
-        model_name=GEMMA_MODEL_ID,
-        max_seq_length=MAX_SEQ_LENGTH,
-        load_in_4bit=False,
-        load_in_8bit=True,  # 8-bit avoids bitsandbytes 4-bit shape issues on Gemma 3n
-        trust_remote_code=True,
-        device_map={"": 0},  # force all layers onto GPU 0, prevent CPU offload
-    )
-
-    # Ensure padding token
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
-        tokenizer.pad_token_id = tokenizer.eos_token_id
-
-    model = FastVisionModel.get_peft_model(
-        model,
-        r=LORA_R,
-        lora_alpha=LORA_ALPHA,
-        lora_dropout=LORA_DROPOUT,
-        bias=LORA_BIAS,
-        target_modules=LORA_TARGET_MODULES,
-        finetune_vision_layers=False,
-        finetune_language_layers=True,
-        finetune_attention_modules=True,
-        finetune_mlp_modules=True,
-        use_gradient_checkpointing="unsloth",
-        random_state=SEED,
-    )
-
-    return model, tokenizer
-
-
-# ---------------------------------------------------------------------------
 # LFM2 model setup (standard PEFT + bitsandbytes 8-bit)
 # ---------------------------------------------------------------------------
 
@@ -342,6 +301,51 @@ def load_lfm2(task: str):
     peft_model.print_trainable_parameters()
 
     # Enable gradient checkpointing
+    peft_model.enable_input_require_grads()
+    peft_model.gradient_checkpointing_enable()
+
+    return peft_model, tokenizer
+
+
+# ---------------------------------------------------------------------------
+# SmolLM3 model setup (standard PEFT + bitsandbytes 8-bit)
+# ---------------------------------------------------------------------------
+
+def load_smollm3(task: str):
+    """Load SmolLM3-3B with bitsandbytes 8-bit and apply LoRA via PEFT."""
+    print("\n  Loading SmolLM3-3B with bitsandbytes 8-bit …")
+    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+    from peft import LoraConfig, get_peft_model, TaskType  # type: ignore
+
+    bnb_config = BitsAndBytesConfig(load_in_8bit=True)
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        SMOLLM3_MODEL_ID,
+        trust_remote_code=True,
+        use_fast=True,
+    )
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.pad_token_id = tokenizer.eos_token_id
+
+    model = AutoModelForCausalLM.from_pretrained(
+        SMOLLM3_MODEL_ID,
+        quantization_config=bnb_config,
+        device_map={"": 0},
+    )
+    model.config.use_cache = False
+
+    lora_cfg = LoraConfig(
+        r=LORA_R,
+        lora_alpha=LORA_ALPHA,
+        lora_dropout=LORA_DROPOUT,
+        bias=LORA_BIAS,
+        target_modules=LORA_TARGET_MODULES,
+        task_type=TaskType.CAUSAL_LM,
+    )
+    peft_model = get_peft_model(model, lora_cfg)
+    peft_model.print_trainable_parameters()
+
     peft_model.enable_input_require_grads()
     peft_model.gradient_checkpointing_enable()
 
@@ -470,7 +474,7 @@ def train(
 
     # Save training config
     hyperparams = {
-        "model_id": GEMMA_MODEL_ID if model_key == "gemma" else LFM2_MODEL_ID,
+        "model_id": {"lfm2": LFM2_MODEL_ID, "smollm3": SMOLLM3_MODEL_ID}[model_key],
         "model_key": model_key,
         "task": task,
         "lora_r": LORA_R,
@@ -562,10 +566,10 @@ def main():
     # ------------------------------------------------------------------
     print("\n[ 3/5 ] Loading model …")
 
-    if model_key == "gemma":
-        model, tokenizer = load_gemma(task)
-    else:
+    if model_key == "lfm2":
         model, tokenizer = load_lfm2(task)
+    else:
+        model, tokenizer = load_smollm3(task)
 
     # ------------------------------------------------------------------
     # 4. WandB

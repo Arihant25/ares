@@ -6,8 +6,8 @@ Two-step pipeline evaluation with finetuned SLMs:
     Step 2 — SocraticGenerator      (finetuned model)
 
 Usage:
-    python test_finetuned.py --model gemma
     python test_finetuned.py --model lfm2
+    python test_finetuned.py --model smollm3
 """
 
 import argparse
@@ -16,7 +16,6 @@ import os
 import re
 import time
 
-import unsloth  # must be first to apply optimizations before transformers/peft
 import torch
 from dotenv import load_dotenv
 
@@ -29,17 +28,17 @@ load_dotenv()
 DATA_PATH = "data/finalTestSet.jsonc"
 OUTPUT_DIR = "outputs"
 
-GEMMA_BASE = "unsloth/gemma-3n-E2B-it-unsloth-bnb-4bit"
-LFM2_BASE = "LiquidAI/LFM2-VL-3B"
+LFM2_BASE     = "LiquidAI/LFM2-VL-3B"
+SMOLLM3_BASE  = "HuggingFaceTB/SmolLM3-3B"
 
 ADAPTER_PATHS = {
-    "gemma": {
-        "detector": "models/gemma-misconception/adapter",
-        "generator": "models/gemma-socratic/adapter",
-    },
     "lfm2": {
         "detector": "models/lfm2-misconception/adapter",
         "generator": "models/lfm2-socratic/adapter",
+    },
+    "smollm3": {
+        "detector": "models/smollm3-misconception/adapter",
+        "generator": "models/smollm3-socratic/adapter",
     },
 }
 
@@ -100,35 +99,6 @@ def save_results(output_path: str, results: list[dict]) -> None:
 # Model loading
 # ---------------------------------------------------------------------------
 
-def load_gemma_models():
-    """Load Gemma base model then apply separate PEFT adapters for each step."""
-    from peft import PeftModel
-    from unsloth import FastVisionModel  # noqa: F401 (unsloth already imported at top)
-
-    print("Loading Gemma base model ...")
-    base_model, processor = FastVisionModel.from_pretrained(
-        GEMMA_BASE,
-        load_in_4bit=False,
-        load_in_8bit=True,
-        device_map={"": 0},
-    )
-    # Use the underlying text tokenizer directly to avoid vision processor overhead
-    # during text-only finetuned inference.
-    tokenizer = processor.tokenizer
-
-    print("Applying Gemma misconception-detector adapter ...")
-    detector_model = PeftModel.from_pretrained(
-        base_model, ADAPTER_PATHS["gemma"]["detector"]
-    )
-
-    print("Applying Gemma socratic-generator adapter ...")
-    generator_model = PeftModel.from_pretrained(
-        base_model, ADAPTER_PATHS["gemma"]["generator"]
-    )
-
-    return detector_model, generator_model, tokenizer
-
-
 def load_lfm2_models():
     """Load LFM2 base model (8-bit) then apply separate PEFT adapters."""
     from peft import PeftModel
@@ -153,6 +123,34 @@ def load_lfm2_models():
     print("Applying LFM2 socratic-generator adapter ...")
     generator_model = PeftModel.from_pretrained(
         base, ADAPTER_PATHS["lfm2"]["generator"]
+    )
+
+    return detector_model, generator_model, tokenizer
+
+
+def load_smollm3_models():
+    """Load SmolLM3 base model (8-bit) then apply separate PEFT adapters."""
+    from peft import PeftModel
+    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+
+    bnb = BitsAndBytesConfig(load_in_8bit=True)
+
+    print("Loading SmolLM3 base model ...")
+    base = AutoModelForCausalLM.from_pretrained(
+        SMOLLM3_BASE,
+        quantization_config=bnb,
+        device_map={"": 0},
+    )
+    tokenizer = AutoTokenizer.from_pretrained(SMOLLM3_BASE, trust_remote_code=True)
+
+    print("Applying SmolLM3 misconception-detector adapter ...")
+    detector_model = PeftModel.from_pretrained(
+        base, ADAPTER_PATHS["smollm3"]["detector"]
+    )
+
+    print("Applying SmolLM3 socratic-generator adapter ...")
+    generator_model = PeftModel.from_pretrained(
+        base, ADAPTER_PATHS["smollm3"]["generator"]
     )
 
     return detector_model, generator_model, tokenizer
@@ -205,7 +203,7 @@ def main() -> None:
     parser.add_argument(
         "--model",
         required=True,
-        choices=["gemma", "lfm2"],
+        choices=["lfm2", "smollm3"],
         help="Which finetuned model pair to use",
     )
     args = parser.parse_args()
@@ -223,10 +221,10 @@ def main() -> None:
     print(f"Loaded {total} items. {len(already_done)} already processed.")
 
     # Load models
-    if model_name == "gemma":
-        detector_model, generator_model, tokenizer = load_gemma_models()
-    else:
+    if model_name == "lfm2":
         detector_model, generator_model, tokenizer = load_lfm2_models()
+    else:
+        detector_model, generator_model, tokenizer = load_smollm3_models()
 
     use_chat_template = False  # both models finetuned on plain completion, not chat format
     print("Models ready. Starting evaluation ...\n")
