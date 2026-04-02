@@ -110,6 +110,11 @@ def save_results(output_path: str, results: list[dict]) -> None:
         json.dump(results, fh, indent=2, ensure_ascii=False)
 
 
+def strip_think_tags(text: str) -> str:
+    # Some models emit internal reasoning in <think>...</think>; remove it before persisting.
+    return re.sub(r"<think>.*?</think>\s*", "", text, flags=re.DOTALL).strip()
+
+
 # ---------------------------------------------------------------------------
 # Inference helpers
 # ---------------------------------------------------------------------------
@@ -206,6 +211,7 @@ def main() -> None:
                 output_text, latency = call_llama_cpp(messages)
             else:
                 output_text, latency = call_ollama(model_id, messages)
+            output_text = strip_think_tags(output_text)
         except Exception as exc:
             print(f"  Error processing item {i + 1}: {exc}")
             continue

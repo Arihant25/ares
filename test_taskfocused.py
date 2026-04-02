@@ -131,6 +131,11 @@ def save_results(output_path: str, results: list[dict]) -> None:
         json.dump(results, fh, indent=2, ensure_ascii=False)
 
 
+def strip_think_tags(text: str) -> str:
+    # Some models emit internal reasoning in <think>...</think>; remove it before persisting.
+    return re.sub(r"<think>.*?</think>\s*", "", text, flags=re.DOTALL).strip()
+
+
 # ---------------------------------------------------------------------------
 # Inference helpers
 # ---------------------------------------------------------------------------
@@ -236,6 +241,8 @@ def main() -> None:
             print(f"  Error in Step 1 for item {i + 1}: {exc}")
             continue
 
+        detected_misconception = strip_think_tags(detected_misconception)
+
         # Strip a leading "Misconception:" label if the model echoed it back
         detected_misconception = re.sub(
             r"^\s*Misconception:\s*", "", detected_misconception, flags=re.IGNORECASE
@@ -264,6 +271,8 @@ def main() -> None:
         except Exception as exc:
             print(f"  Error in Step 2 for item {i + 1}: {exc}")
             continue
+
+        socratic_output = strip_think_tags(socratic_output)
 
         # Strip a leading "Socratic Question:" label if echoed back
         socratic_output = re.sub(

@@ -95,6 +95,11 @@ def save_results(output_path: str, results: list[dict]) -> None:
         json.dump(results, fh, indent=2, ensure_ascii=False)
 
 
+def strip_think_tags(text: str) -> str:
+    # Some models emit internal reasoning in <think>...</think>; remove it before persisting.
+    return re.sub(r"<think>.*?</think>\s*", "", text, flags=re.DOTALL).strip()
+
+
 # ---------------------------------------------------------------------------
 # Model loading
 # ---------------------------------------------------------------------------
@@ -247,6 +252,7 @@ def main() -> None:
             detected_misconception, step1_latency = generate_text(
                 detector_model, tokenizer, det_prompt, use_chat_template=use_chat_template
             )
+            detected_misconception = strip_think_tags(detected_misconception)
             print(f"  Step 1 ({step1_latency:.2f}s): {detected_misconception[:80]}")
 
             # --- Step 2: Socratic question generation ---
@@ -256,6 +262,7 @@ def main() -> None:
             socratic_output, step2_latency = generate_text(
                 generator_model, tokenizer, gen_prompt, use_chat_template=use_chat_template
             )
+            socratic_output = strip_think_tags(socratic_output)
             total_latency = step1_latency + step2_latency
             print(f"  Step 2 ({step2_latency:.2f}s): {socratic_output[:80]}")
 
