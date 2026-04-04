@@ -575,9 +575,13 @@ ANALYSIS_HTML = """
   h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.8rem; margin-top: 1.5rem; }
   table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden; font-size: 0.88rem; }
   th { background: #f1f3f5; text-align: left; padding: 0.6rem 0.8rem; font-weight: 600; border-bottom: 1px solid #dee2e6; }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { background: #e9ecef; }
+  th .sort-indicator { color: #6c757d; font-size: 0.8em; margin-left: 0.35rem; }
   td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #f1f3f5; vertical-align: top; }
   tr:last-child td { border-bottom: none; }
   .evaluators { color: #6c757d; font-size: 0.82rem; }
+  .cell-max { font-weight: 700; }
   .no-data { padding: 1.5rem; color: #6c757d; font-size: 0.9rem; }
 </style>
 </head>
@@ -600,6 +604,13 @@ ANALYSIS_HTML = """
 <div id="runs-table-area"><div class="no-data">Loading...</div></div>
 
 <script>
+let analysisState = {
+  runs: [],
+  paramList: [],
+  sortKey: 'run_id',
+  sortDirection: 'asc',
+};
+
 async function loadStats() {
   const resp = await fetch('/api/stats');
   if (!resp.ok) return;
@@ -619,23 +630,95 @@ async function loadStats() {
 
   const allParams = new Set();
   for (const r of Object.values(runs)) Object.keys(r.avg_scores).forEach(p => allParams.add(p));
-  const paramList = Array.from(allParams);
+  analysisState = {
+    runs: runIds.map(rid => ({ run_id: rid, ...runs[rid] })),
+    paramList: Array.from(allParams),
+    sortKey: analysisState.sortKey || 'run_id',
+    sortDirection: analysisState.sortDirection || 'asc',
+  };
+  renderAnalysisTable();
+}
 
-  let html = '<table><thead><tr><th>Run ID</th><th>Ratings</th><th>Evaluators</th>';
-  for (const p of paramList) html += `<th>${p.replace(/_/g,' ')}</th>`;
+function compareValues(a, b, direction) {
+  const dir = direction === 'desc' ? -1 : 1;
+  const aMissing = a === null || a === undefined || a === '';
+  const bMissing = b === null || b === undefined || b === '';
+  if (aMissing && bMissing) return 0;
+  if (aMissing) return 1;
+  if (bMissing) return -1;
+  if (typeof a === 'number' && typeof b === 'number') return (a - b) * dir;
+  return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' }) * dir;
+}
+
+function getCellValue(row, key) {
+  if (key === 'run_id') return row.run_id;
+  if (key === 'num_ratings') return row.num_ratings;
+  if (key === 'evaluators') return row.evaluators.join(', ');
+  return row.avg_scores[key];
+}
+
+function isNumericColumn(key) {
+  return key === 'num_ratings' || analysisState.paramList.includes(key);
+}
+
+function renderAnalysisTable() {
+  const { runs, paramList, sortKey, sortDirection } = analysisState;
+  const sortedRuns = [...runs].sort((a, b) => compareValues(getCellValue(a, sortKey), getCellValue(b, sortKey), sortDirection));
+
+  const numericColumns = ['num_ratings', ...paramList];
+  const maxValues = new Map();
+  for (const key of numericColumns) {
+    let maxValue = null;
+    for (const row of sortedRuns) {
+      const value = getCellValue(row, key);
+      if (typeof value !== 'number' || Number.isNaN(value)) continue;
+      if (maxValue === null || value > maxValue) maxValue = value;
+    }
+    if (maxValue !== null) maxValues.set(key, maxValue);
+  }
+
+  const headers = [
+    ['run_id', 'Run ID'],
+    ['num_ratings', 'Ratings'],
+    ['evaluators', 'Evaluators'],
+    ...paramList.map(p => [p, p.replace(/_/g, ' ')]),
+  ];
+
+  let html = '<table><thead><tr>';
+  for (const [key, label] of headers) {
+    const isActive = sortKey === key;
+    const indicator = isActive ? (sortDirection === 'asc' ? '▲' : '▼') : '';
+    html += `<th class="sortable" data-sort-key="${key}">${label}<span class="sort-indicator">${indicator}</span></th>`;
+  }
   html += '</tr></thead><tbody>';
 
-  for (const rid of runIds) {
-    const r = runs[rid];
-    html += `<tr><td><strong>${rid}</strong></td><td>${r.num_ratings}</td>`;
-    html += `<td class="evaluators">${r.evaluators.join(', ')}</td>`;
+  for (const row of sortedRuns) {
+    html += `<tr><td><strong>${row.run_id}</strong></td>`;
+    html += `<td${maxValues.get('num_ratings') === row.num_ratings ? ' class="cell-max"' : ''}>${row.num_ratings}</td>`;
+    html += `<td class="evaluators">${row.evaluators.join(', ')}</td>`;
     for (const p of paramList) {
-      html += `<td>${r.avg_scores[p] !== undefined ? r.avg_scores[p].toFixed(2) : '-'}</td>`;
+      const value = row.avg_scores[p];
+      const isMax = typeof value === 'number' && maxValues.get(p) === value;
+      html += `<td${isMax ? ' class="cell-max"' : ''}>${value !== undefined ? value.toFixed(2) : '-'}</td>`;
     }
     html += '</tr>';
   }
   html += '</tbody></table>';
-  document.getElementById('runs-table-area').innerHTML = html;
+
+  const area = document.getElementById('runs-table-area');
+  area.innerHTML = html;
+  area.querySelectorAll('th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.sortKey;
+      if (analysisState.sortKey === key) {
+        analysisState.sortDirection = analysisState.sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        analysisState.sortKey = key;
+        analysisState.sortDirection = isNumericColumn(key) ? 'desc' : 'asc';
+      }
+      renderAnalysisTable();
+    });
+  });
 }
 loadStats();
 </script>
