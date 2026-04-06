@@ -12,6 +12,7 @@ import os
 import random
 import threading
 import uuid
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -39,6 +40,8 @@ EVAL_FILE = OUTPUTS_DIR / "evaluation.json"
 run_data: dict[str, list[dict]] = {}   # run_id -> list of items
 _eval_lock = threading.Lock()
 evaluations: list[dict] = []
+_stats_cache: dict | None = None
+_stats_cache_len: int = -1
 
 # ---------------------------------------------------------------------------
 # Single unified scoring rubric (all approaches generate Socratic questions)
@@ -187,6 +190,43 @@ def get_all_progress() -> list[dict]:
 # Inter-rater agreement helpers
 # ---------------------------------------------------------------------------
 
+def _kappa_stats(
+    pairs: list[tuple[int, int]], min_r: int = 1, max_r: int = 4, weighted: bool = True
+) -> dict[str, float]:
+    """Cohen's kappa (unweighted or linear-weighted) for ordinal ratings (2 raters).
+    Returns kappa, observed agreement (po), expected agreement (pe), and n."""
+    n = len(pairs)
+    if n == 0:
+        return {"kappa": 0.0, "po": 0.0, "pe": 0.0, "n": 0}
+    scale = max_r - min_r
+
+    def w(i: int, j: int) -> float:
+        return (1.0 - abs(i - j) / scale) if weighted else float(i == j)
+
+    po = sum(w(a, b) for a, b in pairs) / n
+
+    counts_a = Counter(a for a, _ in pairs)
+    counts_b = Counter(b for _, b in pairs)
+    pe = sum(
+        w(i, j) * (counts_a.get(i, 0) / n) * (counts_b.get(j, 0) / n)
+        for i in range(min_r, max_r + 1)
+        for j in range(min_r, max_r + 1)
+    )
+
+    kappa = 1.0 if pe >= 1.0 else (po - pe) / (1.0 - pe)
+    return {"kappa": kappa, "po": po, "pe": pe, "n": n}
+
+
+def _sample_size_for_kappa(po: float, pe: float, margin: float = 0.1, z: float = 1.44) -> int:
+    """Minimum sample size to estimate weighted kappa within ±margin at 85% CI.
+    Formula: n = (z/margin)² × po(1-po) / (1-pe)²  (Donner & Eliasziw 1987)."""
+    import math
+    denom = (1.0 - pe) ** 2
+    if denom == 0 or po <= 0 or po >= 1:
+        return 0
+    return math.ceil((z / margin) ** 2 * po * (1 - po) / denom)
+
+
 def compute_agreement_stats() -> dict[str, Any]:
     groups: dict[tuple, list[dict]] = {}
     for ev in evaluations:
@@ -195,27 +235,28 @@ def compute_agreement_stats() -> dict[str, Any]:
 
     multi = {k: v for k, v in groups.items() if len(v) >= 2}
 
-    total_pairs = 0
-    total_agreement = 0.0
     disagreements = []
+    # param -> list of (rater_a_score, rater_b_score) pairs
+    param_pairs: dict[str, list[tuple[int, int]]] = {}
 
     for (run_id, item_index), evals in multi.items():
         param_keys = list(evals[0]["scores"].keys())
-        max_diff_any = 0
+        max_total_diff = 0
 
         for a_idx in range(len(evals)):
             for b_idx in range(a_idx + 1, len(evals)):
                 a_scores = evals[a_idx]["scores"]
                 b_scores = evals[b_idx]["scores"]
+                pair_total_diff = 0
                 for key in param_keys:
-                    diff = abs(a_scores.get(key, 0) - b_scores.get(key, 0))
-                    if diff > max_diff_any:
-                        max_diff_any = diff
-                    agreement = 1.0 - diff / 4.0
-                    total_agreement += agreement
-                    total_pairs += 1
+                    a_val = a_scores.get(key, 0)
+                    b_val = b_scores.get(key, 0)
+                    pair_total_diff += abs(a_val - b_val)
+                    param_pairs.setdefault(key, []).append((a_val, b_val))
+                if pair_total_diff > max_total_diff:
+                    max_total_diff = pair_total_diff
 
-        if max_diff_any >= 2:
+        if max_total_diff > 10:
             eval_breakdown = [
                 {"evaluator": ev["evaluator"], "scores": ev["scores"]}
                 for ev in evals
@@ -225,13 +266,38 @@ def compute_agreement_stats() -> dict[str, Any]:
                 "item_index": item_index,
                 "input": evals[0].get("input", ""),
                 "output": evals[0].get("output", ""),
-                "max_diff": max_diff_any,
+                "max_diff": max_total_diff,
                 "evaluators": eval_breakdown,
             })
 
-    overall_agreement = (total_agreement / total_pairs) if total_pairs > 0 else 1.0
+    per_param_kappa_w = {
+        param: round(_kappa_stats(pairs, weighted=True)["kappa"], 4)
+        for param, pairs in param_pairs.items()
+    }
+    per_param_kappa_u = {
+        param: round(_kappa_stats(pairs, weighted=False)["kappa"], 4)
+        for param, pairs in param_pairs.items()
+    }
+    overall_kappa_w = round(
+        sum(per_param_kappa_w.values()) / len(per_param_kappa_w)
+        if per_param_kappa_w else 0.0, 4,
+    )
+    overall_kappa_u = round(
+        sum(per_param_kappa_u.values()) / len(per_param_kappa_u)
+        if per_param_kappa_u else 0.0, 4,
+    )
+
+    # Pool all pairs to get overall po/pe for sample size estimate (using weighted)
+    all_pairs = [p for pairs in param_pairs.values() for p in pairs]
+    pool = _kappa_stats(all_pairs, weighted=True)
+    sample_size = _sample_size_for_kappa(pool["po"], pool["pe"]) if all_pairs else 0
+
     return {
-        "agreement_score": round(overall_agreement, 4),
+        "cohens_kappa_weighted": overall_kappa_w,
+        "cohens_kappa_unweighted": overall_kappa_u,
+        "per_param_kappa_weighted": per_param_kappa_w,
+        "per_param_kappa_unweighted": per_param_kappa_u,
+        "validation_sample_size": sample_size,
         "disagreement_count": len(disagreements),
         "disagreements": sorted(disagreements, key=lambda x: -x["max_diff"]),
     }
@@ -583,6 +649,14 @@ ANALYSIS_HTML = """
   .evaluators { color: #6c757d; font-size: 0.82rem; }
   .cell-max { font-weight: 700; }
   .no-data { padding: 1.5rem; color: #6c757d; font-size: 0.9rem; }
+  .loading-bar-wrap { padding: 1.5rem 0; }
+  .loading-bar-track { height: 4px; background: #e9ecef; border-radius: 2px; overflow: hidden; }
+  .loading-bar-fill { height: 100%; width: 0%; background: #333; border-radius: 2px; animation: indeterminate 1.4s ease-in-out infinite; }
+  @keyframes indeterminate {
+    0%   { transform: translateX(-100%); width: 40%; }
+    50%  { transform: translateX(150%); width: 60%; }
+    100% { transform: translateX(300%); width: 40%; }
+  }
 </style>
 </head>
 <body>
@@ -596,12 +670,24 @@ ANALYSIS_HTML = """
 <div class="summary">
   <div class="stat-box"><div class="num" id="total-ratings">-</div><div class="lbl">Total Ratings</div></div>
   <div class="stat-box"><div class="num" id="evaluator-count">-</div><div class="lbl">Evaluators</div></div>
-  <div class="stat-box"><div class="num" id="agreement-score">-</div><div class="lbl">Agreement Score</div></div>
+  <div class="stat-box"><div class="num" id="cohens-kappa-w">-</div><div class="lbl">Cohen's κ (weighted)</div></div>
+  <div class="stat-box"><div class="num" id="cohens-kappa-u">-</div><div class="lbl">Cohen's κ (unweighted)</div></div>
   <div class="stat-box"><div class="num" id="disagreement-count">-</div><div class="lbl">Disagreements</div></div>
+  <div class="stat-box"><div class="num" id="validation-n">-</div><div class="lbl">Validation Sample Needed</div></div>
+</div>
+<p style="font-size:0.8rem;color:#6c757d;margin-bottom:1.5rem;" id="validation-note" hidden>
+  Min. samples an external rater should annotate to estimate Cohen's κ within ±0.1 at 85% CI
+  (Donner &amp; Eliasziw 1987: n = (z/ε)² × P̂<sub>o</sub>(1−P̂<sub>o</sub>) / (1−P̂<sub>e</sub>)²).
+</p>
+
+<div id="kappa-breakdown" style="display:none;margin-bottom:1.5rem;">
+  <h2 style="margin-bottom:0.6rem;">κ per Parameter</h2>
+  <table><thead><tr><th>Parameter</th><th>κ weighted</th><th>κ unweighted</th></tr></thead>
+  <tbody id="kappa-tbody"></tbody></table>
 </div>
 
 <h2>Runs</h2>
-<div id="runs-table-area"><div class="no-data">Loading...</div></div>
+<div id="runs-table-area"><div class="loading-bar-wrap"><div class="loading-bar-track"><div class="loading-bar-fill"></div></div></div></div>
 
 <script>
 let analysisState = {
@@ -618,8 +704,25 @@ async function loadStats() {
 
   document.getElementById('total-ratings').textContent = stats.total_ratings;
   document.getElementById('evaluator-count').textContent = stats.evaluators.length;
-  document.getElementById('agreement-score').textContent = stats.agreement_score.toFixed(2);
+  document.getElementById('cohens-kappa-w').textContent = stats.cohens_kappa_weighted.toFixed(3);
+  document.getElementById('cohens-kappa-u').textContent = stats.cohens_kappa_unweighted.toFixed(3);
   document.getElementById('disagreement-count').textContent = stats.disagreement_count;
+
+  if (stats.validation_sample_size > 0) {
+    document.getElementById('validation-n').textContent = stats.validation_sample_size;
+    document.getElementById('validation-note').hidden = false;
+  }
+
+  const kappaW = stats.per_param_kappa_weighted || {};
+  const kappaU = stats.per_param_kappa_unweighted || {};
+  const params = Object.keys(kappaW);
+  if (params.length > 0) {
+    const tbody = document.getElementById('kappa-tbody');
+    tbody.innerHTML = params.map(p =>
+      `<tr><td>${esc(p)}</td><td>${kappaW[p].toFixed(3)}</td><td>${kappaU[p].toFixed(3)}</td></tr>`
+    ).join('');
+    document.getElementById('kappa-breakdown').style.display = '';
+  }
 
   const runs = stats.runs;
   const runIds = Object.keys(runs);
@@ -720,6 +823,9 @@ function renderAnalysisTable() {
     });
   });
 }
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 loadStats();
 </script>
 </body>
@@ -758,12 +864,12 @@ DISAGREEMENTS_HTML = """
   <a href="/analysis">Back to Analysis</a>
   <a href="/evaluate">Evaluate</a>
 </div>
-<p style="font-size:0.88rem;color:#6c757d;margin-bottom:1.2rem;">Items where evaluators differ by 2+ on any parameter.</p>
+<p style="font-size:0.88rem;color:#6c757d;margin-bottom:1.2rem;">Items where evaluators' total rating difference exceeds 10 points.</p>
 <div id="content"><p class="no-data">Loading...</p></div>
 
 <script>
 async function loadDisagreements() {
-  const resp = await fetch('/api/stats');
+  const resp = await fetch('/api/disagreements');
   if (!resp.ok) return;
   const stats = await resp.json();
   const items = stats.disagreements || [];
@@ -881,6 +987,9 @@ async def submit_batch(request: Request):
     with _eval_lock:
         evaluations.extend(records)
         save_evaluations()
+        global _stats_cache, _stats_cache_len
+        _stats_cache = None
+        _stats_cache_len = -1
 
     return JSONResponse(content={"status": "ok", "rated_prompts": count_rated_prompts(name)})
 
@@ -909,16 +1018,37 @@ async def api_progress():
     })
 
 
+def _get_stats() -> dict:
+    global _stats_cache, _stats_cache_len
+    current_len = len(evaluations)
+    if _stats_cache is None or _stats_cache_len != current_len:
+        agreement = compute_agreement_stats()
+        _stats_cache = {
+            "total_ratings": current_len,
+            "evaluators": sorted({ev["evaluator"] for ev in evaluations}),
+            "runs": compute_run_stats(),
+            "cohens_kappa_weighted": agreement["cohens_kappa_weighted"],
+            "cohens_kappa_unweighted": agreement["cohens_kappa_unweighted"],
+            "per_param_kappa_weighted": agreement["per_param_kappa_weighted"],
+            "per_param_kappa_unweighted": agreement["per_param_kappa_unweighted"],
+            "validation_sample_size": agreement["validation_sample_size"],
+            "disagreement_count": agreement["disagreement_count"],
+            "disagreements": agreement["disagreements"],
+        }
+        _stats_cache_len = current_len
+    return _stats_cache
+
+
 @app.get("/api/stats")
 async def api_stats():
-    run_stats = compute_run_stats()
-    agreement = compute_agreement_stats()
-    all_evaluators = sorted({ev["evaluator"] for ev in evaluations})
+    cache = _get_stats()
+    return JSONResponse(content={k: v for k, v in cache.items() if k != "disagreements"})
+
+
+@app.get("/api/disagreements")
+async def api_disagreements():
+    cache = _get_stats()
     return JSONResponse(content={
-        "total_ratings": len(evaluations),
-        "evaluators": all_evaluators,
-        "runs": run_stats,
-        "agreement_score": agreement["agreement_score"],
-        "disagreement_count": agreement["disagreement_count"],
-        "disagreements": agreement["disagreements"],
+        "disagreement_count": cache["disagreement_count"],
+        "disagreements": cache["disagreements"],
     })
