@@ -13,6 +13,7 @@ import random
 import threading
 import uuid
 from collections import Counter
+from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -24,7 +25,17 @@ from jinja2 import Environment, BaseLoader
 
 load_dotenv()
 
-app = FastAPI(title="ARES Evaluation")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    load_all_runs()
+    load_evaluations()
+    load_kappa_evaluations()
+    build_prompt_index()
+    yield
+
+
+app = FastAPI(title="ARES Evaluation", lifespan=lifespan)
 
 # ---------------------------------------------------------------------------
 # File paths
@@ -32,14 +43,18 @@ app = FastAPI(title="ARES Evaluation")
 
 OUTPUTS_DIR = Path("outputs")
 EVAL_FILE = OUTPUTS_DIR / "evaluation.json"
+KAPPA_EVAL_FILE = OUTPUTS_DIR / "kappa_evaluation.json"
 
 # ---------------------------------------------------------------------------
 # In-memory state
 # ---------------------------------------------------------------------------
 
-run_data: dict[str, list[dict]] = {}   # run_id -> list of items
+run_data: dict[str, list[dict]] = {}  # run_id -> list of items
 _eval_lock = threading.Lock()
 evaluations: list[dict] = []
+kappa_evaluations: list[dict] = (
+    []
+)  # kappa subsample evaluations (random prompts, no duplicates)
 _stats_cache: dict | None = None
 _stats_cache_len: int = -1
 
@@ -48,16 +63,21 @@ _stats_cache_len: int = -1
 # ---------------------------------------------------------------------------
 
 PARAMETERS = [
-    ("relevance",           "Relevance",           "Directly addresses the student's specific error"),
-    ("socratic_quality",    "Socratic Quality",    "Guides discovery rather than giving away the answer"),
-    ("clarity",             "Clarity",             "Clear and well-phrased"),
+    ("relevance", "Relevance", "Directly addresses the student's specific error"),
+    (
+        "socratic_quality",
+        "Socratic Quality",
+        "Guides discovery rather than giving away the answer",
+    ),
+    ("clarity", "Clarity", "Clear and well-phrased"),
     ("cognitive_challenge", "Cognitive Challenge", "Promotes meaningful reflection"),
-    ("naturalness",         "Naturalness",         "Sounds like something a real teacher would ask"),
+    ("naturalness", "Naturalness", "Sounds like something a real teacher would ask"),
 ]
 
 # ---------------------------------------------------------------------------
 # Data loading helpers
 # ---------------------------------------------------------------------------
+
 
 def load_run_file(path: Path) -> list[dict]:
     with open(path, "r", encoding="utf-8") as fh:
@@ -97,6 +117,29 @@ def save_evaluations() -> None:
         json.dump(evaluations, fh, indent=2, ensure_ascii=False)
 
 
+def load_kappa_evaluations() -> None:
+    global kappa_evaluations
+    if KAPPA_EVAL_FILE.exists():
+        with open(KAPPA_EVAL_FILE, "r", encoding="utf-8") as fh:
+            try:
+                kappa_evaluations = json.load(fh)
+            except json.JSONDecodeError:
+                kappa_evaluations = []
+    else:
+        kappa_evaluations = []
+
+
+def save_kappa_evaluations() -> None:
+    OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+    with open(KAPPA_EVAL_FILE, "w", encoding="utf-8") as fh:
+        json.dump(kappa_evaluations, fh, indent=2, ensure_ascii=False)
+
+
+def get_kappa_already_rated_prompts() -> set[str]:
+    """Get all prompts that have been rated by anyone in kappa_evaluations."""
+    return {ev.get("input", "") for ev in kappa_evaluations if ev.get("input", "")}
+
+
 # ---------------------------------------------------------------------------
 # Startup
 # ---------------------------------------------------------------------------
@@ -114,23 +157,15 @@ def build_prompt_index() -> None:
                 prompt_index.setdefault(key, []).append((run_id, idx, item))
 
 
-@app.on_event("startup")
-async def startup_event():
-    load_all_runs()
-    load_evaluations()
-    build_prompt_index()
-
-
 # ---------------------------------------------------------------------------
 # Prompt-level lookup (all outputs for the same input)
 # ---------------------------------------------------------------------------
 
+
 def find_unrated_prompt(evaluator_name: str) -> dict | None:
     """Return all outputs for a random prompt not yet rated by this evaluator."""
     rated_inputs = {
-        ev.get("input", "")
-        for ev in evaluations
-        if ev["evaluator"] == evaluator_name
+        ev.get("input", "") for ev in evaluations if ev["evaluator"] == evaluator_name
     }
 
     candidates = [inp for inp in prompt_index if inp not in rated_inputs]
@@ -160,11 +195,68 @@ def find_unrated_prompt(evaluator_name: str) -> dict | None:
 
 def count_rated_prompts(evaluator_name: str) -> int:
     rated_inputs = {
-        ev.get("input", "")
-        for ev in evaluations
-        if ev["evaluator"] == evaluator_name
+        ev.get("input", "") for ev in evaluations if ev["evaluator"] == evaluator_name
     }
     return len(rated_inputs)
+
+
+def find_kappa_unrated_prompt(evaluator_name: str) -> dict | None:
+    """Return all outputs for a random kappa prompt not yet rated by anyone.
+    Excludes any prompt that has already been rated by any evaluator in kappa_evaluations.
+    """
+    all_inputs = list(prompt_index.keys())
+    already_rated = get_kappa_already_rated_prompts()
+
+    # Exclude prompts rated by current evaluator
+    rated_by_current = {
+        ev.get("input", "")
+        for ev in kappa_evaluations
+        if ev["evaluator"] == evaluator_name and ev.get("input", "")
+    }
+
+    # Get candidates: not rated by anyone, and not rated by current evaluator
+    candidates = [
+        inp
+        for inp in all_inputs
+        if inp not in already_rated and inp not in rated_by_current
+    ]
+    if not candidates:
+        return None
+
+    input_text = random.choice(candidates)
+    outputs = prompt_index[input_text]
+    shuffled = outputs[:]
+    random.shuffle(shuffled)
+
+    ground_truth = shuffled[0][2].get("GroundTruth_Question", "") if shuffled else ""
+
+    return {
+        "input": input_text,
+        "ground_truth_question": ground_truth,
+        "outputs": [
+            {
+                "run_id": run_id,
+                "item_index": idx,
+                "output": item.get("Output", ""),
+            }
+            for run_id, idx, item in shuffled
+        ],
+    }
+
+
+def count_kappa_rated_prompts(evaluator_name: str) -> int:
+    """Count how many kappa prompts have been rated by this evaluator."""
+    rated_kappa_inputs = {
+        ev.get("input", "")
+        for ev in kappa_evaluations
+        if ev["evaluator"] == evaluator_name and ev.get("input", "")
+    }
+    return len(rated_kappa_inputs)
+
+
+def total_kappa_prompts() -> int:
+    """Total number of fixed kappa prompts."""
+    return len(get_kappa_prompt_indices())
 
 
 def total_prompts() -> int:
@@ -185,10 +277,10 @@ def get_all_progress() -> list[dict]:
     ]
 
 
-
 # ---------------------------------------------------------------------------
 # Inter-rater agreement helpers
 # ---------------------------------------------------------------------------
+
 
 def _kappa_stats(
     pairs: list[tuple[int, int]], min_r: int = 1, max_r: int = 4, weighted: bool = True
@@ -217,10 +309,13 @@ def _kappa_stats(
     return {"kappa": kappa, "po": po, "pe": pe, "n": n}
 
 
-def _sample_size_for_kappa(po: float, pe: float, margin: float = 0.1, z: float = 1.44) -> int:
-    """Minimum sample size to estimate weighted kappa within ±margin at 85% CI.
-    Formula: n = (z/margin)² × po(1-po) / (1-pe)²  (Donner & Eliasziw 1987)."""
+def _sample_size_for_kappa(
+    po: float, pe: float, margin: float = 0.1, z: float = 1.645
+) -> int:
+    """Minimum sample size to estimate weighted kappa within ±margin at 95% CI.
+    Formula: n = (z/margin)² * po(1-po) / (1-pe)²  (Donner & Eliasziw 1987)."""
     import math
+
     denom = (1.0 - pe) ** 2
     if denom == 0 or po <= 0 or po >= 1:
         return 0
@@ -258,17 +353,18 @@ def compute_agreement_stats() -> dict[str, Any]:
 
         if max_total_diff > 10:
             eval_breakdown = [
-                {"evaluator": ev["evaluator"], "scores": ev["scores"]}
-                for ev in evals
+                {"evaluator": ev["evaluator"], "scores": ev["scores"]} for ev in evals
             ]
-            disagreements.append({
-                "run_id": run_id,
-                "item_index": item_index,
-                "input": evals[0].get("input", ""),
-                "output": evals[0].get("output", ""),
-                "max_diff": max_total_diff,
-                "evaluators": eval_breakdown,
-            })
+            disagreements.append(
+                {
+                    "run_id": run_id,
+                    "item_index": item_index,
+                    "input": evals[0].get("input", ""),
+                    "output": evals[0].get("output", ""),
+                    "max_diff": max_total_diff,
+                    "evaluators": eval_breakdown,
+                }
+            )
 
     per_param_kappa_w = {
         param: round(_kappa_stats(pairs, weighted=True)["kappa"], 4)
@@ -279,12 +375,20 @@ def compute_agreement_stats() -> dict[str, Any]:
         for param, pairs in param_pairs.items()
     }
     overall_kappa_w = round(
-        sum(per_param_kappa_w.values()) / len(per_param_kappa_w)
-        if per_param_kappa_w else 0.0, 4,
+        (
+            sum(per_param_kappa_w.values()) / len(per_param_kappa_w)
+            if per_param_kappa_w
+            else 0.0
+        ),
+        4,
     )
     overall_kappa_u = round(
-        sum(per_param_kappa_u.values()) / len(per_param_kappa_u)
-        if per_param_kappa_u else 0.0, 4,
+        (
+            sum(per_param_kappa_u.values()) / len(per_param_kappa_u)
+            if per_param_kappa_u
+            else 0.0
+        ),
+        4,
     )
 
     # Pool all pairs to get overall po/pe for sample size estimate (using weighted)
@@ -317,8 +421,7 @@ def compute_run_stats() -> dict[str, dict]:
     result = {}
     for rid, s in stats.items():
         avg_scores = {
-            p: round(sum(vals) / len(vals), 2)
-            for p, vals in s["score_sums"].items()
+            p: round(sum(vals) / len(vals), 2) for p, vals in s["score_sums"].items()
         }
         result[rid] = {
             "num_ratings": s["num_ratings"],
@@ -550,7 +653,7 @@ async function getPrompt() {
   document.getElementById('gt-area').style.display = 'none';
   document.getElementById('gt-btn').textContent = 'Show Ground Truth';
 
-  const resp = await fetch('/evaluate/prompt');
+  const resp = await fetch('{{ endpoint_base }}/prompt');
   if (resp.status === 404) {
     document.getElementById('done-msg').style.display = 'block';
     return;
@@ -603,7 +706,7 @@ async function submitAll() {
   document.getElementById('error-msg').style.display = 'none';
   document.getElementById('submit-btn').disabled = true;
 
-  const resp = await fetch('/evaluate/submit-batch', {
+  const resp = await fetch('{{ endpoint_base }}/submit-batch', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ input: currentPrompt.input, ratings }),
@@ -916,6 +1019,7 @@ loadDisagreements();
 # Routes
 # ---------------------------------------------------------------------------
 
+
 @app.get("/", response_class=HTMLResponse)
 async def landing():
     return HTMLResponse(content=LANDING_HTML)
@@ -937,7 +1041,7 @@ async def evaluate_page(request: Request):
     if not name:
         return RedirectResponse(url="/", status_code=303)
     tmpl = jinja_env.from_string(EVALUATE_HTML)
-    html = tmpl.render(evaluator_name=name)
+    html = tmpl.render(evaluator_name=name, endpoint_base="/evaluate")
     return HTMLResponse(content=html)
 
 
@@ -973,16 +1077,18 @@ async def submit_batch(request: Request):
         scores = r.get("scores", {})
         if run_id is None or item_index is None:
             continue
-        records.append({
-            "id": str(uuid.uuid4()),
-            "evaluator": name,
-            "timestamp": datetime.utcnow().isoformat(),
-            "run_id": run_id,
-            "item_index": item_index,
-            "input": input_text,
-            "output": r.get("output", ""),
-            "scores": scores,
-        })
+        records.append(
+            {
+                "id": str(uuid.uuid4()),
+                "evaluator": name,
+                "timestamp": datetime.utcnow().isoformat(),
+                "run_id": run_id,
+                "item_index": item_index,
+                "input": input_text,
+                "output": r.get("output", ""),
+                "scores": scores,
+            }
+        )
 
     with _eval_lock:
         evaluations.extend(records)
@@ -991,7 +1097,9 @@ async def submit_batch(request: Request):
         _stats_cache = None
         _stats_cache_len = -1
 
-    return JSONResponse(content={"status": "ok", "rated_prompts": count_rated_prompts(name)})
+    return JSONResponse(
+        content={"status": "ok", "rated_prompts": count_rated_prompts(name)}
+    )
 
 
 @app.get("/analysis", response_class=HTMLResponse)
@@ -1012,10 +1120,12 @@ async def disagreements_page(request: Request):
 
 @app.get("/api/progress")
 async def api_progress():
-    return JSONResponse(content={
-        "total": total_prompts(),
-        "evaluators": get_all_progress(),
-    })
+    return JSONResponse(
+        content={
+            "total": total_prompts(),
+            "evaluators": get_all_progress(),
+        }
+    )
 
 
 def _get_stats() -> dict:
@@ -1042,13 +1152,95 @@ def _get_stats() -> dict:
 @app.get("/api/stats")
 async def api_stats():
     cache = _get_stats()
-    return JSONResponse(content={k: v for k, v in cache.items() if k != "disagreements"})
+    return JSONResponse(
+        content={k: v for k, v in cache.items() if k != "disagreements"}
+    )
 
 
 @app.get("/api/disagreements")
 async def api_disagreements():
     cache = _get_stats()
-    return JSONResponse(content={
-        "disagreement_count": cache["disagreement_count"],
-        "disagreements": cache["disagreements"],
-    })
+    return JSONResponse(
+        content={
+            "disagreement_count": cache["disagreement_count"],
+            "disagreements": cache["disagreements"],
+        }
+    )
+
+
+# ---------------------------------------------------------------------------
+# Kappa evaluation endpoints (fixed 5-prompt subsample)
+# ---------------------------------------------------------------------------
+
+
+@app.get("/kappa", response_class=HTMLResponse)
+async def kappa_page(request: Request):
+    """Kappa evaluation page with fixed 5-prompt subsample."""
+    name = request.cookies.get("evaluator_name")
+    if not name:
+        return RedirectResponse(url="/", status_code=303)
+    tmpl = jinja_env.from_string(EVALUATE_HTML)
+    html = tmpl.render(evaluator_name=name, endpoint_base="/kappa")
+    return HTMLResponse(content=html)
+
+
+@app.get("/kappa/prompt")
+async def get_kappa_prompt(request: Request):
+    """Get next unrated kappa prompt."""
+    name = request.cookies.get("evaluator_name")
+    if not name:
+        raise HTTPException(status_code=401, detail="Not logged in")
+
+    prompt = find_kappa_unrated_prompt(name)
+    if prompt is None:
+        raise HTTPException(status_code=404, detail="No more prompts")
+    return JSONResponse(content=prompt)
+
+
+@app.post("/kappa/submit-batch")
+async def submit_kappa_batch(request: Request):
+    """Submit kappa evaluation ratings to separate file."""
+    name = request.cookies.get("evaluator_name")
+    if not name:
+        raise HTTPException(status_code=401, detail="Not logged in")
+
+    body = await request.json()
+    input_text = body.get("input", "")
+    ratings = body.get("ratings", [])
+
+    if not ratings:
+        raise HTTPException(status_code=400, detail="No ratings provided")
+
+    records = []
+    for r in ratings:
+        run_id = r.get("run_id")
+        item_index = r.get("item_index")
+        scores = r.get("scores", {})
+        if run_id is None or item_index is None:
+            continue
+        records.append(
+            {
+                "id": str(uuid.uuid4()),
+                "evaluator": name,
+                "timestamp": datetime.utcnow().isoformat(),
+                "run_id": run_id,
+                "item_index": item_index,
+                "input": input_text,
+                "output": r.get("output", ""),
+                "scores": scores,
+            }
+        )
+
+    with _eval_lock:
+        kappa_evaluations.extend(records)
+        save_kappa_evaluations()
+
+    return JSONResponse(
+        content={"status": "ok", "rated_prompts": count_kappa_rated_prompts(name)}
+    )
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)
