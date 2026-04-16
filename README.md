@@ -39,6 +39,7 @@ The Gemma and LFM2 models are each fine-tuned into a MisconceptionDetector and a
 ├── test_taskfocused.py          Runs task-focused evaluation (two prompts) for one model
 ├── test_finetuned.py            Runs the finetuned model pipeline for Gemma or LFM2
 ├── app.py                       FastAPI web UI for blind human evaluation
+├── statistical_analysis.py      Python script to generate LaTeX tables for the paper
 ├── run_all.sh                   Orchestrates all runs in the correct order
 │
 ├── outputs/                     All output JSON files (one per run, created at runtime)
@@ -52,6 +53,7 @@ The Gemma and LFM2 models are each fine-tuned into a MisconceptionDetector and a
 │   ├── taskfocused_lfm2.json
 │   ├── finetuned_gemma.json
 │   ├── finetuned_lfm2.json
+│   ├── kappa_evaluation.json    Test evaluations specifically for Cohen's Kappa analysis
 │   └── evaluation.json          Human evaluation scores from the web UI
 │
 ├── logs/                        Per-run stdout/stderr logs (created at runtime)
@@ -199,6 +201,7 @@ The web UI supports blind human evaluation of model outputs.
 |-----|-------------|
 | `/` | Landing page — enter your name to begin |
 | `/evaluate` | Evaluation interface — pick a task type, rate outputs blindly |
+| `/kappa` | Kappa evaluation interface — fixed subsample of prompts for Cohen's Kappa |
 | `/analysis` | Inter-rater agreement stats, per-model average scores |
 | `/analysis/disagreements` | Items where evaluators disagreed (model info revealed here) |
 
@@ -271,3 +274,13 @@ Task-focused and finetuned entries additionally include:
 2. Open the web UI and have at least two evaluators rate outputs.
 3. Visit `/analysis` for aggregate results and inter-rater statistics.
 4. All raw outputs are in `outputs/*.json` for further analysis.
+5. Generate statistical tables and latency figures for the LaTeX paper:
+   ```bash
+   uv run --with scipy --with matplotlib python statistical_analysis.py
+   ```
+   This script runs formal hypothesis tests and latency analysis across all datasets. It reads from `outputs/kappa_evaluation.json`, `outputs/cross_model_evaluation.json`, `outputs/evaluation.json`, and all ten per-run output files, then produces:
+   - `author_ext_stats.tex` — Wilcoxon + Spearman generalisability table (external raters vs. authors)
+   - `llm_judge_bias.tex` — LLM-as-judge inflation and rank-correlation table
+   - `llm_judge_stats.json` — numerical snapshot of self-bias and composite inflation
+   - `latency_stats.tex` — mean, std, and median inference latency per configuration, with per-phase breakdown for two-step approaches
+   - `latency_plot.pdf` — grouped bar chart of median latency across all models and configurations (requires `matplotlib`)
