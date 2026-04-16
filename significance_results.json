@@ -1,0 +1,69 @@
+{
+  "per_pair": {
+    "Grok: Task-focused vs Baseline": {
+      "n": 100,
+      "delta": 0.09,
+      "stat": 2430.5,
+      "p": 0.1739,
+      "r": 0.136
+    },
+    "Qwen: Task-focused vs Baseline": {
+      "n": 100,
+      "delta": -0.035,
+      "stat": 1954.5,
+      "p": 0.8529,
+      "r": 0.0185
+    },
+    "SmolLM3: Task-focused vs Baseline": {
+      "n": 100,
+      "delta": 0.088,
+      "stat": 2591.5,
+      "p": 0.1237,
+      "r": 0.1539
+    },
+    "LFM2: Task-focused vs Baseline": {
+      "n": 100,
+      "delta": 0.074,
+      "stat": 2467.0,
+      "p": 0.3057,
+      "r": 0.1024
+    },
+    "SmolLM3: Fine-tuned vs Baseline": {
+      "n": 100,
+      "delta": -0.33,
+      "stat": 1474.0,
+      "p": 0.0032,
+      "r": 0.2948
+    },
+    "LFM2: Fine-tuned vs Baseline": {
+      "n": 100,
+      "delta": -0.527,
+      "stat": 1093.0,
+      "p": 0.0,
+      "r": 0.4659
+    }
+  },
+  "pooled": {
+    "SLM pooled: Task-focused vs Baseline": {
+      "n": 200,
+      "delta": 0.081,
+      "stat": 10094.5,
+      "p": 0.1128,
+      "r": 0.1121
+    },
+    "SLM pooled: Fine-tuned vs Baseline": {
+      "n": 200,
+      "delta": -0.4285,
+      "stat": 5127.0,
+      "p": 0.0,
+      "r": 0.3708
+    },
+    "LLM pooled: Task-focused vs Baseline": {
+      "n": 200,
+      "delta": 0.0275,
+      "stat": 8723.5,
+      "p": 0.5352,
+      "r": 0.0438
+    }
+  }
+}

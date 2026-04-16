@@ -2,7 +2,7 @@ import json
 import os
 import statistics
 from collections import defaultdict, Counter
-from scipy.stats import spearmanr, wilcoxon
+from scipy.stats import spearmanr, wilcoxon, norm
 
 # ---------------------------------------------------------------------------
 # Color scheme — consistent across all figures (derived from latency plot)
@@ -591,6 +591,155 @@ def main():
         plot_category(cat_means, plots_dir)
 
     plot_latency(row_by_key, plots_dir)
+
+    # -------------------------------------------------------------------------
+    # PART 5: PAIRWISE WILCOXON SIGNED-RANK TESTS ON MAIN COMPARISONS
+    # -------------------------------------------------------------------------
+    print("=" * 50)
+    print("Pairwise Wilcoxon Signed-Rank Tests (RQ1 & RQ2)")
+    print("=" * 50)
+
+    if not os.path.exists(eval_path):
+        print("evaluation.json not found — skipping significance tests")
+        return
+
+    eval_data = load_data(eval_path)
+
+    # Build item-level score maps: {run_id -> {item_index -> {dimension -> score}}}
+    DIMENSIONS = ['relevance', 'socratic_quality', 'clarity', 'cognitive_challenge', 'naturalness']
+    run_item_dim_scores = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+    for entry in eval_data:
+        if entry['evaluator'] not in ('avilol', 'Arihant'):
+            continue
+        rid  = entry['run_id']
+        idx  = entry['item_index']
+        for dim, val in entry['scores'].items():
+            run_item_dim_scores[rid][idx][dim].append(val)
+
+    # Collapse to mean per (run_id, item_index, dimension)
+    run_item_scores = {}  # {run_id -> {item_index -> {dim: mean, 'composite': mean}}}
+    for rid, items in run_item_dim_scores.items():
+        run_item_scores[rid] = {}
+        for idx, dims in items.items():
+            entry_scores = {}
+            composites = []
+            for dim in DIMENSIONS:
+                vals = dims.get(dim, [])
+                if vals:
+                    m = sum(vals) / len(vals)
+                    entry_scores[dim] = m
+                    composites.append(m)
+            if composites:
+                entry_scores['composite'] = sum(composites) / len(composites)
+            run_item_scores[rid][idx] = entry_scores
+
+    def get_paired_scores(run_a, run_b, dimension):
+        """Return two aligned lists of scores for items present in both runs."""
+        items_a = run_item_scores.get(run_a, {})
+        items_b = run_item_scores.get(run_b, {})
+        shared  = sorted(set(items_a) & set(items_b))
+        sa, sb  = [], []
+        for idx in shared:
+            va = items_a[idx].get(dimension)
+            vb = items_b[idx].get(dimension)
+            if va is not None and vb is not None:
+                sa.append(va)
+                sb.append(vb)
+        return sa, sb
+
+    def effect_size_r(p_val, n):
+        """Approximate effect size r from p-value and N (two-sided)."""
+        if p_val >= 1.0 or p_val <= 0.0:
+            return 0.0
+        z = norm.ppf(1 - min(p_val, 0.9999) / 2)
+        return z / (n ** 0.5)
+
+    COMPARISON_PAIRS = [
+        # (label, run_a, run_b, direction)
+        # direction='greater' means we test run_a > run_b (i.e. a improved over b)
+        ('Grok: Task-focused vs Baseline',    'taskfocused_grok',    'baseline_grok',    'greater'),
+        ('Qwen: Task-focused vs Baseline',    'taskfocused_qwen',    'baseline_qwen',    'greater'),
+        ('SmolLM3: Task-focused vs Baseline', 'taskfocused_smollm3', 'baseline_smollm3', 'greater'),
+        ('LFM2: Task-focused vs Baseline',    'taskfocused_lfm2',    'baseline_lfm2',    'greater'),
+        ('SmolLM3: Fine-tuned vs Baseline',   'finetuned_smollm3',   'baseline_smollm3', 'less'),
+        ('LFM2: Fine-tuned vs Baseline',      'finetuned_lfm2',      'baseline_lfm2',    'less'),
+    ]
+
+    per_pair_results = {}
+    for label, run_a, run_b, direction in COMPARISON_PAIRS:
+        sa, sb = get_paired_scores(run_a, run_b, 'composite')
+        if len(sa) < 10:
+            print(f"  {label}: insufficient data (n={len(sa)})")
+            continue
+        try:
+            stat, p = wilcoxon(sa, sb, alternative=direction)
+        except ValueError as e:
+            print(f"  {label}: wilcoxon error: {e}")
+            continue
+        delta = sum(sa) / len(sa) - sum(sb) / len(sb)
+        r     = effect_size_r(p, len(sa))
+        per_pair_results[label] = {'n': len(sa), 'delta': delta, 'stat': stat, 'p': p, 'r': r}
+        p_str = f"<0.001" if p < 0.001 else f"{p:.3f}"
+        print(f"  {label}: n={len(sa)}, delta={delta:+.3f}, W={stat:.1f}, p={p_str}, r={r:.3f}")
+
+    # Pooled SLM comparisons
+    pooled_results = {}
+    for pool_label, run_pairs, direction in [
+        ('SLM pooled: Task-focused vs Baseline',
+         [('taskfocused_smollm3', 'baseline_smollm3'), ('taskfocused_lfm2', 'baseline_lfm2')],
+         'greater'),
+        ('SLM pooled: Fine-tuned vs Baseline',
+         [('finetuned_smollm3', 'baseline_smollm3'), ('finetuned_lfm2', 'baseline_lfm2')],
+         'less'),
+    ]:
+        all_a, all_b = [], []
+        for run_a, run_b in run_pairs:
+            sa, sb = get_paired_scores(run_a, run_b, 'composite')
+            all_a.extend(sa)
+            all_b.extend(sb)
+        if len(all_a) < 10:
+            continue
+        try:
+            stat, p = wilcoxon(all_a, all_b, alternative=direction)
+        except ValueError as e:
+            print(f"  {pool_label}: wilcoxon error: {e}")
+            continue
+        delta = sum(all_a) / len(all_a) - sum(all_b) / len(all_b)
+        r     = effect_size_r(p, len(all_a))
+        pooled_results[pool_label] = {'n': len(all_a), 'delta': delta, 'stat': stat, 'p': p, 'r': r}
+        p_str = f"<0.001" if p < 0.001 else f"{p:.3f}"
+        print(f"  {pool_label}: n={len(all_a)}, delta={delta:+.3f}, W={stat:.1f}, p={p_str}, r={r:.3f}")
+
+    # Also pooled LLM task-focused vs baseline
+    all_a, all_b = [], []
+    for run_a, run_b in [('taskfocused_grok', 'baseline_grok'), ('taskfocused_qwen', 'baseline_qwen')]:
+        sa, sb = get_paired_scores(run_a, run_b, 'composite')
+        all_a.extend(sa); all_b.extend(sb)
+    if len(all_a) >= 10:
+        try:
+            stat, p = wilcoxon(all_a, all_b, alternative='greater')
+            delta = sum(all_a) / len(all_a) - sum(all_b) / len(all_b)
+            r     = effect_size_r(p, len(all_a))
+            pooled_results['LLM pooled: Task-focused vs Baseline'] = {
+                'n': len(all_a), 'delta': delta, 'stat': stat, 'p': p, 'r': r
+            }
+            p_str = f"<0.001" if p < 0.001 else f"{p:.3f}"
+            print(f"  LLM pooled: Task-focused vs Baseline: n={len(all_a)}, delta={delta:+.3f}, "
+                  f"W={stat:.1f}, p={p_str}, r={r:.3f}")
+        except ValueError:
+            pass
+
+    # Export significance summary as JSON for use in paper edits
+    import json as _json
+    sig_out = {'per_pair': {}, 'pooled': {}}
+    for k, v in per_pair_results.items():
+        sig_out['per_pair'][k] = {kk: round(vv, 4) for kk, vv in v.items()}
+    for k, v in pooled_results.items():
+        sig_out['pooled'][k] = {kk: round(vv, 4) for kk, vv in v.items()}
+    json_path = os.path.join(root_dir, 'significance_results.json')
+    with open(json_path, 'w') as f:
+        _json.dump(sig_out, f, indent=2)
+    print(f"Exported {json_path}")
 
 
 if __name__ == "__main__":
