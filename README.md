@@ -66,12 +66,28 @@ The Gemma and LFM2 models are each fine-tuned into a MisconceptionDetector and a
 
 ---
 
+## System Specifications
+
+All experiments reported in the paper were conducted on the following hardware:
+
+| Component | Specification |
+|-----------|---------------|
+| Machine | Lenovo ThinkStation P5 |
+| CPU | Intel Xeon w3-2435 (8-core / 16-thread, 3.1 GHz base) |
+| RAM | 32 GB DDR5 ECC |
+| GPU | NVIDIA RTX A2000 (16 GB GDDR6 VRAM) |
+| Disk | 1 TB NVMe SSD |
+| OS | Ubuntu 24.10 LTS |
+
+> **Note:** A GPU with less VRAM may require reducing batch size or sequence length in `finetune.py`.
+
+---
+
 ## Prerequisites
 
 - Python 3.11+
 - [uv](https://docs.astral.sh/uv/) — fast Python package manager
 - [ollama](https://ollama.com/) — for local Gemma and LFM2 inference (unfinetuned runs)
-- CUDA-capable GPU with at least 16 GB VRAM (recommended: RTX 4090 or equivalent)
 - A [Weights & Biases](https://wandb.ai/) account for finetuning tracking
 - An [OpenRouter](https://openrouter.ai/) API key for Grok and Qwen inference
 
@@ -270,17 +286,79 @@ Task-focused and finetuned entries additionally include:
 
 ## Reproducing Results
 
-1. Run `bash run_all.sh` from start to finish.
-2. Open the web UI and have at least two evaluators rate outputs.
-3. Visit `/analysis` for aggregate results and inter-rater statistics.
-4. All raw outputs are in `outputs/*.json` for further analysis.
-5. Generate statistical tables and latency figures for the LaTeX paper:
-   ```bash
-   uv run --with scipy --with matplotlib python statistical_analysis.py
-   ```
-   This script runs formal hypothesis tests and latency analysis across all datasets. It reads from `outputs/kappa_evaluation.json`, `outputs/cross_model_evaluation.json`, `outputs/evaluation.json`, and all ten per-run output files, then produces:
-   - `author_ext_stats.tex` — Wilcoxon + Spearman generalisability table (external raters vs. authors)
-   - `llm_judge_bias.tex` — LLM-as-judge inflation and rank-correlation table
-   - `llm_judge_stats.json` — numerical snapshot of self-bias and composite inflation
-   - `latency_stats.tex` — mean, std, and median inference latency per configuration, with per-phase breakdown for two-step approaches
-   - `latency_plot.pdf` — grouped bar chart of median latency across all models and configurations (requires `matplotlib`)
+The steps below replicate the full experimental pipeline as run on the [ThinkStation P5 hardware](#system-specifications) described above. Latency figures will vary with different hardware; all other results (scores, rankings, statistics) should be reproducible regardless of GPU model, provided VRAM is sufficient.
+
+### Step 1 — Environment setup
+
+```bash
+git clone <repo-url>
+cd ares
+git checkout final
+
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+uv venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+uv pip install -r pyproject.toml
+
+# Install Unsloth for your CUDA version (CUDA 12.x + PyTorch 2.5):
+pip install "unsloth[cu124-torch250]"
+# Fallback:
+pip install unsloth
+```
+
+### Step 2 — Configure API keys
+
+```bash
+cp .env.example .env
+# Fill in OPENROUTER_API_KEY and WANDB_API_KEY
+```
+
+### Step 3 — Pull local models via ollama
+
+```bash
+ollama pull hf.co/unsloth/gemma-3n-E2B-it-GGUF:Q8_0
+ollama pull hf.co/LiquidAI/LFM2-VL-3B-GGUF:Q8_0
+```
+
+### Step 4 — Run the full pipeline
+
+```bash
+bash run_all.sh
+```
+
+Expected runtimes on the ThinkStation P5:
+
+| Phase | Approx. duration |
+|-------|------------------|
+| Finetuning (4 adapters total) | ~2–4 hours per adapter |
+| Baseline + task-focused evaluation (all models) | ~1–2 hours |
+| Finetuned evaluation (Gemma + LFM2) | ~30–60 minutes |
+
+### Step 5 — Human evaluation
+
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8000
+```
+
+Open `http://localhost:8000`. Have **at least two independent evaluators** complete both the `/evaluate` and `/kappa` interfaces before proceeding.
+
+### Step 6 — Statistical analysis
+
+```bash
+uv run --with scipy --with matplotlib python statistical_analysis.py
+```
+
+This reads from `outputs/kappa_evaluation.json`, `outputs/cross_model_evaluation.json`, `outputs/evaluation.json`, and all ten per-run output files, then produces:
+
+- `author_ext_stats.tex` — Wilcoxon + Spearman generalisability table (external raters vs. authors)
+- `llm_judge_bias.tex` — LLM-as-judge inflation and rank-correlation table
+- `llm_judge_stats.json` — numerical snapshot of self-bias and composite inflation
+- `latency_stats.tex` — mean, std, and median inference latency per configuration, with per-phase breakdown for two-step approaches
+- `latency_plot.pdf` — grouped bar chart of median latency across all models and configurations
+
+### Resuming interrupted runs
+
+All test scripts checkpoint after every item — if a run is interrupted, re-running the same command will pick up where it left off. Finetuning must be restarted from scratch if interrupted, but saved adapters in `models/` will be reused if `--skip-finetune` is passed to `run_all.sh`.
